@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产品中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="万维物联网产品中心 - LoRa传感器、LoRa网关、数据采集器等全系列IoT产品">
+  <meta name="keywords" content="LoRa传感器, LoRa网关, 物联网传感器, 数据采集器, 资产管理标签, 温湿度传感器, 水浸传感器, 物联网产品">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ========================================
+       CSS Design System - 与index.html保持一致
+       ======================================== */
+    :root {
+      --color-primary-50: #eff6ff;
+      --color-primary-100: #dbeafe;
+      --color-primary-200: #bfdbfe;
+      --color-primary-300: #93c5fd;
+      --color-primary-400: #60a5fa;
+      --color-primary-500: #0066ff;
+      --color-primary-600: #0052cc;
+      --color-primary-700: #0047b3;
+      --color-primary-800: #003d99;
+      --color-primary-900: #1e3a8a;
+
+      --color-secondary-50: #f8fafc;
+      --color-secondary-100: #f1f5f9;
+      --color-secondary-200: #e2e8f0;
+      --color-secondary-300: #cbd5e1;
+      --color-secondary-400: #94a3b8;
+      --color-secondary-500: #64748b;
+      --color-secondary-600: #475569;
+      --color-secondary-700: #334155;
+      --color-secondary-800: #1e293b;
+      --color-secondary-900: #0f172a;
+
+      --color-accent-400: #fb923c;
+      --color-accent-500: #ff6b35;
+      --color-accent-600: #ea580c;
+
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-info: #0ea5e9;
+
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-dark: #0f172a;
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      --font-sans: 'Noto Sans SC', 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Inter', 'Noto Sans SC', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+      --radius-full: 9999px;
+
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+
+      --container-max: 1280px;
+      --container-padding: 1.5rem;
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --color-primary-500: #3b82f6;
+      --color-primary-600: #2563eb;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    }
+
+    /* Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-primary);
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+    ul, ol { list-style: none; }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--container-padding);
+    }
+
+    /* ========================================
+       Header / Navigation - 与index.html一致
+       ======================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition-base);
+    }
+
+    [data-theme="dark"] .header {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .header.scrolled {
+      border-bottom-color: var(--color-secondary-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .header__logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .header__logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .header__logo-en {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .header__nav {
+      display: none;
+      gap: var(--space-1);
+    }
+
+    @media (min-width: 1024px) {
+      .header__nav { display: flex; }
+    }
+
+    .header__nav-item {
+      position: relative;
+      padding: var(--space-2) var(--space-4);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+
+    .header__nav-item:hover,
+    .header__nav-item.active {
+      color: var(--color-primary-600);
+      background: var(--color-primary-50);
+    }
+
+    .header__nav-item.active {
+      color: var(--color-primary-600);
+    }
+
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .header__theme-toggle {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+      font-size: 1.25rem;
+    }
+
+    .header__theme-toggle:hover {
+      background: var(--color-secondary-100);
+      color: var(--text-primary);
+    }
+
+    .header__mobile-toggle {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+    }
+
+    @media (min-width: 1024px) {
+      .header__mobile-toggle { display: none; }
+    }
+
+    /* ========================================
+       Hero / Page Header
+       ======================================== */
+    .page-hero {
+      position: relative;
+      padding: calc(72px + var(--space-16)) 0 var(--space-16);
+      background: linear-gradient(180deg, var(--color-primary-50) 0%, var(--bg-primary) 100%);
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .page-hero {
+      background: linear-gradient(180deg, #1e293b 0%, var(--bg-primary) 100%);
+    }
+
+    .page-hero__bg {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(var(--color-secondary-200) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-secondary-200) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.3;
+    }
+
+    [data-theme="dark"] .page-hero__bg {
+      background-image: 
+        linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    }
+
+    .page-hero__glow {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--color-primary-200) 0%, transparent 70%);
+      top: -150px;
+      right: -150px;
+      opacity: 0.5;
+    }
+
+    .page-hero__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .page-hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: white;
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-md);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-6);
+    }
+
+    [data-theme="dark"] .page-hero__badge {
+      background: var(--bg-secondary);
+    }
+
+    .page-hero__title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+    }
+
+    .page-hero__subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Stats */
+    .page-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-12);
+      margin-top: var(--space-10);
+      flex-wrap: wrap;
+    }
+
+    .page-stat {
+      text-align: center;
+    }
+
+    .page-stat__number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-primary-500);
+      line-height: 1;
+    }
+
+    .page-stat__label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: var(--space-2);
+    }
+
+    /* ========================================
+       Search & Filter Section
+       ======================================== */
+    .filter-section {
+      padding: var(--space-8) 0;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--color-secondary-200);
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+    }
+
+    [data-theme="dark"] .filter-section {
+      background: var(--bg-secondary);
+      border-color: var(--color-secondary-700);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .filter-search {
+      flex: 1;
+      min-width: 280px;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .filter-search__input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 3rem;
+      border: 2px solid var(--color-secondary-200);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      transition: all var(--transition-fast);
+    }
+
+    .filter-search__input:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+      box-shadow: 0 0 0 3px var(--color-primary-100);
+    }
+
+    .filter-search__icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.125rem;
+    }
+
+    .filter-dropdown {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .filter-select {
+      padding: 0.625rem 2rem 0.625rem 1rem;
+      border: 2px solid var(--color-secondary-200);
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--color-primary-500);
+    }
+
+    [data-theme="dark"] .filter-select {
+      background-color: var(--bg-tertiary);
+      border-color: var(--color-secondary-600);
+      color: var(--text-primary);
+    }
+
+    /* Category Nav */
+    .category-nav {
+      display: flex;
+      gap: var(--space-2);
+      padding: var(--space-4) 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .category-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category-nav__item {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--bg-secondary);
+      border: 2px solid transparent;
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .category-nav__item:hover {
+      background: var(--color-primary-50);
+      color: var(--color-primary-600);
+      border-color: var(--color-primary-200);
+    }
+
+    .category-nav__item.active {
+      background: var(--color-primary-500);
+      color: white;
+      border-color: var(--color-primary-500);
+    }
+
+    .category-nav__icon {
+      font-size: 1rem;
+    }
+
+    /* ========================================
+       Products Section
+       ======================================== */
+    .products-section {
+      padding: var(--space-12) 0 var(--space-20);
+    }
+
+    /* Category Group */
+    .category-group {
+      margin-bottom: var(--space-16);
+    }
+
+    .category-group__header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-4);
+      border-bottom: 2px solid var(--color-secondary-200);
+    }
+
+    [data-theme="dark"] .category-group__header {
+      border-color: var(--color-secondary-700);
+    }
+
+    .category-group__icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+      box-shadow: 0 4px 14px 0 rgb(0 102 255 / 0.3);
+    }
+
+    .category-group__info {
+      flex: 1;
+    }
+
+    .category-group__title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-1);
+    }
+
+    .category-group__protocols {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .category-group__count {
+      background: var(--color-secondary-100);
+      color: var(--text-secondary);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-6);
+    }
+
+    /* Product Card */
+    .product-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+      border-color: var(--color-primary-300);
+    }
+
+    [data-theme="dark"] .product-card {
+      background: var(--bg-secondary);
+      border-color: var(--color-secondary-700);
+    }
+
+    [data-theme="dark"] .product-card:hover {
+      border-color: var(--color-primary-500);
+    }
+
+    .product-card__image {
+      aspect-ratio: 16 / 10;
+      background: linear-gradient(135deg, var(--color-secondary-50) 0%, var(--color-secondary-100) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .product-card__image {
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--color-secondary-800) 100%);
+    }
+
+    .product-card__placeholder {
+      font-size: 3rem;
+      opacity: 0.3;
+    }
+
+    .product-card__badge {
+      position: absolute;
+      top: var(--space-3);
+      right: var(--space-3);
+      padding: var(--space-1) var(--space-3);
+      background: var(--color-warning);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+    }
+
+    .product-card__badge--new {
+      background: var(--color-success);
+    }
+
+    .product-card__body {
+      padding: var(--space-5);
+    }
+
+    .product-card__category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-primary-500);
+      font-weight: 600;
+      margin-bottom: var(--space-2);
+    }
+
+    .product-card__name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .product-card__model {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-3);
+    }
+
+    [data-theme="dark"] .product-card__model {
+      background: var(--bg-tertiary);
+    }
+
+    .product-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .product-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: var(--space-1) var(--space-2);
+      background: var(--color-primary-50);
+      color: var(--color-primary-600);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+    }
+
+    [data-theme="dark"] .product-tag {
+      background: var(--color-primary-900);
+      color: var(--color-primary-300);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: var(--space-20) var(--space-4);
+      color: var(--text-muted);
+    }
+
+    .empty-state__icon {
+      font-size: 4rem;
+      margin-bottom: var(--space-4);
+      opacity: 0.5;
+    }
+
+    .empty-state__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-2);
+    }
+
+    /* ========================================
+       Modal - 产品详情弹框
+       ======================================== */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      align-items: flex-start;
+      justify-content: center;
+      padding: var(--space-8) var(--space-4);
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal__backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal__content {
+      position: relative;
+      background: var(--bg-primary);
+      border-radius: var(--radius-2xl);
+      max-width: 1000px;
+      width: 100%;
+      margin: var(--space-4) auto;
+      box-shadow: var(--shadow-2xl);
+    }
+
+    .modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--color-secondary-200);
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+
+    [data-theme="dark"] .modal__header {
+      border-color: var(--color-secondary-700);
+    }
+
+    .modal__title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .modal__subtitle {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.8);
+      margin-top: var(--space-1);
+    }
+
+    .modal__close {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      color: white;
+      font-size: 1.5rem;
+      transition: all var(--transition-fast);
+      background: rgba(255,255,255,0.2);
+    }
+
+    .modal__close:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .modal__body {
+      padding: var(--space-6);
+    }
+
+    /* 产品详情布局 */
+    .product-detail {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: var(--space-8);
+    }
+
+    @media (max-width: 768px) {
+      .product-detail {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 产品图片 */
+    .product-detail__image {
+      position: sticky;
+      top: var(--space-4);
+    }
+
+    .product-detail__img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--color-secondary-50) 0%, var(--color-secondary-100) 100%);
+      border-radius: var(--radius-xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+      border: 2px solid var(--color-secondary-200);
+    }
+
+    [data-theme="dark"] .product-detail__img {
+      background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--color-secondary-800) 100%);
+      border-color: var(--color-secondary-700);
+    }
+
+    .product-detail__thumbs {
+      display: flex;
+      gap: var(--space-2);
+      margin-top: var(--space-4);
+    }
+
+    .product-detail__thumb {
+      width: 60px;
+      height: 60px;
+      background: var(--bg-secondary);
+      border: 2px solid var(--color-secondary-200);
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .product-detail__thumb:hover,
+    .product-detail__thumb.active {
+      border-color: var(--color-primary-500);
+    }
+
+    /* 产品信息 */
+    .product-detail__info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+
+    .product-detail__header {
+      border-bottom: 1px solid var(--color-secondary-200);
+      padding-bottom: var(--space-4);
+    }
+
+    .product-detail__category {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-primary-600);
+      background: var(--color-primary-50);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-2);
+    }
+
+    .product-detail__name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+    }
+
+    .product-detail__model {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-md);
+    }
+
+    /* 产品描述 */
+    .product-detail__desc {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+    }
+
+    /* 参数表格 */
+    .product-detail__section {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+    }
+
+    [data-theme="dark"] .product-detail__section {
+      background: var(--bg-tertiary);
+    }
+
+    .product-detail__section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .product-detail__section-title::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: var(--color-primary-500);
+      border-radius: 2px;
+    }
+
+    .product-detail__specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-2) 0;
+      border-bottom: 1px solid var(--color-secondary-100);
+    }
+
+    [data-theme="dark"] .spec-row {
+      border-color: var(--color-secondary-700);
+    }
+
+    .spec-row:last-child {
+      border-bottom: none;
+    }
+
+    .spec-row__label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .spec-row__value {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* 产品特点 */
+    .product-detail__features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    .feature-item__icon {
+      width: 24px;
+      height: 24px;
+      background: var(--color-success);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* 选型表格 */
+    .product-detail__model-table {
+      overflow-x: auto;
+    }
+
+    .model-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+
+    .model-table th,
+    .model-table td {
+      padding: var(--space-3);
+      text-align: left;
+      border: 1px solid var(--color-secondary-200);
+    }
+
+    [data-theme="dark"] .model-table th,
+    [data-theme="dark"] .model-table td {
+      border-color: var(--color-secondary-700);
+    }
+
+    .model-table th {
+      background: var(--color-primary-500);
+      color: white;
+      font-weight: 600;
+    }
+
+    .model-table tr:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+
+    [data-theme="dark"] .model-table tr:nth-child(even) {
+      background: var(--bg-tertiary);
+    }
+
+    .model-table tr:hover {
+      background: var(--color-primary-50);
+    }
+
+    [data-theme="dark"] .model-table tr:hover {
+      background: var(--color-primary-900);
+    }
+
+    /* 场景标签 */
+    .product-detail__scenes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .scene-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: var(--space-2) var(--space-3);
+      background: var(--bg-secondary);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-full);
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    [data-theme="dark"] .scene-tag {
+      background: var(--bg-tertiary);
+      border-color: var(--color-secondary-700);
+    }
+
+    /* 产品命名规范 */
+    .product-naming {
+      background: var(--bg-secondary);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+
+    [data-theme="dark"] .product-naming {
+      background: var(--bg-tertiary);
+      border-color: var(--color-secondary-700);
+    }
+
+    .product-naming__example {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+      margin-bottom: var(--space-4);
+      padding: var(--space-3);
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .product-naming__code {
+      color: var(--color-secondary-600);
+    }
+
+    [data-theme="dark"] .product-naming__code {
+      color: var(--color-secondary-300);
+    }
+
+    .product-naming__code.highlight-model {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .product-naming__code.highlight-comm {
+      color: var(--color-primary-500);
+      background: var(--color-primary-100);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      margin-left: -2px; /* 消除间距，让数字和通讯方式紧挨着 */
+    }
+
+    [data-theme="dark"] .product-naming__code.highlight {
+      background: rgba(37, 99, 235, 0.2);
+      color: var(--color-primary-400);
+    }
+
+    .product-naming__separator {
+      color: var(--color-secondary-400);
+      font-weight: 400;
+    }
+
+    .product-naming__rules {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2);
+    }
+
+    @media (max-width: 480px) {
+      .product-naming__rules {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .naming-rule {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2);
+      background: var(--bg-primary);
+      border-radius: var(--radius-sm);
+      font-size: 0.8125rem;
+    }
+
+    .naming-rule__prefix {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-weight: 600;
+      color: var(--color-primary-600);
+      background: var(--color-primary-100);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+
+    [data-theme="dark"] .naming-rule__prefix {
+      background: rgba(37, 99, 235, 0.2);
+      color: var(--color-primary-400);
+    }
+
+    .naming-rule__desc {
+      color: var(--text-secondary);
+    }
+
+    /* 操作按钮 */
+    .product-detail__actions {
+      display: flex;
+      gap: var(--space-3);
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-secondary-200);
+    }
+
+    [data-theme="dark"] .product-detail__actions {
+      border-color: var(--color-secondary-700);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: all var(--transition-fast);
+    }
+
+    .btn--primary {
+      background: var(--color-primary-500);
+      color: white;
+    }
+
+    .btn--primary:hover {
+      background: var(--color-primary-600);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--color-secondary-300);
+    }
+
+    .btn--outline:hover {
+      border-color: var(--color-primary-500);
+      color: var(--color-primary-600);
+    }
+
+    /* ========================================
+       Footer
+       ======================================== */
+    .footer {
+      background: var(--color-secondary-900);
+      color: white;
+      padding: var(--space-16) 0 var(--space-8);
+    }
+
+    .footer__content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-10);
+      margin-bottom: var(--space-10);
+    }
+
+    .footer__brand {
+      max-width: 300px;
+    }
+
+    .footer__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer__desc {
+      color: var(--color-secondary-400);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+
+    .footer__title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: var(--space-4);
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .footer__link {
+      color: var(--color-secondary-400);
+      font-size: 0.875rem;
+      transition: color var(--transition-fast);
+    }
+
+    .footer__link:hover {
+      color: white;
+    }
+
+    .footer__bottom {
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--color-secondary-700);
+      text-align: center;
+      color: var(--color-secondary-500);
+      font-size: 0.875rem;
+    }
+
+    /* ========================================
+       Animations
+       ======================================== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-card {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .filter-search {
+        max-width: none;
+      }
+      
+      .filter-dropdown {
+        justify-content: flex-start;
+      }
+      
+      .page-stats {
+        gap: var(--space-8);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header__container">
+      <a href="index.html" class="header__logo">
+        <div class="header__logo-icon">WW</div>
+        <div class="header__logo-text">
+          <span>万维物联网</span>
+          <span class="header__logo-en">WWIOT</span>
+        </div>
+      </a>
+
+      <nav class="header__nav">
+        <a href="index.html" class="header__nav-item">首页</a>
+        <a href="products.html" class="header__nav-item active">产品中心</a>
+        <a href="#" class="header__nav-item">解决方案</a>
+        <a href="#" class="header__nav-item">技术支持</a>
+        <a href="#" class="header__nav-item">关于我们</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="header__theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+        <button class="header__mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="page-hero__bg"></div>
+    <div class="page-hero__glow"></div>
+    <div class="container page-hero__content">
+      <div class="page-hero__badge">
+        <span>📦</span>
+        <span>产品中心</span>
+      </div>
+      <h1 class="page-hero__title">全系列IoT产品</h1>
+      <p class="page-hero__subtitle">从传感器、网关到云平台，提供完整的物联网解决方案</p>
+      
+      <div class="page-stats">
+        <div class="page-stat">
+          <div class="page-stat__number" id="total-products">156</div>
+          <div class="page-stat__label">产品型号</div>
+        </div>
+        <div class="page-stat">
+          <div class="page-stat__number">11</div>
+          <div class="page-stat__label">产品分类</div>
+        </div>
+        <div class="page-stat">
+          <div class="page-stat__number">4</div>
+          <div class="page-stat__label">通信方式</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Section -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="filter-bar">
+        <div class="filter-search">
+          <span class="filter-search__icon">🔍</span>
+          <input type="text" class="filter-search__input" id="search-input" placeholder="搜索产品名称、型号...">
+        </div>
+        <div class="filter-dropdown">
+          <select class="filter-select" id="filter-protocol">
+            <option value="">通信方式</option>
+            <option value="lora">LoRa</option>
+            <option value="lorawan-hf">LoRaWAN 高频</option>
+            <option value="lorawan-lf">LoRaWAN 低频</option>
+            <option value="4g">4G</option>
+            <option value="bluetooth">蓝牙</option>
+          </select>
+          <select class="filter-select" id="filter-power">
+            <option value="">供电方式</option>
+            <option value="battery">电池供电</option>
+            <option value="solar">太阳能供电</option>
+            <option value="external">外接供电</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Category Navigation -->
+      <div class="category-nav" id="category-nav">
+        <button class="category-nav__item active" data-category="all">
+          <span class="category-nav__icon">📦</span>
+          <span>全部产品</span>
+        </button>
+        <button class="category-nav__item" data-category="temp">
+          <span class="category-nav__icon">🌡️</span>
+          <span>温湿度</span>
+        </button>
+        <button class="category-nav__item" data-category="io">
+          <span class="category-nav__icon">🔌</span>
+          <span>开关量/IO</span>
+        </button>
+        <button class="category-nav__item" data-category="gateway">
+          <span class="category-nav__icon">🌐</span>
+          <span>网关设备</span>
+        </button>
+        <button class="category-nav__item" data-category="power">
+          <span class="category-nav__icon">⚡</span>
+          <span>电力能源</span>
+        </button>
+        <button class="category-nav__item" data-category="pressure">
+          <span class="category-nav__icon">📊</span>
+          <span>压力/液位</span>
+        </button>
+        <button class="category-nav__item" data-category="control">
+          <span class="category-nav__icon">🎛️</span>
+          <span>控制/报警</span>
+        </button>
+        <button class="category-nav__item" data-category="collector">
+          <span class="category-nav__icon">📡</span>
+          <span>数据采集</span>
+        </button>
+        <button class="category-nav__item" data-category="sensor">
+          <span class="category-nav__icon">🧭</span>
+          <span>位置/运动</span>
+        </button>
+        <button class="category-nav__item" data-category="gas">
+          <span class="category-nav__icon">💨</span>
+          <span>气体检测</span>
+        </button>
+        <button class="category-nav__item" data-category="pcba">
+          <span class="category-nav__icon">🔧</span>
+          <span>PCBA/配件</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <div class="container">
+      <div id="products-container">
+        <!-- Products will be rendered here -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal - 产品详情弹框 -->
+  <div class="modal" id="product-modal">
+    <div class="modal__backdrop" onclick="closeModal()"></div>
+    <div class="modal__content">
+      <div class="modal__header">
+        <div>
+          <h2 class="modal__title" id="modal-title">产品详情</h2>
+          <div class="modal__subtitle" id="modal-subtitle">WW-10 系列</div>
+        </div>
+        <button class="modal__close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="product-detail">
+          <!-- 左侧：产品图片 -->
+          <div class="product-detail__image">
+            <div class="product-detail__img" id="modal-image-container">
+              <!-- 图片将由JS动态加载 -->
+            </div>
+            <div class="product-detail__thumbs" id="modal-thumbs">
+              <!-- 缩略图将由JS动态加载 -->
+            </div>
+          </div>
+          
+          <!-- 右侧：产品信息 -->
+          <div class="product-detail__info">
+            <div class="product-detail__header">
+              <span class="product-detail__category" id="modal-category">温湿度传感器</span>
+              <h3 class="product-detail__name" id="modal-name">无线温湿度采集终端</h3>
+              <span class="product-detail__model" id="modal-model">WW-10L</span>
+            </div>
+            
+            <div class="product-detail__desc" id="modal-desc">
+              工业级无线温湿度采集终端，采用低功耗设计，支持LoRa/LoRaWAN/4G多种通讯方式。适用于车间、仓库、机房等工业环境的温湿度监测。
+            </div>
+            
+            <!-- 技术参数 -->
+            <div class="product-detail__section">
+              <h4 class="product-detail__section-title">技术参数</h4>
+              <div class="product-detail__specs" id="modal-specs">
+                <!-- 参数将由JS渲染 -->
+              </div>
+            </div>
+            
+            <!-- 产品特点 -->
+            <div class="product-detail__section">
+              <h4 class="product-detail__section-title">产品特点</h4>
+              <div class="product-detail__features" id="modal-features">
+                <div class="feature-item"><span class="feature-item__icon">✓</span> 低功耗长续航</div>
+                <div class="feature-item"><span class="feature-item__icon">✓</span> IP65防护等级</div>
+                <div class="feature-item"><span class="feature-item__icon">✓</span> 远程配置升级</div>
+                <div class="feature-item"><span class="feature-item__icon">✓</span> 断网数据补传</div>
+              </div>
+            </div>
+            
+            <!-- 选型表格 -->
+            <div class="product-detail__section">
+              <h4 class="product-detail__section-title">产品选型</h4>
+              <div class="product-detail__model-table">
+                <table class="model-table">
+                  <thead>
+                    <tr>
+                      <th>型号</th>
+                      <th>通讯方式</th>
+                      <th>供电方式</th>
+                      <th>测温范围</th>
+                    </tr>
+                  </thead>
+                  <tbody id="modal-model-table">
+                    <!-- 表格行将由JS渲染 -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <!-- 产品命名规范 -->
+            <div class="product-detail__section">
+              <h4 class="product-detail__section-title">📋 产品命名规则</h4>
+              <div class="product-naming">
+                <div class="product-naming__example" id="naming-example">
+                  <span class="product-naming__code">WW</span>
+                  <span class="product-naming__separator">-</span>
+                  <span class="product-naming__code highlight-model">10</span><span class="product-naming__code highlight-comm">L</span>
+                  <span class="product-naming__separator">-</span>
+                  <span class="product-naming__code">SP1</span>
+                </div>
+                <div class="product-naming__rules" id="naming-rules">
+                  <div class="naming-rule">
+                    <span class="naming-rule__prefix">WW</span>
+                    <span class="naming-rule__desc">品牌前缀</span>
+                  </div>
+                  <div class="naming-rule">
+                    <span class="naming-rule__prefix">10/11/12/13</span>
+                    <span class="naming-rule__desc">产品型号</span>
+                  </div>
+                  <div class="naming-rule">
+                    <span class="naming-rule__prefix">L/LW/HW/C</span>
+                    <span class="naming-rule__desc">通讯方式：L=LoRa, LW=LoRaWAN, HW=高频LoRaWAN, C=4G</span>
+                  </div>
+                  <div class="naming-rule">
+                    <span class="naming-rule__prefix">SP1</span>
+                    <span class="naming-rule__desc">外置探头：SP1=温湿度探头</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 应用场景 -->
+            <div class="product-detail__section">
+              <h4 class="product-detail__section-title">应用场景</h4>
+              <div class="product-detail__scenes" id="modal-scenes">
+                <span class="scene-tag">🏭 工业车间</span>
+                <span class="scene-tag">🏬 仓储物流</span>
+                <span class="scene-tag">🖥️ 机房监控</span>
+                <span class="scene-tag">🏥 医药冷链</span>
+                <span class="scene-tag">🌡️ 实验室</span>
+              </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="product-detail__actions">
+              <button class="btn btn--primary">📥 下载规格书</button>
+              <button class="btn btn--outline">📞 咨询报价</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__content">
+        <div class="footer__brand">
+          <div class="footer__logo">
+            <div class="footer__logo-icon">WW</div>
+            <span>万维物联网</span>
+          </div>
+          <p class="footer__desc">专注于低功耗无线通讯技术，提供从传感器、网关到云平台的高性能端到端物联网解决方案。</p>
+        </div>
+        
+        <div>
+          <h4 class="footer__title">产品中心</h4>
+          <div class="footer__links">
+            <a href="#" class="footer__link">传感器系列</a>
+            <a href="#" class="footer__link">网关设备</a>
+            <a href="#" class="footer__link">数据采集器</a>
+            <a href="#" class="footer__link">通信模组</a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer__title">解决方案</h4>
+          <div class="footer__links">
+            <a href="#" class="footer__link">智慧水务</a>
+            <a href="#" class="footer__link">智慧能源</a>
+            <a href="#" class="footer__link">智慧农业</a>
+            <a href="#" class="footer__link">智慧工业</a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer__title">联系我们</h4>
+          <div class="footer__links">
+            <a href="tel:13675120926" class="footer__link">电话: 136-7512-0926</a>
+            <a href="mailto:x@wwiot.com" class="footer__link">邮箱: x@wwiot.com</a>
+            <a href="contact.html" class="footer__link">更多联系方式</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+        <p>© 2026 万维物联网（南京）科技有限公司 版权所有</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Product Data - 全部来自CSV，无SL开头产品
+    const products = [
+      // ==================== 温湿度传感器 ====================
+      { id: 1, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-10L", protocols: ["lora"], power: "battery" },
+      { id: 2, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-10HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 3, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-10LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 4, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G", model: "WW-10C", protocols: ["4g"], power: "external" },
+      { id: 5, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-10L-SP1", protocols: ["lora"], power: "battery" },
+      { id: 6, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-10HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 7, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-10LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 8, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-10C-SP1", protocols: ["4g"], power: "external" },
+      
+      { id: 9, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-11L", protocols: ["lora"], power: "battery" },
+      { id: 10, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-11HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 11, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-11LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 12, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-11C", protocols: ["4g"], power: "external" },
+      // { id: 13, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-11L-SP1", protocols: ["lora"], power: "battery" },
+      // { id: 14, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-11HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
+      // { id: 15, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-11LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
+      // { id: 16, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-11C-SP1", protocols: ["4g"], power: "external" },
+      
+      { id: 17, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-12L", protocols: ["lora"], power: "battery" },
+      { id: 18, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-12HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 19, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-12LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 20, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-12C", protocols: ["4g"], power: "external" },
+      { id: 21, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-12L-SP1", protocols: ["lora"], power: "battery" },
+      { id: 22, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-12HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 23, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-12LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 24, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-12C-SP1", protocols: ["4g"], power: "external" },
+      
+      { id: 25, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/LoRa", model: "WW-13L", protocols: ["lora"], power: "battery" },
+      { id: 26, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/高频LoRaWAN", model: "WW-13HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 27, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/低频LoRaWAN", model: "WW-13LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 28, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/4G", model: "WW-13C", protocols: ["4g"], power: "external" },
+      
+      { id: 29, category: "temp", subCategory: "母线测温", name: "无线红外母线测温/LoRa", model: "WW-16L", protocols: ["lora"], power: "battery" },
+      { id: 30, category: "temp", subCategory: "母线测温", name: "有线母线测温RS485", model: "WW-16-RS", protocols: ["wired"], power: "external" },
+      
+      { id: 31, category: "temp", subCategory: "K温度", name: "K型温度传感器", model: "WW-15L-K", protocols: ["lora", "4g"], power: "battery" },
+      { id: 32, category: "temp", subCategory: "K温度", name: "T型温度传感器", model: "WW-15C-K", protocols: ["lora", "4g"], power: "battery" },
+      // { id: 33, category: "temp", subCategory: "K温度", name: "红外温度传感器", model: "WW-15L/C-HW", protocols: ["lora", "4g"], power: "battery" },
+      // { id: 34, category: "temp", subCategory: "K温度", name: "热敏电阻温度传感器", model: "WW-15L/C-RM", protocols: ["lora", "4g"], power: "battery" },
+      
+      // ==================== 开关量/IO ====================
+      // { id: 35, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/LoRa", model: "WW-20L", protocols: ["lora"], power: "battery" },
+      // { id: 36, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/高频LoRaWAN", model: "WW-20HW", protocols: ["lorawan-hf"], power: "battery" },
+      // { id: 37, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/低频LoRaWAN", model: "WW-20LW", protocols: ["lorawan-lf"], power: "battery" },
+      // { id: 38, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/4G", model: "WW-20C", protocols: ["4g"], power: "external" },
+      
+      { id: 39, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/LoRa", model: "WW-20L-SP20", protocols: ["lora"], power: "battery" },
+      { id: 40, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/高频LoRaWAN", model: "WW-20HW-SP20", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 41, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/低频LoRaWAN", model: "WW-20LW-SP20", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 42, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/4G", model: "WW-20C-SP20", protocols: ["4g"], power: "external" },
+      { id: 43, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-20L-SP21", protocols: ["lora"], power: "battery" },
+      { id: 44, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-20HW-SP21", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 45, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-20LW-SP21", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 46, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-20C-SP21", protocols: ["4g"], power: "external" },
+      
+      { id: 47, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/LoRa", model: "WW-20L-SP22", protocols: ["lora"], power: "battery" },
+      { id: 48, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/高频LoRaWAN", model: "WW-20HW-SP22", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 49, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/低频LoRaWAN", model: "WW-20LW-SP22", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 50, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/4G", model: "WW-20C-SP22", protocols: ["4g"], power: "external" },
+      
+      { id: 51, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/LoRa", model: "WW-21L", protocols: ["lora"], power: "battery" },
+      { id: 52, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/高频LoRaWAN", model: "WW-21HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 53, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/低频LoRaWAN", model: "WW-21LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 54, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/4G", model: "WW-21C", protocols: ["4g"], power: "external" },
+      
+      { id: 55, category: "io", subCategory: "开关量IO", name: "无线烟感LoRa", model: "WW-22L", protocols: ["lora"], power: "battery" },
+      { id: 56, category: "io", subCategory: "开关量IO", name: "无线烟感高频LoRaWAN", model: "WW-22HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 57, category: "io", subCategory: "开关量IO", name: "无线烟感低频LoRaWAN", model: "WW-22LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 58, category: "io", subCategory: "开关量IO", name: "无线烟感4G", model: "WW-22C", protocols: ["4g"], power: "external" },
+      
+      { id: 59, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/LoRa", model: "WW-26L-SP20", protocols: ["lora"], power: "battery" },
+      { id: 60, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/高频LoRaWAN", model: "WW-26HW-SP20", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 61, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/低频LoRaWAN", model: "WW-26LW-SP20", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 62, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/4G", model: "WW-26C-SP20", protocols: ["4g"], power: "external" },
+      { id: 63, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-26L-SP21", protocols: ["lora"], power: "battery" },
+      { id: 64, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-26HW-SP21", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 65, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-26LW-SP21", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 66, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-26C-SP21", protocols: ["4g"], power: "external" },
+      { id: 67, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端/LoRa", model: "WW-26L-SP22", protocols: ["lora"], power: "battery" },
+      { id: 68, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端/高频LoRaWAN", model: "WW-26HW-SP22", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 69, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端/低频LoRaWAN", model: "WW-26LW-SP22", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 70, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端/4G", model: "WW-26C-SP22", protocols: ["4g"], power: "external" },
+      
+      // ==================== 气体检测 ====================
+      { id: 71, category: "gas", subCategory: "气体类检测", name: "无线环境元素采集终端/CO2", model: "WW-30[L/HW/LW/C]-CO2", protocols: ["lora", "lorawan-hf", "lorawan-lf", "4g"], power: "external" },
+      { id: 72, category: "gas", subCategory: "气体类检测", name: "无线环境元素采集终端/O2", model: "WW-30[L/HW/LW/C]-O2", protocols: ["lora", "lorawan-hf", "lorawan-lf", "4g"], power: "external" },
+      
+      // ==================== 电力能源 ====================
+      { id: 73, category: "power", subCategory: "电力能源检测", name: "无线电流采集终端", model: "WW-60[L/HW/C]-电流", protocols: ["lora", "lorawan-hf", "4g"], power: "battery" },
+      { id: 74, category: "power", subCategory: "电力能源检测", name: "无线电压采集终端", model: "WW-60[L/HW/C]-电压", protocols: ["lora", "lorawan-hf", "4g"], power: "battery" },
+      { id: 75, category: "power", subCategory: "电力能源检测", name: "无线电表计量终端", model: "WW-60[L/HW/C]-电表", protocols: ["lora", "lorawan-hf", "4g"], power: "battery" },
+      { id: 76, category: "power", subCategory: "电力能源检测", name: "无线水表计量终端", model: "WW-60[L/HW/C]-水表", protocols: ["lora", "lorawan-hf", "4g"], power: "battery" },
+      { id: 77, category: "power", subCategory: "电力能源检测", name: "无线UPS电压/电阻监测", model: "WW-60[L/HW/C]-UPS", protocols: ["lora", "lorawan-hf", "4g"], power: "battery" },
+      
+      // ==================== 位置/运动传感器 ====================
+      { id: 78, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/LoRa", model: "WW-50L", protocols: ["lora"], power: "battery" },
+      { id: 79, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/高频LoRaWAN", model: "WW-50HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 80, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/低频LoRa", model: "WW-50LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 81, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/4G", model: "WW-50C", protocols: ["4g"], power: "external" },
+      { id: 82, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/LoRa", model: "WW-50L-P2", protocols: ["lora"], power: "battery" },
+      { id: 83, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/高频LoRaWAN", model: "WW-50HW-P2", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 84, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/低频LoRa", model: "WW-50LW-P2", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 85, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/4G", model: "WW-50C-P2", protocols: ["4g"], power: "external" },
+      { id: 86, category: "sensor", subCategory: "运动位置传感器", name: "震动传感器", model: "WW-51L", protocols: ["lora", "4g"], power: "battery", note: "新品" },
+      
+      // ==================== 压力/液位 ====================
+      { id: 87, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/LoRa", model: "WW-70L", protocols: ["lora"], power: "battery" },
+      { id: 88, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/低频LoRaWAN", model: "WW-70LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 89, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/高频LoRaWAN", model: "WW-70HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 90, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/4G", model: "WW-70C", protocols: ["4g"], power: "external" },
+      
+      { id: 91, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/LoRa", model: "WW-71L-P1", protocols: ["lora"], power: "battery" },
+      { id: 92, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/低频LoRaWAN", model: "WW-71LW-P1", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 93, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/高频LoRaWAN", model: "WW-71HW-P1", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 94, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/4G", model: "WW-71C-P1", protocols: ["4g"], power: "external" },
+      
+      { id: 95, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/LoRa", model: "WW-72L", protocols: ["lora"], power: "battery" },
+      { id: 96, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/低频LoRaWAN", model: "WW-72LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 97, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/高频LoRaWAN", model: "WW-72HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 98, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/蓝牙", model: "WW-72B", protocols: ["bluetooth"], power: "battery" },
+      
+      { id: 99, category: "pressure", subCategory: "液位", name: "无线液位传感器/LoRa", model: "WW-73L", protocols: ["lora"], power: "battery" },
+      { id: 100, category: "pressure", subCategory: "液位", name: "无线液位传感器/低频LoRaWAN", model: "WW-73LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 101, category: "pressure", subCategory: "液位", name: "无线液位传感器/高频LoRaWAN", model: "WW-73HW", protocols: ["lorawan-hf"], power: "battery" },
+      { id: 102, category: "pressure", subCategory: "液位", name: "无线液位传感器/4G", model: "WW-73C", protocols: ["4g"], power: "external" },
+      
+      { id: 103, category: "pressure", subCategory: "拉力", name: "无线拉力传感器/LoRa", model: "WW-74L", protocols: ["lora"], power: "battery" },
+      
+      // ==================== 控制/报警 ====================
+      { id: 104, category: "control", subCategory: "控制类", name: "继电器输出控制（直流交流）", model: "WW-C10L/C", protocols: ["lora", "4g"], power: "external" },
+      { id: 105, category: "control", subCategory: "控制类", name: "门磁继电器输出控制", model: "WW-C11C", protocols: ["4g"], power: "external" },
+      { id: 106, category: "control", subCategory: "控制类", name: "IO输出控制", model: "WW-C12L/C", protocols: ["lora", "4g"], power: "external" },
+      { id: 107, category: "control", subCategory: "控制类", name: "智能家居控制开关", model: "WW-C13L/C", protocols: ["lora", "4g"], power: "external" },
+      { id: 108, category: "control", subCategory: "控制类", name: "智能家居插座", model: "WW-C15L/C", protocols: ["lora", "4g"], power: "external" },
+      { id: 109, category: "control", subCategory: "控制类", name: "智能家居空调控制", model: "WW-C16L/C", protocols: ["lora", "4g"], power: "external" },
+      { id: 110, category: "control", subCategory: "控制类", name: "智能家居LED控制", model: "WW-C17L/C", protocols: ["lora", "4g"], power: "external" },
+      
+      { id: 111, category: "control", subCategory: "报警类", name: "无线声光报警器/LoRa", model: "WW-C18L", protocols: ["lora"], power: "external" },
+      { id: 112, category: "control", subCategory: "报警类", name: "无线声光报警器/低频LoRaWAN", model: "WW-C18LW", protocols: ["lorawan-lf"], power: "external" },
+      { id: 113, category: "control", subCategory: "报警类", name: "无线声光报警器/高频LoRaWAN", model: "WW-C18HW", protocols: ["lorawan-hf"], power: "external" },
+      { id: 114, category: "control", subCategory: "报警类", name: "无线声光报警器/4G", model: "WW-C18C", protocols: ["4g"], power: "external" },
+      
+      // ==================== 数据采集器 ====================
+      { id: 115, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D1L", protocols: ["lora"], power: "external" },
+      { id: 116, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(4~20mA)/LoRa", model: "WW-D1L-AI", protocols: ["lora"], power: "external" },
+      { id: 117, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(开关量)/LoRa", model: "WW-D1L-IO", protocols: ["lora"], power: "external" },
+      { id: 118, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/4G", model: "WW-D1C", protocols: ["4g"], power: "external" },
+      { id: 119, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/低频LoRaWAN", model: "WW-D1LW", protocols: ["lorawan-lf"], power: "external" },
+      { id: 120, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D1HW", protocols: ["lorawan-hf"], power: "external" },
+      
+      { id: 121, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D2L", protocols: ["lora"], power: "solar" },
+      { id: 122, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/4G", model: "WW-D2C", protocols: ["4g"], power: "solar" },
+      { id: 123, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/低频LoRaWAN", model: "WW-D2LW", protocols: ["lorawan-lf"], power: "solar" },
+      { id: 124, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D2HW", protocols: ["lorawan-hf"], power: "solar" },
+      
+      { id: 125, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D3L", protocols: ["lora"], power: "battery" },
+      { id: 126, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/4G", model: "WW-D3C", protocols: ["4g"], power: "battery" },
+      { id: 127, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/低频LoRaWAN", model: "WW-D3LW", protocols: ["lorawan-lf"], power: "battery" },
+      { id: 128, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D3HW", protocols: ["lorawan-hf"], power: "battery" },
+      
+      // ==================== 网关设备 ====================
+      { id: 129, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G1-610", protocols: ["wired"], power: "external" },
+      { id: 130, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G1", protocols: ["wired"], power: "external" },
+      { id: 131, category: "gateway", subCategory: "网关", name: "室内网关【RK3568】", model: "WW-G2", protocols: ["wired"], power: "external" },
+      { id: 132, category: "gateway", subCategory: "网关", name: "室内网关【ESP32】", model: "WW-G3", protocols: ["wired"], power: "external" },
+      { id: 133, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G6-B", protocols: ["wired"], power: "external" },
+      
+      { id: 134, category: "gateway", subCategory: "单通道网关", name: "小网关LoRa转RS485", model: "WW-G0-RS", protocols: ["lora", "rs485"], power: "external" },
+      { id: 135, category: "gateway", subCategory: "单通道网关", name: "小网关LoRa转RJ45", model: "WW-G0-RJ", protocols: ["lora", "ethernet"], power: "external" },
+      { id: 136, category: "gateway", subCategory: "单通道网关", name: "小网关LoRa转4G", model: "WW-G0-C", protocols: ["lora", "4g"], power: "external" },
+      
+      // ==================== PCBA/配件 ====================
+      { id: 137, category: "pcba", subCategory: "PCBA", name: "倾角主板", model: "WW-D2L-50-PCB", protocols: [], power: "external" },
+      { id: 138, category: "pcba", subCategory: "PCBA", name: "网关主板", model: "WW-G1-PCB", protocols: [], power: "external" },
+      { id: 139, category: "pcba", subCategory: "PCBA", name: "人体红外主板", model: "WW-21LF-PCB", protocols: [], power: "external" },
+      { id: 140, category: "pcba", subCategory: "PCBA", name: "LoRa温湿度/水浸/门磁主板", model: "WW-10LF-PCB", protocols: [], power: "external" },
+      { id: 141, category: "pcba", subCategory: "PCBA", name: "4G温湿度/水浸/门磁主板", model: "WW-10C1-PCB", protocols: [], power: "external" },
+      { id: 142, category: "pcba", subCategory: "PCBA", name: "LoRa采集器主板", model: "WW-D1LF-PCB", protocols: [], power: "external" },
+      { id: 143, category: "pcba", subCategory: "PCBA", name: "4G采集器主板", model: "WW-D1C1-PCB", protocols: [], power: "external" },
+      { id: 144, category: "pcba", subCategory: "PCBA", name: "低频LoRa透传模组", model: "WW-M1-L", protocols: ["lora"], power: "external" },
+      { id: 145, category: "pcba", subCategory: "PCBA", name: "高频LoRa透传模组", model: "WW-M1-H", protocols: ["lora"], power: "external" },
+      { id: 146, category: "pcba", subCategory: "PCBA", name: "LoRa转4G模组", model: "WW-M1-C", protocols: ["lora", "4g"], power: "external" },
+      
+      { id: 147, category: "pcba", subCategory: "电池", name: "电池ER14505M", model: "ER34615-102", protocols: [], power: "battery" },
+      { id: 148, category: "pcba", subCategory: "电池", name: "电池ER34615", model: "ER34615-D2", protocols: [], power: "battery" },
+      { id: 149, category: "pcba", subCategory: "电池", name: "电池ER14505*2M电池组", model: "ER14505-10C", protocols: [], power: "battery" },
+      { id: 150, category: "pcba", subCategory: "电池", name: "电池ER14505*2电池组", model: "ER14505-21C", protocols: [], power: "battery" },
+      
+      { id: 151, category: "pcba", subCategory: "外置探头", name: "水浸探头", model: "-", protocols: [], power: "external" },
+      { id: 152, category: "pcba", subCategory: "外置探头", name: "水绳探头", model: "-", protocols: [], power: "external" },
+      { id: 153, category: "pcba", subCategory: "耳机探头", name: "耳机款温湿度探头", model: "SP1", protocols: [], power: "external" },
+      { id: 154, category: "pcba", subCategory: "耳机探头", name: "耳机款门磁探头", model: "SP22", protocols: [], power: "external" },
+      { id: 155, category: "pcba", subCategory: "耳机探头", name: "耳机款水浸探头", model: "SP20", protocols: [], power: "external" },
+      { id: 156, category: "pcba", subCategory: "耳机探头", name: "耳机款水绳探头", model: "SP21", protocols: [], power: "external" },
+    ];
+
+    // Category config
+    const categories = {
+      all: { name: "全部产品", icon: "📦" },
+      temp: { name: "温湿度传感器", icon: "🌡️" },
+      io: { name: "开关量/IO", icon: "🔌" },
+      gateway: { name: "网关设备", icon: "🌐" },
+      power: { name: "电力能源", icon: "⚡" },
+      pressure: { name: "压力/液位", icon: "📊" },
+      control: { name: "控制/报警", icon: "🎛️" },
+      collector: { name: "数据采集器", icon: "📡" },
+      sensor: { name: "位置/运动", icon: "🧭" },
+      gas: { name: "气体检测", icon: "💨" },
+      pcba: { name: "PCBA/配件", icon: "🔧" }
+    };
+
+    // 产品图片URL映射表
+    // key: 产品型号 (不含WW-前缀)
+    // value: 图片文件名 (放在 images/ 目录下)
+    // [] 内的内容表示可选项，例如 WW-10[L:LW:HW:C]-SP1.png 对应 WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
+    const productImages = {
+      // ========== WW-10 系列 - 温湿度传感器 ==========
+      // 图片: WW-10[L:LW:HW:C]-SP1.png → WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
+      '10L-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      '10LW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      '10HW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      '10C-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      // 图片: WW-10L:H:LW:HW:C.png → WW-10L, WW-10H, WW-10LW, WW-10HW, WW-10C
+      '10L': 'WW-10L:H:LW:HW:C.png',
+      '10H': 'WW-10L:H:LW:HW:C.png',
+      '10LW': 'WW-10L:H:LW:HW:C.png',
+      '10HW': 'WW-10L:H:LW:HW:C.png',
+      '10C': 'WW-10L:H:LW:HW:C.png',
+
+      // ========== WW-11/12/13 系列 - 室内/测温 ==========
+      // 使用 WW-10 系列的通用图片
+      '11L': 'WW-11.png',
+      '11H': 'WW-11.png',
+      '11LW': 'WW-11.png',
+      '11HW': 'WW-11.png',
+      '11C': 'WW-11.png',
+
+      // '11L-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      // '11LW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      // '11HW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      // '11C-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+
+      '12L': 'WW-12.png',
+      '12LW': 'WW-12.png',
+      '12HW': 'WW-12.png',
+      '12C': 'WW-12.png',
+      '12L-SP1': 'WW-12-SP1.jpg',
+      '12LW-SP1': 'WW-12-SP1.jpg',
+      '12HW-SP1': 'WW-12-SP1.jpg',
+      '12C-SP1': 'WW-12-SP1.jpg',
+      '13L': 'WW-13.png',
+      '13H': 'WW-13.png',
+      '13LW': 'WW-13.png',
+      '13HW': 'WW-13.png',
+      '13C': 'WW-13.png',
+
+      // ========== WW-15 系列 - K型温度传感器 ==========
+      // 图片: WW-15[L:C]-K.jpg → WW-15L-K, WW-15C-K
+      '15L-K': 'WW-15.png',
+      '15C-K': 'WW-15.png',
+      // '15L-T': 'WW-15.png',
+      // '15C-T': 'WW-15.png',
+      // '15L-HW': 'WW-15.png',
+      // '15C-HW': 'WW-15.png',
+      // '15L-RM': 'WW-15.png',
+      // '15C-RM': 'WW-15.png',
+
+      '16L': 'WW-16.png',
+      '16-RS': 'WW-16.png',
+     
+      // ========== WW-20 系列 - 开关量采集终端 ==========
+      // 
+      '20L-SP20': 'WW-20-SP20.png',
+      '20LW-SP20': 'WW-20-SP20.png',
+      '20HW-SP20': 'WW-20-SP20.png',
+      '20C-SP20': 'WW-20-SP20.png',
+
+      // 图片: WW-20[L:LW:HW:C]-SP21.jpg → 水浸(绕线)
+      '20L-SP21': 'WW-20-SP21.png',
+      '20LW-SP21': 'WW-20-SP21.png',
+      '20HW-SP21': 'WW-20-SP21.png',
+      '20C-SP21': 'WW-20-SP21.png',
+      // 图片: WW-20[L:LW:HW:C]-SP22.png → 门磁
+      '20L-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
+      '20LW-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
+      '20HW-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
+      '20C-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
+      // 基础开关量型号 (无探头)
+      '20L': 'WW-20[L:LW:HW:C]-SP21.jpg',
+      '20LW': 'WW-20[L:LW:HW:C]-SP21.jpg',
+      '20HW': 'WW-20[L:LW:HW:C]-SP21.jpg',
+      '20C': 'WW-20[L:LW:HW:C]-SP21.jpg',
+
+      // ========== WW-21 系列 - 人体感应 ==========
+      '21L': 'WW-21.png',
+      '21H': 'WW-21.png',
+      '21LW': 'WW-21.png',
+      '21HW': 'WW-21.png',
+      '21C': 'WW-21.png',
+
+      // ========== WW-22 系列 - 烟感 ==========
+      // 图片: WW-22L:LW:HW:C.png → WW-22L, WW-22LW, WW-22HW, WW-22C
+      '22L': 'WW-22L:LW:HW:C.png',
+      '22H': 'WW-22L:LW:HW:C.png',
+      '22LW': 'WW-22L:LW:HW:C.png',
+      '22HW': 'WW-22L:LW:HW:C.png',
+      '22C': 'WW-22L:LW:HW:C.png',
+
+      // ========== WW-26 系列 - 水浸采集 ==========
+      '26L-SP20': 'WW-26-SP20.png',
+      '26LW-SP20': 'WW-26-SP20.png',
+      '26HW-SP20': 'WW-26-SP20.png',
+      '26C-SP20': 'WW-26-SP20.png',
+      '26L-SP21': 'WW-26-SP21.png',
+      '26LW-SP21': 'WW-26-SP21.png',
+      '26HW-SP21': 'WW-26-SP21.png',
+      '26C-SP21': 'WW-26-SP21.png',
+      '26L-SP22': 'WW-26-SP22.png',
+      '26LW-SP22': 'WW-26-SP22.png',
+      '26HW-SP22': 'WW-26-SP22.png',
+      '26C-SP22': 'WW-26-SP22.png',
+
+      // ========== WW-50 系列 - 倾角传感器 ==========
+      // 图片: WW-50L:H:LW:HW:C.jpg → WW-50L, WW-50H, WW-50LW, WW-50HW, WW-50C
+      '50L': 'WW-50.png',
+      '50LW': 'WW-50.png',
+      '50HW': 'WW-50.png',
+      '50C': 'WW-50.png',
+      '50L-P2': 'WW-50.png',
+      '50LW-P2': 'WW-50.png',
+      '50HW-P2': 'WW-50.png',
+      '50C-P2': 'WW-50.png',
+
+      // ========== WW-51 系列 - 震动传感器 ==========
+      '51L': 'WW-51.png',
+      '51C': 'WW-51.png',
+
+      // ========== WW-D2 系列 - 太阳能数据采集器 ==========
+      // 图片: WW-D2L:H:LW:HW:C.jpg → WW-D2L, WW-D2H, WW-D2LW, WW-D2HW, WW-D2C
+      'D2L': 'WW-D2L:H:LW:HW:C.png',
+      'D2H': 'WW-D2L:H:LW:HW:C.png',
+      'D2LW': 'WW-D2L:H:LW:HW:C.png',
+      'D2HW': 'WW-D2L:H:LW:HW:C.png',
+      'D2C': 'WW-D2L:H:LW:HW:C.png',
+
+      // ========== WW-D1/D3 系列 - 数据采集器 ==========
+      'D1L': 'WW-D2L:H:LW:HW:C.jpg',
+      'D1H': 'WW-D2L:H:LW:HW:C.jpg',
+      'D1LW': 'WW-D2L:H:LW:HW:C.jpg',
+      'D1HW': 'WW-D2L:H:LW:HW:C.jpg',
+      'D1C': 'WW-D2L:H:LW:HW:C.jpg',
+      'D3L': 'WW-D2L:H:LW:HW:C.jpg',
+      'D3H': 'WW-D2L:H:LW:HW:C.jpg',
+      'D3LW': 'WW-D2L:H:LW:HW:C.jpg',
+      'D3HW': 'WW-D2L:H:LW:HW:C.jpg',
+      'D3C': 'WW-D2L:H:LW:HW:C.jpg',
+
+      // ========== WW-G1 系列 - 网关 ==========
+      // 图片: WW-G1.jpg → WW-G1, WW-G1-610
+      'G1': 'WW-G1.jpg',
+      'G1-610': 'WW-G1.jpg',
+    };
+
+// 获取产品图片URL
+    function getProductImageUrl(model) {
+      // 移除 WW- 前缀
+      const key = model.replace(/^WW-/, '');
+      return productImages[key] || null;
+    }
+
+    // 获取产品卡片图片HTML
+    function getProductCardImageHTML(model) {
+      const imageUrl = getProductImageUrl(model);
+      if (imageUrl) {
+        return `<img src="images/${imageUrl}" alt="${model}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="product-card__placeholder" style="display:none;">📦</span>`;
+      }
+      return '<span class="product-card__placeholder">📦</span>';
+    }
+
+    // 更新Modal中的产品图片
+    function updateProductImage(model) {
+      const imageContainer = document.getElementById('modal-image-container');
+      const thumbsContainer = document.getElementById('modal-thumbs');
+      const imageUrl = getProductImageUrl(model);
+
+      if (imageUrl) {
+        // 显示图片
+        imageContainer.innerHTML = `<img src="images/${imageUrl}" alt="${model}" style="width:100%;height:100%;object-fit:contain;">`;
+        // 添加缩略图
+        thumbsContainer.innerHTML = `
+          <div class="product-detail__thumb active" onclick="changeMainImage('${imageUrl}', this)">
+            <img src="images/${imageUrl}" alt="主图" style="width:100%;height:100%;object-fit:contain;">
+          </div>
+        `;
+      } else {
+        // 显示占位图标
+        imageContainer.innerHTML = '<span style="font-size:5rem;">📦</span>';
+        thumbsContainer.innerHTML = `
+          <div class="product-detail__thumb active">📦</div>
+          <div class="product-detail__thumb">📊</div>
+          <div class="product-detail__thumb">📐</div>
+        `;
+      }
+    }
+
+    // 切换主图
+    function changeMainImage(imageUrl, thumbElement) {
+      const imageContainer = document.getElementById('modal-image-container');
+      imageContainer.innerHTML = `<img src="images/${imageUrl}" alt="产品图片" style="width:100%;height:100%;object-fit:contain;">`;
+
+      // 更新缩略图激活状态
+      document.querySelectorAll('.product-detail__thumb').forEach(t => t.classList.remove('active'));
+      thumbElement.classList.add('active');
+    }
+
+    // 协议标签
+    const protocolLabels = {
+      'lora': 'LoRa',
+      'lorawan-hf': 'LoRaWAN高频',
+      'lorawan-lf': 'LoRaWAN低频',
+      '4g': '4G',
+      'bluetooth': '蓝牙',
+      'rs485': 'RS485',
+      'ethernet': '以太网',
+      'wired': '有线'
+    };
+
+    const powerLabels = {
+      'battery': '电池供电',
+      'solar': '太阳能供电',
+      'external': '外接供电'
+    };
+
+    // Filter state
+    let currentCategory = 'all';
+    let currentProtocol = '';
+    let currentPower = '';
+    let searchQuery = '';
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderProducts();
+      setupFilters();
+      setupSearch();
+      setupHeader();
+    });
+
+    // Header scroll effect
+    function setupHeader() {
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      document.querySelector('.header__theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Setup filters
+    function setupFilters() {
+      // Category nav
+      document.querySelectorAll('.category-nav__item').forEach(item => {
+        item.addEventListener('click', () => {
+          document.querySelectorAll('.category-nav__item').forEach(i => i.classList.remove('active'));
+          item.classList.add('active');
+          currentCategory = item.dataset.category;
+          renderProducts();
+        });
+      });
+
+      // Dropdown filters
+      document.getElementById('filter-protocol').addEventListener('change', (e) => {
+        currentProtocol = e.target.value;
+        renderProducts();
+      });
+
+      document.getElementById('filter-power').addEventListener('change', (e) => {
+        currentPower = e.target.value;
+        renderProducts();
+      });
+    }
+
+    // Setup search
+    function setupSearch() {
+      document.getElementById('search-input').addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        renderProducts();
+      });
+    }
+
+    // Filter products
+    function filterProducts() {
+      return products.filter(product => {
+        if (currentCategory !== 'all' && product.category !== currentCategory) return false;
+        if (currentProtocol && !product.protocols.includes(currentProtocol)) return false;
+        if (currentPower && product.power !== currentPower) return false;
+        if (searchQuery) {
+          const searchText = `${product.name} ${product.model} ${product.subCategory}`.toLowerCase();
+          if (!searchText.includes(searchQuery)) return false;
+        }
+        return true;
+      });
+    }
+
+    // Render products
+    function renderProducts() {
+      const container = document.getElementById('products-container');
+      const filteredProducts = filterProducts();
+      
+      // Update count
+      document.getElementById('total-products').textContent = products.length;
+
+      if (filteredProducts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state__icon">🔍</div>
+            <h3 class="empty-state__title">未找到匹配的产品</h3>
+            <p>请尝试调整筛选条件或搜索关键词</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Group by subCategory
+      const grouped = {};
+      filteredProducts.forEach(product => {
+        const key = product.subCategory || '未分类';
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(product);
+      });
+
+      let html = '';
+      Object.keys(grouped).forEach(subCategory => {
+        const categoryProducts = grouped[subCategory];
+        const firstProduct = categoryProducts[0];
+        const uniqueProtocols = [...new Set(categoryProducts.flatMap(p => p.protocols))];
+
+        html += `
+          <div class="category-group">
+            <div class="category-group__header">
+              <div class="category-group__icon">${categories[firstProduct.category]?.icon || '📦'}</div>
+              <div class="category-group__info">
+                <h2 class="category-group__title">${subCategory}</h2>
+                <div class="category-group__protocols">
+                  ${uniqueProtocols.slice(0, 4).map(p => `<span class="product-tag">${protocolLabels[p] || p}</span>`).join('')}
+                </div>
+              </div>
+              <span class="category-group__count">${categoryProducts.length} 个型号</span>
+            </div>
+            <div class="product-grid">
+              ${categoryProducts.map(product => `
+                <div class="product-card" onclick="openModal(${product.id})" style="animation-delay: ${categoryProducts.indexOf(product) * 0.05}s">
+                  <div class="product-card__image">
+                    ${getProductCardImageHTML(product.model)}
+                    ${product.note ? `<span class="product-card__badge">${product.note}</span>` : ''}
+                  </div>
+                  <div class="product-card__body">
+                    <div class="product-card__category">${product.subCategory}</div>
+                    <h3 class="product-card__name">${product.name}</h3>
+                    <span class="product-card__model">${product.model}</span>
+                    <div class="product-card__tags">
+                      ${product.protocols.slice(0, 2).map(p => `<span class="product-tag">${protocolLabels[p] || p}</span>`).join('')}
+                      <span class="product-tag">${powerLabels[product.power] || product.power}</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // 产品描述模板
+    const productDescriptions = {
+      temp: '工业级无线温湿度采集终端，采用低功耗设计，支持LoRa/LoRaWAN/4G多种通讯方式。适用于车间、仓库、机房等工业环境的温湿度监测。',
+      io: '无线开关量采集终端，支持多种探头类型（门磁、水浸、烟感、人体红外）。低功耗设计，电池可用2-3年，适合各种安防和监测场景。',
+      gateway: '高性能物联网网关，支持LoRa/LoRaWAN转以太网/4G/WiFi。适用于中小型物联网系统，支持本地数据处理和云端对接。',
+      power: '无线电力参数采集终端，支持电流、电压、功率、能耗等参数采集。开口式互感器设计，安装方便无需断线。',
+      pressure: '工业级压力/液位传感器，采用高精度MEMS芯片，支持消防管网、工业管道、水箱液位等多种应用场景。',
+      control: '无线控制终端，支持远程开关控制和报警输出。可与传感器联动，实现智能化控制和报警提醒功能。',
+      collector: '多功能无线数据采集器，支持RS485、4~20mA、开关量等多种接口。适用于工业现场数据采集和远程传输。',
+      sensor: '高精度运动位置传感器，采用MEMS技术，支持倾角、震动等参数监测。适用于结构安全监测和设备状态监控。',
+      gas: '无线气体检测终端，支持CO2、O2等气体浓度监测。采用高品质传感器，精度高稳定性好。',
+      pcba: '高品质PCB板和配件产品，包括主板、模组、电池、探头等。性能稳定，品质可靠。'
+    };
+
+    // 获取同系列其他产品（用于选型表格）
+    function getSeriesProducts(product) {
+      const baseModel = product.model.split('-')[0].split('L')[0].split('HW')[0].split('LW')[0].split('C')[0];
+      return products.filter(p => 
+        p.id !== product.id && 
+        p.category === product.category &&
+        p.subCategory === product.subCategory
+      ).slice(0, 5);
+    }
+
+    // Modal functions
+    // 更新产品命名规范高亮
+    function updateNamingHighlight(model) {
+      // 解析产品型号：WW-10L-SP1
+      // 格式：WW-数字通讯方式-探头
+      // 通讯方式：L(LoRa), LW(LoRaWAN), HW(高频LoRaWAN), C(4G)
+      const parts = model.split('-');
+      const brand = parts[0] || 'WW'; // WW品牌前缀
+      
+      // 第二部分是 10L、10LW、10HW、10C 等，需要拆分
+      let seriesNum = '';
+      let comm = '';
+      const part2 = parts[1] || '10L';
+      
+      // 用正则匹配：数字 + 通讯方式后缀
+      const match = part2.match(/^(\d+)(L|LW|HW|C)$/);
+      if (match) {
+        seriesNum = match[1]; // 10
+        comm = match[2]; // L / LW / HW / C
+      } else {
+        // 默认情况
+        seriesNum = part2.replace(/L|LW|HW|C$/, '').replace(/\D+$/, '') || '10';
+        comm = part2.replace(/^\d+/, '') || 'L';
+      }
+      
+      const probe = parts[2] || ''; // SP1探头
+
+      // 获取通讯方式说明
+      const commMap = {
+        'L': 'LoRa',
+        'LW': 'LoRaWAN',
+        'HW': '高频LoRaWAN',
+        'C': '4G'
+      };
+      const commLabel = commMap[comm] || comm;
+
+      // 获取探头说明
+      const probeMap = {
+        'SP1': '温湿度探头',
+        'SP2': '外置探头',
+        'SP3': '高温探头'
+      };
+      const probeLabel = probeMap[probe] || (probe ? '外置探头' : '内置探头');
+
+      // 更新示例展示 - 数字和通讯方式分开显示
+      const namingExample = document.getElementById('naming-example');
+      if (namingExample) {
+        namingExample.innerHTML = `
+          <span class="product-naming__code">${brand}</span>
+          <span class="product-naming__separator">-</span>
+          <span class="product-naming__code highlight-model">${seriesNum}</span><span class="product-naming__code highlight-comm" title="${commLabel}">${comm}</span>
+          <span class="product-naming__separator">-</span>
+          <span class="product-naming__code">${probe}</span>
+        `;
+      }
+
+      // 更新规则说明
+      const namingRules = document.getElementById('naming-rules');
+      if (namingRules) {
+        namingRules.innerHTML = `
+          <div class="naming-rule">
+            <span class="naming-rule__prefix">${brand}</span>
+            <span class="naming-rule__desc">品牌前缀（万维物联网）</span>
+          </div>
+          <div class="naming-rule">
+            <span class="naming-rule__prefix">${seriesNum}</span>
+            <span class="naming-rule__desc">产品型号（尺寸/规格）</span>
+          </div>
+          <div class="naming-rule">
+            <span class="naming-rule__prefix">${comm}</span>
+            <span class="naming-rule__desc">${commLabel} 通讯方式</span>
+          </div>
+          ${probe ? `
+          <div class="naming-rule">
+            <span class="naming-rule__prefix">${probe}</span>
+            <span class="naming-rule__desc">${probeLabel}</span>
+          </div>
+          ` : ''}
+        `;
+      }
+    }
+
+    function openModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      // 更新基本信息
+      document.getElementById('modal-title').textContent = product.name;
+      document.getElementById('modal-subtitle').textContent = `WW-10 系列 · ${categories[product.category]?.name || product.category}`;
+      document.getElementById('modal-category').textContent = product.subCategory;
+      document.getElementById('modal-name').textContent = product.name;
+      document.getElementById('modal-model').textContent = product.model;
+      document.getElementById('modal-desc').textContent = productDescriptions[product.category] || '高性能物联网产品，广泛应用于各种监测场景。';
+
+      // 更新产品图片
+      updateProductImage(product.model);
+
+      // 更新技术参数
+      const specs = generateSpecsHTML(product);
+      document.getElementById('modal-specs').innerHTML = specs;
+
+      // 更新产品特点
+      const features = generateFeaturesHTML(product);
+      document.getElementById('modal-features').innerHTML = features;
+
+      // 更新选型表格
+      const seriesProducts = getSeriesProducts(product);
+      const modelTableHTML = generateModelTableHTML(product, seriesProducts);
+      document.getElementById('modal-model-table').innerHTML = modelTableHTML;
+
+      // 更新应用场景
+      const scenes = generateScenesHTML(product);
+      document.getElementById('modal-scenes').innerHTML = scenes;
+
+      // 更新产品命名规范高亮
+      updateNamingHighlight(product.model);
+
+      document.getElementById('product-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // 生成技术参数HTML
+    function generateSpecsHTML(product) {
+      let specs = [];
+      
+      // 根据产品类别添加不同参数
+      if (product.category === 'temp') {
+        specs = [
+          { label: '通讯方式', value: product.protocols.map(p => protocolLabels[p] || p).join(' / ') || 'LoRa' },
+          { label: '测温范围', value: '-40~85°C' },
+          { label: '测量精度', value: '±0.3°C / ±3%RH' },
+          { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
+          { label: '电池型号', value: product.model.includes('11') || product.model.includes('12') ? 'ER14505×2' : 'ER34615×2' },
+          { label: '防护等级', value: product.model.includes('11') || product.model.includes('12') ? 'IP30' : 'IP65' },
+          { label: '产品尺寸', value: product.model.includes('11') || product.model.includes('12') ? '86×55×22mm' : '112×72×38mm' },
+          { label: '显示方式', value: 'LCD实时显示' }
+        ];
+      } else if (product.category === 'io') {
+        specs = [
+          { label: '通讯方式', value: product.protocols.map(p => protocolLabels[p] || p).join(' / ') || 'LoRa' },
+          { label: '输入类型', value: product.model.includes('SP20') ? '电极式水浸' : 
+                          product.model.includes('SP21') ? '绳式水浸' :
+                          product.model.includes('SP22') ? '门磁开关' :
+                          product.model.includes('21') ? 'PIR人体红外' :
+                          product.model.includes('22') ? '光电式烟雾' : '开关量' },
+          { label: '输入通道', value: '1~2路' },
+          { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
+          { label: '电池型号', value: product.model.includes('11') || product.model.includes('12') || product.model.includes('21') || product.model.includes('22') ? 'ER14505×2' : 'ER34615×2' },
+          { label: '防护等级', value: product.model.includes('11') || product.model.includes('12') || product.model.includes('21') || product.model.includes('22') ? 'IP30' : 'IP65' },
+          { label: '产品尺寸', value: product.model.includes('11') || product.model.includes('12') || product.model.includes('21') || product.model.includes('22') ? '86×55×22mm' : '直径104mm' },
+          { label: '报警方式', value: product.model.includes('22') ? '声光报警' : '数据上报' }
+        ];
+      } else if (product.category === 'gateway') {
+        specs = [
+          { label: '上行接口', value: '以太网 / 4G / WiFi' },
+          { label: '下行接口', value: 'LoRa / LoRaWAN' },
+          { label: '网关通道', value: product.model.includes('G0') ? '单通道' : '多通道' },
+          { label: '供电方式', value: 'DC 12V' },
+          { label: '防护等级', value: 'IP30' },
+          { label: '工作温度', value: '-20~60°C' },
+          { label: '安装方式', value: '壁挂/桌面' },
+          { label: '并发容量', value: '200+节点' }
+        ];
+      } else if (product.category === 'power') {
+        specs = [
+          { label: '通讯方式', value: product.protocols.map(p => protocolLabels[p] || p).join(' / ') || 'LoRa' },
+          { label: '测量类型', value: product.model.includes('电流') ? '交流电流' : 
+                          product.model.includes('电压') ? '交流电压' :
+                          product.model.includes('电表') ? '有功功率' :
+                          product.model.includes('水表') ? '瞬时/累计流量' : '电压/内阻' },
+          { label: '测量范围', value: product.model.includes('电流') ? '0~100A' : 
+                          product.model.includes('电压') ? '0~250V' :
+                          product.model.includes('电表') ? '0~60kW' : 'DC 0~300V' },
+          { label: '测量精度', value: '±1%' },
+          { label: '供电方式', value: '锂电池供电' },
+          { label: '电池型号', value: 'ER14505×2' },
+          { label: '安装方式', value: '开口式互感器' },
+          { label: '通讯协议', value: 'Modbus RTU' }
+        ];
+      } else if (product.category === 'pressure') {
+        specs = [
+          { label: '通讯方式', value: product.protocols.map(p => protocolLabels[p] || p).join(' / ') || 'LoRa' },
+          { label: '测量类型', value: product.model.includes('70') ? '水压' : 
+                          product.model.includes('71') ? '工业压力' :
+                          product.model.includes('72') ? '工业压力' :
+                          product.model.includes('73') ? '液位' : '拉力' },
+          { label: '测量范围', value: product.model.includes('70') ? '0~1.6MPa' : 
+                          product.model.includes('71') || product.model.includes('72') ? '0~10MPa' :
+                          product.model.includes('73') ? '0~10m' : '0~1000kg' },
+          { label: '测量精度', value: product.model.includes('70') ? '±0.5%' : 
+                          product.model.includes('71') ? '±0.25%' :
+                          product.model.includes('73') ? '±0.5%' : '±0.1%' },
+          { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
+          { label: '防护等级', value: product.model.includes('73') ? 'IP68' : 'IP65' },
+          { label: '连接接口', value: product.model.includes('70') ? 'G1/2外螺纹' : 'M20×1.5' },
+          { label: '产品尺寸', value: product.model.includes('72') ? '直径28mm' : '112×72×38mm' }
+        ];
+      } else {
+        // 默认参数
+        specs = [
+          { label: '通讯方式', value: product.protocols.map(p => protocolLabels[p] || p).join(' / ') || 'LoRa' },
+          { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
+          { label: '防护等级', value: 'IP65' },
+          { label: '工作温度', value: '-20~60°C' },
+          { label: '产品尺寸', value: '86×55×22mm' },
+          { label: '电池型号', value: 'ER14505×2' },
+          { label: '显示方式', value: 'LCD实时显示' },
+          { label: '通讯频段', value: '470~510MHz' }
+        ];
+      }
+
+      return specs.map(s => `
+        <div class="spec-row">
+          <span class="spec-row__label">${s.label}</span>
+          <span class="spec-row__value">${s.value}</span>
+        </div>
+      `).join('');
+    }
+
+    // 生成产品特点HTML
+    function generateFeaturesHTML(product) {
+      let features = [];
+      
+      if (product.category === 'temp') {
+        features = [
+          '超低功耗，电池可用3-5年',
+          'IP65防护等级',
+          '内置高精度温湿度传感器',
+          '支持远程配置和OTA升级',
+          '断网数据自动补传',
+          'LCD实时显示'
+        ];
+      } else if (product.category === 'io') {
+        features = [
+          '支持多种探头类型',
+          '电池可用2-3年',
+          'IP65防护等级',
+          '支持远程配置',
+          '本地LCD显示状态',
+          '报警联动功能'
+        ];
+      } else if (product.category === 'gateway') {
+        features = [
+          '高性能处理器',
+          '支持多协议上行',
+          '本地数据存储',
+          '远程管理平台',
+          '边缘计算能力',
+          '双向通讯'
+        ];
+      } else if (product.category === 'power') {
+        features = [
+          '开口式互感器安装',
+          '无需断线安装',
+          '电池可用2-3年',
+          '支持远程配置',
+          '数据统计分析',
+          '用电报表导出'
+        ];
+      } else if (product.category === 'pressure') {
+        features = [
+          '高精度MEMS传感器',
+          '防护等级IP65/IP68',
+          '电池可用3-5年',
+          '支持远程配置',
+          'LCD显示',
+          '长期稳定性好'
+        ];
+      } else {
+        features = [
+          '低功耗长续航',
+          '防护等级IP65',
+          '支持远程配置',
+          '断网数据补传',
+          'LCD实时显示',
+          '安装简便'
+        ];
+      }
+
+      return features.map(f => `
+        <div class="feature-item">
+          <span class="feature-item__icon">✓</span>
+          <span>${f}</span>
+        </div>
+      `).join('');
+    }
+
+    // 生成选型表格HTML
+    function generateModelTableHTML(product, seriesProducts) {
+      const allProducts = [product, ...seriesProducts];
+      
+      return allProducts.slice(0, 6).map(p => `
+        <tr>
+          <td><strong>${p.model}</strong></td>
+          <td>${p.protocols.map(pr => protocolLabels[pr] || pr).join(' / ') || '-'}</td>
+          <td>${powerLabels[p.power] || p.power}</td>
+          <td>${product.category === 'temp' ? '-40~85°C' : '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // 生成应用场景HTML
+    function generateScenesHTML(product) {
+      let scenes = [];
+      
+      if (product.category === 'temp') {
+        scenes = ['🏭 工业车间', '🏬 仓储物流', '🖥️ 机房监控', '🏥 医药冷链', '🌡️ 实验室'];
+      } else if (product.category === 'io') {
+        if (product.model.includes('SP20') || product.model.includes('SP21')) {
+          scenes = ['💧 机房漏水', '🏢 地下室防水', '📦 仓储防水', '🏭 泵房监测'];
+        } else if (product.model.includes('SP22')) {
+          scenes = ['🚪 门禁监控', '🪟 窗户监测', '🗄️ 柜门监测', '🔒 防盗报警'];
+        } else if (product.model.includes('21')) {
+          scenes = ['👤 人体入侵检测', '🔐 智能安防', '💡 节能控制', '📊 人员统计'];
+        } else if (product.model.includes('22')) {
+          scenes = ['🔥 火灾预警', '📦 仓库防火', '🖥️ 机房防火', '🏠 家庭安防'];
+        } else {
+          scenes = ['🔌 状态监测', '🖥️ 设备监控', '🚪 门禁系统', '🔔 报警检测'];
+        }
+      } else if (product.category === 'gateway') {
+        scenes = ['🏢 中小企业', '🏭 工业物联网', '🏠 智能家居', '🌾 农业大棚'];
+      } else if (product.category === 'power') {
+        scenes = ['⚡ 电力监测', '📊 能耗管理', '🏭 设备状态', '🏭 产线监控'];
+      } else if (product.category === 'pressure') {
+        if (product.model.includes('70')) {
+          scenes = ['🚒 消防管网', '💧 喷淋系统', '🚰 消火栓', '🛁 水箱液位'];
+        } else if (product.model.includes('71') || product.model.includes('72')) {
+          scenes = ['⚙️ 液压系统', '💨 气动系统', '🔧 管道压力', '🛢️ 泵站监测'];
+        } else if (product.model.includes('73')) {
+          scenes = ['🛁 水箱液位', '🏊 水池监测', '💧 地下水位', '🌊 水文监测'];
+        } else {
+          scenes = ['⚖️ 张力监测', '📦 称重监测', '🔬 拉力试验', '🪢 绳索张力'];
+        }
+      } else {
+        scenes = ['🏭 工业监测', '🏢 楼宇管理', '🌾 农业应用', '🏠 智能家居'];
+      }
+
+      return scenes.map(s => `<span class="scene-tag">${s}</span>`).join('');
+    }
+
+    function closeModal() {
+      document.getElementById('product-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      // Simplified - in production would toggle mobile menu
+      alert('移动端菜单功能');
+    }
+  </script>
+</body>
+</html>

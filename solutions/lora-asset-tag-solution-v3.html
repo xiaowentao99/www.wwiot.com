@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoRa 有源 RFID 资产管理标签方案 v3 — SF10 · 5~8mm 厚度</title>
+<meta name="description" content="万维物联网LoRa有源RFID资产管理标签方案，支持5-8mm超薄设计，适用于工业资产管理、贵重物品追踪等场景。">
+<meta name="keywords" content="LoRa资产管理标签, 有源RFID标签, 资产管理方案, SF10标签, 物联网资产管理, 贵重物品追踪, 工业资产标签">
+<meta name="robots" content="index, follow">
+<style>
+  :root {
+    --primary: #1a56db;
+    --accent: #0ea5e9;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --purple: #7c3aed;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+  }
+
+  .site-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 45%, #0d9488 100%);
+    color: white;
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M0 0h40v40H0zm40 40h40v40H40z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .site-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; position: relative; }
+  .site-header p { margin-top: 10px; font-size: 1rem; opacity: 0.72; position: relative; }
+  .header-badges { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; position: relative; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 4px 14px; font-size: 0.78rem; }
+  .badge-new { background: rgba(16,185,129,0.25); border-color: rgba(16,185,129,0.5); color: #6ee7b7; }
+  .badge-warn { background: rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.5); color: #fca5a5; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+  .change-bar {
+    background: linear-gradient(90deg, #f0fdf4, #ecfdf5);
+    border: 1.5px solid #22c55e;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .change-bar h3 { font-size: 0.9rem; color: #166534; font-weight: 700; }
+  .change-bar ul { font-size: 0.85rem; color: #166534; padding-left: 16px; margin-top: 6px; line-height: 1.8; }
+
+  .section { background: white; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 32px; overflow: hidden; }
+  .section-header { padding: 22px 28px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 12px; }
+  .section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+  .section-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); }
+  .section-header p { font-size: 0.82rem; color: var(--gray-500); margin-top: 2px; }
+  .section-body { padding: 28px; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .info-card { border: 1.5px solid var(--gray-200); border-radius: 12px; padding: 14px 16px; background: var(--gray-50); }
+  .info-card .label { font-size: 0.73rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-card .value { font-size: 1.1rem; font-weight: 700; color: var(--gray-800); margin-top: 4px; }
+  .info-card .sub { font-size: 0.77rem; color: var(--gray-500); margin-top: 2px; }
+  .info-card.highlight { border-color: #22c55e; background: #f0fdf4; }
+  .info-card.highlight .value { color: #166534; }
+  .info-card.changed { border-color: #22c55e; background: #f0fdf4; }
+  .info-card.changed .value { color: #166534; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  th { background: var(--gray-100); padding: 10px 14px; text-align: left; font-weight: 600; color: var(--gray-600); border-bottom: 1px solid var(--gray-200); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-50); }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+  .tag-green { background: #d1fae5; color: #065f46; }
+  .tag-blue { background: #dbeafe; color: #1e40af; }
+  .tag-orange { background: #fef3c7; color: #92400e; }
+  .tag-red { background: #fee2e2; color: #991b1b; }
+  .tag-purple { background: #f3e8ff; color: #6b21a8; }
+  .tag-teal { background: #ccfbf1; color: #0f766e; }
+  tr.changed-row td { background: #f0fdf4; }
+  tr.changed-row td:first-child { border-left: 3px solid #22c55e; }
+
+  .callout { border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 0.875rem; display: flex; gap: 10px; align-items: flex-start; }
+  .callout-blue { background: #eff6ff; border-left: 4px solid #3b82f6; color: #1e40af; }
+  .callout-green { background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; }
+  .callout-orange { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+  .callout-red { background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; }
+  .callout-teal { background: #f0fdfa; border-left: 4px solid #14b8a6; color: #0f766e; }
+
+  .energy-bar-wrap { margin: 10px 0; }
+  .energy-label { font-size: 0.8rem; color: var(--gray-600); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .energy-bar-bg { background: var(--gray-200); border-radius: 99px; height: 10px; overflow: hidden; }
+  .energy-bar-fill { height: 100%; border-radius: 99px; }
+
+  .card-ui-wrapper { display: flex; flex-wrap: wrap; gap: 36px; align-items: flex-start; justify-content: center; }
+  .card-legend { flex: 1; min-width: 260px; }
+  .legend-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-100); }
+  .legend-item:last-child { border-bottom: none; }
+  .legend-dot { width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+  .legend-item h4 { font-size: 0.88rem; font-weight: 700; color: var(--gray-800); }
+  .legend-item p { font-size: 0.78rem; color: var(--gray-500); margin-top: 2px; }
+
+  .floor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 700px) { .floor-grid { grid-template-columns: 1fr; } }
+
+  .arch-wrapper { overflow-x: auto; }
+  .protocol-frame { font-family: monospace; font-size: 0.78rem; background: #0f172a; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; line-height: 1.9; overflow-x: auto; }
+  .protocol-frame .field-name { color: #60a5fa; }
+  .protocol-frame .field-val { color: #86efac; }
+  .protocol-frame .comment { color: #94a3b8; }
+
+  .thickness-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+  .thickness-card { border-radius: 12px; padding: 16px; border: 2px solid; }
+  .thickness-card.th5 { background: #f0fdf4; border-color: #22c55e; }
+  .thickness-card.th6 { background: #eff6ff; border-color: #3b82f6; }
+  .thickness-card.th8 { background: #fef3c7; border-color: #f59e0b; }
+  .thickness-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .thickness-card.th5 h4 { color: #166534; }
+  .thickness-card.th6 h4 { color: #1e40af; }
+  .thickness-card.th8 h4 { color: #92400e; }
+  .thickness-card p { font-size: 0.8rem; color: var(--gray-600); margin: 4px 0; }
+  .thickness-card .rec { margin-top: 8px; font-size: 0.75rem; font-weight: 600; }
+  .thickness-card.th5 .rec { color: #166534; }
+  .thickness-card.th6 .rec { color: #1e40af; }
+  .thickness-card.th8 .rec { color: #92400e; }
+  @media (max-width: 700px) { .thickness-options { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>📡 LoRa 有源 RFID 资产管理标签方案 <span style="font-size:1rem;opacity:0.6;">v3</span></h1>
+  <p>裸 LoRa 私有协议 · SF10 扩频 · 有源 RFID 5~8mm 厚度</p>
+  <div class="header-badges">
+    <span class="badge badge-new">✦ 有源 RFID 卡（5~8mm）</span>
+    <span class="badge">私有协议</span>
+    <span class="badge">SF10</span>
+    <span class="badge">CN470 MHz</span>
+    <span class="badge">≥5年续航</span>
+    <span class="badge">2026-03-26</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- 变更说明 -->
+<div class="change-bar">
+  <span style="font-size:1.3rem;">✅</span>
+  <div>
+    <h3>v3 关键优化：有源 RFID 卡厚度 5~8mm</h3>
+    <ul>
+      <li>厚度从 1.5~3.8mm 放宽至 <strong>5~8mm</strong>，采用标准有源 RFID 卡规格</li>
+      <li>电池选型彻底解放：可使用 <strong>CR2032/CR2450/CR2477</strong>，甚至双电池并联</li>
+      <li>续航目标从 3年 提升至 <strong>≥5年</strong>，可支持更长使用周期</li>
+      <li>提供 5mm/6mm/8mm 三档厚度设计，匹配不同场景需求</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 1: 核心参数
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">⚙️</div>
+    <div>
+      <h2>一、方案核心参数（v3 有源 RFID）</h2>
+      <p>私有协议 · SF10 · 5~8mm 有源 RFID 卡</p>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="info-grid">
+      <div class="info-card changed">
+        <div class="label">产品形态</div>
+        <div class="value">有源 RFID 卡</div>
+        <div class="sub">85.6×54×5~8mm</div>
+      </div>
+      <div class="info-card">
+        <div class="label">通信协议</div>
+        <div class="value">裸 LoRa 私有</div>
+        <div class="sub">自定义帧格式</div>
+      </div>
+      <div class="info-card">
+        <div class="label">扩频因子</div>
+        <div class="value">SF10</div>
+        <div class="sub">TOA ~330ms</div>
+      </div>
+      <div class="info-card">
+        <div class="label">频段</div>
+        <div class="value">CN470 MHz</div>
+        <div class="sub">国内免申请</div>
+      </div>
+      <div class="info-card">
+        <div class="label">发射功率</div>
+        <div class="value">+14 dBm</div>
+        <div class="sub">室内标准</div>
+      </div>
+      <div class="info-card">
+        <div class="label">上报频率</div>
+        <div class="value">1次 / 天</div>
+        <div class="sub">可配置</div>
+      </div>
+      <div class="info-card highlight">
+        <div class="label">续航目标</div>
+        <div class="value">≥ 5 年</div>
+        <div class="sub">5~8mm 厚度支持大容量电池</div>
+      </div>
+      <div class="info-card">
+        <div class="label">日均功耗</div>
+        <div class="value">~59 μAh</div>
+        <div class="sub">SF10 · 含20%裕量</div>
+      </div>
+    </div>
+
+    <div class="callout callout-green" style="margin-top:18px;">
+      ✅ <span><strong>有源 RFID 卡优势</strong>：厚度 5~8mm 是工业有源 RFID 的标准规格，既能容纳 CR 系列纽扣电池，又能保持卡片形态便于携带/挂绳/卡套使用。相比超薄 1.5mm 方案，彻底摆脱电池容量约束，可实现 5~10 年超长续航。</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 2: 电池评估（5~8mm 厚度）
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">🔋</div>
+    <div>
+      <h2>二、电池用量评估（5~8mm 厚度方案）</h2>
+      <p>三档厚度设计 · 5~10 年续航可选</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <h3 style="font-size:0.95rem; color:var(--gray-700); margin-bottom:16px;">2.1 三档厚度设计对比</h3>
+    <div class="thickness-options">
+      <div class="thickness-card th5">
+        <h4>📐 5mm 轻薄版</h4>
+        <p><strong>电池：</strong>CR2032 (3.2mm)</p>
+        <p><strong>容量：</strong>225 mAh</p>
+        <p><strong>5年用量：</strong>108 mAh / 225 = 48%</p>
+        <p><strong>续航：</strong>约 5~6 年</p>
+        <p class="rec">✅ 推荐：平衡轻薄与续航</p>
+      </div>
+      <div class="thickness-card th6">
+        <h4>📐 6mm 标准版</h4>
+        <p><strong>电池：</strong>CR2450 (5.0mm)</p>
+        <p><strong>容量：</strong>620 mAh</p>
+        <p><strong>5年用量：</strong>108 mAh / 620 = 17%</p>
+        <p><strong>续航：</strong>约 10~12 年</p>
+        <p class="rec">✅ 推荐：超长续航，免维护</p>
+      </div>
+      <div class="thickness-card th8">
+        <h4>📐 8mm 双电版</h4>
+        <p><strong>电池：</strong>双 CR2032 并联</p>
+        <p><strong>容量：</strong>450 mAh</p>
+        <p><strong>5年用量：</strong>108 mAh / 450 = 24%</p>
+        <p><strong>续航：</strong>约 8~10 年</p>
+        <p class="rec">备用方案：双电池冗余</p>
+      </div>
+    </div>
+
+    <h3 style="font-size:0.95rem; color:var(--gray-700); margin: 22px 0 14px;">2.2 功耗计算（SF10 · 59μAh/天）</h3>
+    <table>
+      <thead>
+        <tr><th>功耗来源</th><th>电流</th><th>持续时间/天</th><th>每日电量 (μAh)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>LoRa 发射（SF10）</strong><br><span style="font-size:0.78rem;color:var(--gray-500);">+14dBm，1次/天，330ms</span></td>
+          <td>120 mA</td>
+          <td>330 ms</td>
+          <td><strong>11 μAh</strong></td>
+        </tr>
+        <tr>
+          <td><strong>MCU 唤醒处理</strong></td>
+          <td>5 mA</td>
+          <td>250 ms</td>
+          <td>0.35 μAh</td>
+        </tr>
+        <tr>
+          <td><strong>MCU 深度睡眠</strong></td>
+          <td>1.5 μA</td>
+          <td>23.9 h</td>
+          <td>35.9 μAh</td>
+        </tr>
+        <tr>
+          <td><strong>RTC 时钟</strong></td>
+          <td>0.1 μA</td>
+          <td>24 h</td>
+          <td>2.4 μAh</td>
+        </tr>
+        <tr style="background:#f0fdf4; font-weight:600;">
+          <td colspan="3"><strong>每日总消耗（含20%裕量）</strong></td>
+          <td><strong>~59 μAh/天</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-teal" style="margin-top:14px;">
+      📊 <span><strong>5年总耗量</strong>：59 μAh × 365 × 5 = <strong>107,675 μAh ≈ 108 mAh</strong>，含自放电后需备份容量约 <strong>150~200 mAh</strong></span>
+    </div>
+
+    <h3 style="font-size:0.95rem; color:var(--gray-700); margin: 22px 0 14px;">2.3 电池型号详细对比</h3>
+    <table>
+      <thead>
+        <tr><th>型号</th><th>容量</th><th>厚度</th><th>卡片总厚</th><th>5年用量率</th><th>实际续航</th><th>推荐度</th></tr>
+      </thead>
+      <tbody>
+        <tr style="background:#f0fdf4;">
+          <td><strong>CR2032</strong></td>
+          <td>225 mAh</td>
+          <td>3.2 mm</td>
+          <td><strong>5.0 mm</strong></td>
+          <td>48%</td>
+          <td><span class="tag tag-green">5~6 年</span></td>
+          <td><span class="tag tag-green">✅ 首选轻薄版</span></td>
+        </tr>
+        <tr style="background:#eff6ff;">
+          <td><strong>CR2450</strong></td>
+          <td>620 mAh</td>
+          <td>5.0 mm</td>
+          <td><strong>6.5 mm</strong></td>
+          <td>17%</td>
+          <td><span class="tag tag-blue">10~12 年</span></td>
+          <td><span class="tag tag-blue">✅ 超长续航版</span></td>
+        </tr>
+        <tr>
+          <td><strong>CR2477</strong></td>
+          <td>1000 mAh</td>
+          <td>7.7 mm</td>
+          <td><strong>9.0 mm</strong></td>
+          <td>11%</td>
+          <td><span class="tag tag-purple">15+ 年</span></td>
+          <td><span class="tag tag-orange">过剩，不推荐</span></td>
+        </tr>
+        <tr>
+          <td><strong>双 CR2032 并联</strong></td>
+          <td>450 mAh</td>
+          <td>6.4 mm</td>
+          <td><strong>8.0 mm</strong></td>
+          <td>24%</td>
+          <td><span class="tag tag-orange">8~10 年</span></td>
+          <td><span class="tag tag-orange">冗余备份方案</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-green" style="margin-top:14px;">
+      ✅ <span><strong>最终推荐</strong>：<br>
+      • <strong>5mm 轻薄版（CR2032）</strong>：满足 5 年续航，最轻薄，成本最低，推荐大规模部署<br>
+      • <strong>6mm 标准版（CR2450）</strong>：620mAh 超大容量，10+ 年续航，适合免维护场景<br>
+      • 8mm 双电版：除非有冗余备份需求，否则不推荐</span>
+    </div>
+
+    <!-- 电量预测条形图 -->
+    <h3 style="font-size:0.95rem; color:var(--gray-700); margin: 22px 0 12px;">各方案 5 年电量使用预测（含自放电）</h3>
+    <div class="energy-bar-wrap">
+      <div class="energy-label"><span>CR2450（6mm）— 620mAh，5年用量约 180mAh</span><span>29%</span></div>
+      <div class="energy-bar-bg"><div class="energy-bar-fill" style="width:29%; background:linear-gradient(90deg,#3b82f6,#60a5fa);"></div></div>
+    </div>
+    <div class="energy-bar-wrap">
+      <div class="energy-label"><span>双 CR2032（8mm）— 450mAh，5年用量约 180mAh</span><span>40%</span></div>
+      <div class="energy-bar-bg"><div class="energy-bar-fill" style="width:40%; background:linear-gradient(90deg,#f59e0b,#fcd34d);"></div></div>
+    </div>
+    <div class="energy-bar-wrap">
+      <div class="energy-label"><span>CR2032（5mm）— 225mAh，5年用量约 180mAh</span><span>80%</span></div>
+      <div class="energy-bar-bg"><div class="energy-bar-fill" style="width:80%; background:linear-gradient(90deg,#22c55e,#86efac);"></div></div>
+    </div>
+    <p style="font-size:0.78rem; color:var(--gray-500); margin-top:6px;">CR2032 5年用量率约 80%，仍有 20% 余量，满足 ≥5 年指标</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 3: 产品外观 UI（5~8mm 有源 RFID）
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdfa;">🎨</div>
+    <div>
+      <h2>三、产品外观设计（有源 RFID 卡 5~8mm）</h2>
+      <p>标准有源 RFID 形态 · 电池仓 · 指示灯 · 天线</p>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="card-ui-wrapper">
+
+      <!-- SVG 正面（6mm 标准版示意） -->
+      <div>
+        <p style="text-align:center; font-size:0.8rem; color:var(--gray-500); margin-bottom:8px;">正面视图（6mm 标准版 / CR2450）</p>
+        <svg width="342" height="216" viewBox="0 0 342 216" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="activeRfidGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0f766e"/>
+              <stop offset="50%" style="stop-color:#0d9488"/>
+              <stop offset="100%" style="stop-color:#115e59"/>
+            </linearGradient>
+            <filter id="glow3">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- 卡片主体（6mm 厚度感） -->
+          <rect x="6" y="6" width="330" height="204" rx="14" fill="url(#activeRfidGrad)"/>
+          <!-- 厚度边框效果 -->
+          <rect x="8" y="8" width="326" height="200" rx="12" fill="none" stroke="#14b8a6" stroke-width="1.5" opacity="0.5"/>
+          <rect x="6" y="6" width="330" height="204" rx="14" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.3"/>
+
+          <!-- 顶部装饰带 -->
+          <rect x="6" y="6" width="330" height="6" rx="3" fill="#14b8a6" opacity="0.6"/>
+
+          <!-- 有源 RFID 标识 -->
+          <rect x="20" y="22" width="70" height="28" rx="6" fill="rgba(20,184,166,0.2)" stroke="#5eead4" stroke-width="1"/>
+          <text x="55" y="40" text-anchor="middle" fill="#ccfbf1" font-size="10" font-weight="bold" font-family="monospace">ACTIVE</text>
+          <text x="55" y="50" text-anchor="middle" fill="#5eead4" font-size="8" font-family="monospace">RFID</text>
+
+          <!-- 协议标识 -->
+          <rect x="98" y="24" width="85" height="24" rx="4" fill="rgba(255,255,255,0.06)"/>
+          <text x="140" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="sans-serif">LoRa · SF10 · 470M</text>
+
+          <!-- 产品型号 -->
+          <text x="320" y="38" text-anchor="end" fill="rgba(255,255,255,0.4)" font-size="8.5" font-family="sans-serif">ART-200 v3.0</text>
+
+          <!-- 主内容区 -->
+          <rect x="20" y="60" width="210" height="100" rx="8" fill="rgba(0,0,0,0.25)" stroke="rgba(20,184,166,0.3)" stroke-width="1"/>
+
+          <!-- 资产ID -->
+          <text x="32" y="82" fill="rgba(255,255,255,0.4)" font-size="9" font-family="monospace">ASSET ID</text>
+          <text x="32" y="108" fill="white" font-size="16" font-weight="700" font-family="monospace" letter-spacing="1.5">ART2026-0001</text>
+
+          <!-- 状态信息 -->
+          <text x="32" y="130" fill="rgba(255,255,255,0.5)" font-size="8" font-family="monospace">BAT: 87% | SEQ: 0042 | RSSI: -82</text>
+          <text x="32" y="145" fill="rgba(255,255,255,0.4)" font-size="8" font-family="monospace">Last: 2026-03-26 08:00</text>
+
+          <!-- 右侧状态区 -->
+          <!-- LED 状态 -->
+          <circle cx="280" cy="85" r="7" fill="#22c55e" filter="url(#glow3)" opacity="0.95"/>
+          <circle cx="280" cy="85" r="10" fill="none" stroke="#22c55e" stroke-width="1.5" opacity="0.4"/>
+          <text x="280" y="105" text-anchor="middle" fill="#6ee7b7" font-size="8">STATUS</text>
+
+          <!-- 电池图标 -->
+          <rect x="262" y="120" width="36" height="18" rx="3" fill="none" stroke="#5eead4" stroke-width="1.5"/>
+          <rect x="264" y="122" width="28" height="14" rx="1.5" fill="#14b8a6" opacity="0.6"/>
+          <rect x="298" y="125" width="3" height="8" rx="1" fill="#5eead4"/>
+          <text x="280" y="148" text-anchor="middle" fill="#5eead4" font-size="8">CR2450</text>
+
+          <!-- 二维码 -->
+          <rect x="20" y="168" width="42" height="42" rx="4" fill="rgba(255,255,255,0.08)" stroke="rgba(20,184,166,0.3)" stroke-width="1"/>
+          <rect x="24" y="172" width="12" height="12" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="42" y="172" width="12" height="12" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="24" y="190" width="12" height="12" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="27" y="175" width="6" height="6" fill="#0f766e"/>
+          <rect x="45" y="175" width="6" height="6" fill="#0f766e"/>
+          <rect x="27" y="193" width="6" height="6" fill="#0f766e"/>
+
+          <!-- 底部信息 -->
+          <text x="72" y="195" fill="rgba(255,255,255,0.25)" font-size="7.5" font-family="monospace">SN: ART2026031200001 · CR2450 · 6.5mm</text>
+          <text x="72" y="205" fill="rgba(255,255,255,0.2)" font-size="7.5" font-family="monospace">Private LoRa · SF10 · CN470 · +14dBm</text>
+
+          <!-- 厚度标注 -->
+          <line x1="336" y1="6" x2="336" y2="210" stroke="rgba(94,234,212,0.3)" stroke-width="0.8"/>
+          <text x="340" y="112" fill="rgba(94,234,212,0.5)" font-size="8" font-family="sans-serif" writing-mode="tb">6.5mm</text>
+        </svg>
+      </div>
+
+      <!-- SVG 背面（电池仓结构） -->
+      <div>
+        <p style="text-align:center; font-size:0.8rem; color:var(--gray-500); margin-bottom:8px;">背面视图（电池仓 + 内部结构）</p>
+        <svg width="342" height="216" viewBox="0 0 342 216" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="backGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#134e4a"/>
+              <stop offset="100%" style="stop-color:#0f3a36"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="330" height="204" rx="14" fill="url(#backGrad)"/>
+          <rect x="6" y="6" width="330" height="204" rx="14" fill="none" stroke="#14b8a6" stroke-width="1" opacity="0.4"/>
+
+          <!-- 电池仓（CR2450 尺寸） -->
+          <rect x="20" y="20" width="100" height="100" rx="10" fill="rgba(20,184,166,0.1)" stroke="#14b8a6" stroke-width="1.5" stroke-dasharray="5 3"/>
+          <circle cx="70" cy="70" r="35" fill="rgba(20,184,166,0.08)" stroke="#5eead4" stroke-width="1.5"/>
+          <circle cx="70" cy="70" r="25" fill="rgba(20,184,166,0.05)" stroke="#5eead4" stroke-width="1"/>
+          <text x="70" y="65" text-anchor="middle" fill="#5eead4" font-size="10" font-weight="bold">CR2450</text>
+          <text x="70" y="78" text-anchor="middle" fill="#5eead4" font-size="9">620mAh</text>
+          <text x="70" y="90" text-anchor="middle" fill="#5eead4" font-size="8">3.0V</text>
+          <!-- 正负极标识 -->
+          <text x="35" y="115" fill="#5eead4" font-size="10" font-weight="bold">+</text>
+          <text x="100" y="115" fill="#5eead4" font-size="10" font-weight="bold">−</text>
+          <text x="70" y="130" text-anchor="middle" fill="rgba(94,234,212,0.6)" font-size="8">电池仓（硬币开启）</text>
+
+          <!-- MCU + LoRa 模块 -->
+          <rect x="140" y="20" width="180" height="80" rx="8" fill="rgba(255,255,255,0.05)" stroke="#0d9488" stroke-width="1"/>
+          <text x="230" y="38" text-anchor="middle" fill="#5eead4" font-size="9" font-weight="600">主控模块</text>
+
+          <!-- MCU -->
+          <rect x="150" y="48" width="70" height="42" rx="4" fill="rgba(255,255,255,0.06)" stroke="#5eead4" stroke-width="1"/>
+          <text x="185" y="65" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="8.5" font-family="monospace">STM32L0</text>
+          <text x="185" y="76" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="monospace">超低功耗MCU</text>
+          <text x="185" y="85" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7">1.5μA睡眠</text>
+
+          <!-- LoRa RF -->
+          <rect x="230" y="48" width="80" height="42" rx="4" fill="rgba(255,255,255,0.06)" stroke="#5eead4" stroke-width="1"/>
+          <text x="270" y="65" text-anchor="middle" fill="#5eead4" font-size="8.5" font-family="monospace">SX1262</text>
+          <text x="270" y="76" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="7.5" font-family="monospace">LoRa收发</text>
+          <text x="270" y="85" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7">SF10/CN470</text>
+
+          <!-- PCB 天线区域 -->
+          <rect x="20" y="130" width="300" height="70" rx="6" fill="rgba(20,184,166,0.06)" stroke="#14b8a6" stroke-width="1" stroke-dasharray="4 3"/>
+          <text x="170" y="150" text-anchor="middle" fill="#5eead4" font-size="9" font-weight="600">PCB 印刷天线区域（净空禁止金属）</text>
+          <!-- 蛇形天线示意 -->
+          <path d="M35 175 L60 175 L60 160 L85 160 L85 185 L110 185 L110 165 L135 165 L135 180 L160 180 L160 155 L185 155 L185 175 L210 175 L210 165 L235 165 L235 180 L260 180 L260 160 L285 160 L285 175 L305 175" 
+                stroke="#14b8a6" stroke-width="1.5" fill="none" opacity="0.7"/>
+          <text x="170" y="195" text-anchor="middle" fill="rgba(94,234,212,0.5)" font-size="8">470MHz 全向天线 · 覆盖半径 60~100m</text>
+
+          <!-- LED 位置 -->
+          <circle cx="315" cy="40" r="5" fill="rgba(34,197,94,0.3)" stroke="#22c55e" stroke-width="1"/>
+          <text x="315" y="55" text-anchor="middle" fill="#6ee7b7" font-size="7">LED</text>
+
+          <!-- 尺寸标注 -->
+          <line x1="14" y1="210" x2="328" y2="210" stroke="rgba(94,234,212,0.2)" stroke-width="0.8"/>
+          <text x="171" y="215" text-anchor="middle" fill="rgba(94,234,212,0.4)" font-size="7.5">85.6 mm（ISO 7810 ID-1 标准）</text>
+        </svg>
+      </div>
+
+      <!-- 图例 -->
+      <div class="card-legend">
+        <h3 style="font-size:0.95rem; color:var(--gray-700); margin-bottom:12px;">标注说明（有源 RFID 卡）</h3>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#22c55e;"></div>
+          <div>
+            <h4>状态指示灯 LED</h4>
+            <p>正面右侧。绿色常亮=正常；红色闪=低电量（&lt;20%）；绿色快闪=发包中。每天1次可见闪烁。</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#14b8a6;"></div>
+          <div>
+            <h4>电池仓（CR2450/CR2032）</h4>
+            <p>背面左侧圆形卡扣仓，用硬币旋转开启。支持 CR2032（5mm版）或 CR2450（6mm版），可更换。</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#0d9488;"></div>
+          <div>
+            <h4>PCB 印刷天线</h4>
+            <p>背面底部大面积蛇形天线，470MHz 全向辐射。此区域禁止金属覆盖，禁止贴金属标签。</p>
+          </div>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#5eead4;"></div>
+          <div>
+            <h4>主控模块</h4>
+            <p>STM32L0 超低功耗 MCU + SX1262 LoRa 收发器，深度睡眠 1.5μA，SF10 发射 120mA@330ms。</p>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; padding:12px; background:var(--gray-50); border-radius:8px; border:1px solid var(--gray-200);">
+          <p style="font-size:0.8rem; color:var(--gray-600); font-weight:600; margin-bottom:6px;">📐 三档产品规格</p>
+          <table style="font-size:0.78rem;">
+            <tr><td style="color:var(--gray-500);padding:3px 8px 3px 0;">5mm 轻薄版</td><td style="font-weight:600;">CR2032 · 225mAh · <span style="color:#166534;">5~6年</span></td></tr>
+            <tr><td style="color:var(--gray-500);padding:3px 8px 3px 0;">6mm 标准版</td><td style="font-weight:600;">CR2450 · 620mAh · <span style="color:#1e40af;">10~12年</span></td></tr>
+            <tr><td style="color:var(--gray-500);padding:3px 8px 3px 0;">8mm 双电版</td><td style="font-weight:600;">双CR2032 · 450mAh · <span style="color:#92400e;">8~10年</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 4: 网关部署
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdfa;">📶</div>
+    <div>
+      <h2>四、楼层网关部署方案（SF10）</h2>
+      <p>有源 RFID 卡覆盖 · 单网关覆盖整层</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-teal">
+      ✦ <span><strong>SF10 有源 RFID 覆盖能力</strong>：接收灵敏度 -134 dBm，室内有效覆盖半径 <strong>60~100m</strong>，可穿透 5~7 道砖墙。标准办公楼层（1000m²）只需 <strong>1 个网关</strong> 即可全覆盖，大幅降低基础设施成本。</span>
+    </div>
+
+    <div class="floor-grid" style="margin-top: 20px;">
+      <!-- 楼层平面示意 -->
+      <div>
+        <p style="font-size:0.85rem; font-weight:600; color:var(--gray-700); margin-bottom:12px;">有源 RFID 单网关覆盖示意（1000m²）</p>
+        <svg width="100%" viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" style="border:1px solid var(--gray-200); border-radius:8px; background:#f8fafc;">
+          <defs>
+            <radialGradient id="covActive" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:0.2"/>
+              <stop offset="60%" style="stop-color:#14b8a6;stop-opacity:0.08"/>
+              <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:0"/>
+            </radialGradient>
+          </defs>
+          <!-- 楼层 -->
+          <rect x="20" y="20" width="360" height="240" rx="4" fill="white" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="20" y="20" width="120" height="100" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="80" y="75" text-anchor="middle" fill="#64748b" font-size="11">会议室A</text>
+          <rect x="20" y="120" width="120" height="80" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="80" y="165" text-anchor="middle" fill="#64748b" font-size="11">会议室B</text>
+          <rect x="20" y="200" width="120" height="60" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="80" y="233" text-anchor="middle" fill="#64748b" font-size="10">茶水间</text>
+          <rect x="140" y="20" width="30" height="240" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="155" y="145" text-anchor="middle" fill="#94a3b8" font-size="9" writing-mode="tb">走廊</text>
+          <rect x="170" y="20" width="210" height="240" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+          <text x="275" y="130" text-anchor="middle" fill="#94a3b8" font-size="11">开放办公区</text>
+
+          <!-- 单网关覆盖圆 -->
+          <circle cx="200" cy="140" r="195" fill="url(#covActive)"/>
+
+          <!-- 网关 -->
+          <rect x="147" y="128" width="28" height="28" rx="5" fill="#0d9488"/>
+          <text x="161" y="146" text-anchor="middle" fill="white" font-size="11" font-weight="bold">GW</text>
+          <text x="161" y="168" text-anchor="middle" fill="#0d9488" font-size="9" font-weight="600">单网关</text>
+          <text x="161" y="178" text-anchor="middle" fill="#0d9488" font-size="8.5">SF10</text>
+          <line x1="161" y1="128" x2="161" y2="112" stroke="#0d9488" stroke-width="2"/>
+          <line x1="156" y1="116" x2="161" y2="112" stroke="#0d9488" stroke-width="1.5"/>
+          <line x1="166" y1="116" x2="161" y2="112" stroke="#0d9488" stroke-width="1.5"/>
+
+          <!-- 有源 RFID 标签 -->
+          <circle cx="55" cy="55" r="5" fill="#f59e0b"/>
+          <circle cx="85" cy="155" r="5" fill="#f59e0b"/>
+          <circle cx="220" cy="50" r="5" fill="#f59e0b"/>
+          <circle cx="270" cy="90" r="5" fill="#f59e0b"/>
+          <circle cx="340" cy="130" r="5" fill="#f59e0b"/>
+          <circle cx="200" cy="200" r="5" fill="#f59e0b"/>
+          <circle cx="340" cy="230" r="5" fill="#f59e0b"/>
+          <circle cx="55" cy="220" r="5" fill="#f59e0b"/>
+          <circle cx="310" cy="200" r="5" fill="#f59e0b"/>
+
+          <!-- 图例 -->
+          <rect x="22" y="215" width="120" height="40" rx="4" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+          <circle cx="32" cy="227" r="5" fill="#14b8a6" opacity="0.3"/>
+          <text x="42" y="231" fill="#475569" font-size="8.5">SF10 单网关覆盖</text>
+          <circle cx="32" cy="245" r="5" fill="#f59e0b"/>
+          <text x="42" y="249" fill="#475569" font-size="8.5">有源 RFID 标签</text>
+        </svg>
+      </div>
+
+      <!-- 部署参数 -->
+      <div>
+        <p style="font-size:0.85rem; font-weight:600; color:var(--gray-700); margin-bottom:12px;">网关部署参数（有源 RFID）</p>
+        <table>
+          <thead><tr><th>参数</th><th>数值</th></tr></thead>
+          <tbody>
+            <tr><td>SF10 接收灵敏度</td><td><strong>-134 dBm</strong></td></tr>
+            <tr><td>室内有效覆盖半径</td><td><strong>60~100m</strong></td></tr>
+            <tr><td>穿墙能力</td><td><strong>5~7 道砖墙</strong></td></tr>
+            <tr><td>标准层(1000m²)网关数</td><td><strong>1 个</strong></td></tr>
+            <tr><td>大型仓库(5000m²)</td><td><strong>2~3 个</strong></td></tr>
+            <tr><td>安装位置</td><td>走廊天花板</td></tr>
+            <tr><td>安装高度</td><td>2.5~3.5m</td></tr>
+            <tr><td>网关上行</td><td>Ethernet / 4G</td></tr>
+            <tr><td>单网关并发</td><td>≥ 2000 终端</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout-green" style="margin-top:14px;">
+          💰 <span><strong>成本优势</strong>：相比 SF7 方案（每层 2~3 网关），有源 RFID + SF10 每层仅需 1 网关，20 层大楼可节省 20~40 个网关，节约基础设施成本约 ¥4~8 万。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 5: 系统架构
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">🏗️</div>
+    <div>
+      <h2>五、整体系统架构图（有源 RFID 私有协议）</h2>
+      <p>裸 LoRa 私有协议 · 网关直连业务平台</p>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="callout callout-teal" style="margin-bottom:20px;">
+      ✦ <span><strong>有源 RFID 系统架构</strong>：标签采用私有 LoRa 协议直接通信，网关解析后通过 MQTT 推送至业务平台，去掉 LoRaWAN NS/AS 中间层，简化部署，降低延迟。</span>
+    </div>
+
+    <div class="arch-wrapper">
+      <svg width="100%" viewBox="0 0 900 480" xmlns="http://www.w3.org/2000/svg" style="min-width:700px;">
+        <defs>
+          <linearGradient id="a1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f0fdfa"/><stop offset="100%" style="stop-color:#ccfbf1"/></linearGradient>
+          <linearGradient id="a2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#f0fdf4"/><stop offset="100%" style="stop-color:#dcfce7"/></linearGradient>
+          <linearGradient id="a3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#eff6ff"/><stop offset="100%" style="stop-color:#dbeafe"/></linearGradient>
+          <linearGradient id="a4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#fff7ed"/><stop offset="100%" style="stop-color:#ffedd5"/></linearGradient>
+          <marker id="ar1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#14b8a6"/></marker>
+          <marker id="ar2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/></marker>
+        </defs>
+        <rect width="900" height="480" fill="#f8fafc" rx="12"/>
+
+        <!-- 层 1: 感知层 -->
+        <rect x="10" y="20" width="880" height="110" rx="10" fill="url(#a1)" stroke="#5eead4" stroke-width="1.5"/>
+        <text x="26" y="42" fill="#0f766e" font-size="11" font-weight="700">感知层 · 有源 RFID 标签（5~8mm · 5~10年续航）</text>
+
+        <!-- 层 2: 射频接入 -->
+        <rect x="10" y="142" width="880" height="95" rx="10" fill="url(#a2)" stroke="#86efac" stroke-width="1.5"/>
+        <text x="26" y="164" fill="#166534" font-size="11" font-weight="700">射频接入层 · 裸 LoRa 私有协议（SF10 · 单网关覆盖）</text>
+
+        <!-- 层 3: 业务平台 -->
+        <rect x="10" y="249" width="880" height="105" rx="10" fill="url(#a3)" stroke="#93c5fd" stroke-width="1.5"/>
+        <text x="26" y="271" fill="#1e40af" font-size="11" font-weight="700">业务平台层 · 直连架构（无 LoRaWAN NS/AS）</text>
+
+        <!-- 层 4: 应用层 -->
+        <rect x="10" y="366" width="880" height="100" rx="10" fill="url(#a4)" stroke="#fdba74" stroke-width="1.5"/>
+        <text x="26" y="388" fill="#92400e" font-size="11" font-weight="700">应用层 · Web/App/大屏/第三方集成</text>
+
+        <!-- ═══ 感知层 ═══ -->
+        <!-- 标签 1 -->
+        <rect x="40" y="52" width="95" height="65" rx="8" fill="white" stroke="#14b8a6" stroke-width="1.5"/>
+        <text x="87" y="72" text-anchor="middle" fill="#0d9488" font-size="16">📡</text>
+        <text x="87" y="88" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">有源 RFID</text>
+        <text x="87" y="98" text-anchor="middle" fill="#64748b" font-size="7.5">CR2450 · 6mm</text>
+        <text x="87" y="108" text-anchor="middle" fill="#64748b" font-size="7.5">10年续航</text>
+
+        <!-- 标签 2 -->
+        <rect x="150" y="52" width="95" height="65" rx="8" fill="white" stroke="#14b8a6" stroke-width="1.5"/>
+        <text x="197" y="72" text-anchor="middle" fill="#0d9488" font-size="16">📡</text>
+        <text x="197" y="88" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">有源 RFID</text>
+        <text x="197" y="98" text-anchor="middle" fill="#64748b" font-size="7.5">CR2032 · 5mm</text>
+        <text x="197" y="108" text-anchor="middle" fill="#64748b" font-size="7.5">5年续航</text>
+
+        <!-- 更多标签 -->
+        <rect x="260" y="52" width="70" height="65" rx="8" fill="white" stroke="#5eead4" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="295" y="90" text-anchor="middle" fill="#94a3b8" font-size="9">... N 个</text>
+
+        <!-- 帧格式 -->
+        <rect x="350" y="48" width="220" height="75" rx="8" fill="white" stroke="#14b8a6" stroke-width="1.5"/>
+        <text x="460" y="65" text-anchor="middle" fill="#0d9488" font-size="9.5" font-weight="700">私有帧（16B 上行）</text>
+        <line x1="364" y1="70" x2="556" y2="70" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="364" y="82" fill="#475569" font-size="8" font-family="monospace">0xAA55 · VER · DEV_ID(6B)</text>
+        <text x="364" y="93" fill="#475569" font-size="8" font-family="monospace">SEQ(2B) · BAT · STATUS</text>
+        <text x="364" y="104" fill="#475569" font-size="8" font-family="monospace">CRC16 · SF10 · TOA 330ms</text>
+        <text x="364" y="115" fill="#475569" font-size="8" font-family="monospace">+14dBm · CN470</text>
+
+        <!-- 电源方案 -->
+        <rect x="590" y="48" width="280" height="75" rx="8" fill="white" stroke="#14b8a6" stroke-width="1.5"/>
+        <text x="730" y="65" text-anchor="middle" fill="#0d9488" font-size="9.5" font-weight="700">电源方案（5~8mm 有源 RFID）</text>
+        <line x1="604" y1="70" x2="856" y2="70" stroke="#e2e8f0" stroke-width="1"/>
+        <text x="604" y="82" fill="#475569" font-size="8">5mm: CR2032 225mAh · 5~6年</text>
+        <text x="604" y="93" fill="#475569" font-size="8">6mm: CR2450 620mAh · 10~12年</text>
+        <text x="604" y="104" fill="#475569" font-size="8">8mm: 双CR2032 450mAh · 8~10年</text>
+        <text x="604" y="115" fill="#475569" font-size="8">日均: 59μAh · 深睡 1.5μA</text>
+
+        <!-- 感知 → 射频 -->
+        <line x1="87" y1="165" x2="87" y2="240" stroke="#14b8a6" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#ar1)" opacity="0.6"/>
+        <line x1="197" y1="165" x2="197" y2="240" stroke="#14b8a6" stroke-width="1.2" stroke-dasharray="5 3" marker-end="url(#ar1)" opacity="0.6"/>
+        <text x="130" y="208" text-anchor="middle" fill="#14b8a6" font-size="8.5" font-style="italic">LoRa RF · SF10</text>
+
+        <!-- ═══ 射频接入层 ═══ -->
+        <!-- 网关 -->
+        <rect x="40" y="175" width="110" height="52" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="95" y="195" text-anchor="middle" fill="#166534" font-size="14">🔌</text>
+        <text x="95" y="210" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">私有协议网关</text>
+        <text x="95" y="220" text-anchor="middle" fill="#64748b" font-size="7.5">单网关覆盖整层</text>
+
+        <!-- 交换机 -->
+        <rect x="170" y="175" width="100" height="52" rx="8" fill="white" stroke="#22c55e" stroke-width="1.5"/>
+        <text x="220" y="195" text-anchor="middle" fill="#166534" font-size="14">🔗</text>
+        <text x="220" y="210" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">楼层交换机</text>
+        <text x="220" y="220" text-anchor="middle" fill="#64748b" font-size="7.5">Ethernet/PoE</text>
+
+        <!-- MQTT Broker -->
+        <rect x="290" y="175" width="130" height="52" rx="8" fill="white" stroke="#22c55e" stroke-width="2"/>
+        <text x="355" y="195" text-anchor="middle" fill="#166534" font-size="14">📨</text>
+        <text x="355" y="210" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">MQTT Broker</text>
+        <text x="355" y="220" text-anchor="middle" fill="#64748b" font-size="7.5">轻量消息总线</text>
+
+        <!-- 无 LoRaWAN 标注 -->
+        <rect x="440" y="175" width="160" height="52" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <text x="520" y="195" text-anchor="middle" fill="#991b1b" font-size="9" font-weight="700">❌ 无 LoRaWAN NS/AS</text>
+        <text x="520" y="208" text-anchor="middle" fill="#dc2626" font-size="8">去掉 Join/Accept</text>
+        <text x="520" y="219" text-anchor="middle" fill="#dc2626" font-size="8">私有帧直达业务层</text>
+
+        <!-- 连线 -->
+        <line x1="150" y1="201" x2="170" y2="201" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="270" y1="201" x2="290" y2="201" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="420" y1="201" x2="440" y2="201" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+        <!-- MQTT → 平台 -->
+        <line x1="355" y1="227" x2="355" y2="249" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+        <!-- ═══ 业务平台层 ═══ -->
+        <!-- 设备认证 -->
+        <rect x="40" y="270" width="115" height="70" rx="8" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="97" y="292" text-anchor="middle" fill="#1e40af" font-size="13">🔐</text>
+        <text x="97" y="310" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">设备认证</text>
+        <text x="97" y="322" text-anchor="middle" fill="#64748b" font-size="7.5">DEV_ID白名单</text>
+        <text x="97" y="332" text-anchor="middle" fill="#64748b" font-size="7.5">SEQ防重放</text>
+
+        <!-- 帧解析 -->
+        <rect x="170" y="270" width="115" height="70" rx="8" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="227" y="292" text-anchor="middle" fill="#1e40af" font-size="13">⚙️</text>
+        <text x="227" y="310" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">帧解析服务</text>
+        <text x="227" y="322" text-anchor="middle" fill="#64748b" font-size="7.5">私有帧解码</text>
+        <text x="227" y="332" text-anchor="middle" fill="#64748b" font-size="7.5">CRC16校验</text>
+
+        <!-- 时序数据库 -->
+        <rect x="300" y="270" width="115" height="70" rx="8" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="357" y="292" text-anchor="middle" fill="#1e40af" font-size="13">📊</text>
+        <text x="357" y="310" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">时序数据库</text>
+        <text x="357" y="322" text-anchor="middle" fill="#64748b" font-size="7.5">在线状态·电量</text>
+        <text x="357" y="332" text-anchor="middle" fill="#64748b" font-size="7.5">历史轨迹</text>
+
+        <!-- 告警引擎 -->
+        <rect x="430" y="270" width="115" height="70" rx="8" fill="white" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="487" y="292" text-anchor="middle" fill="#1e40af" font-size="13">🔔</text>
+        <text x="487" y="310" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">告警引擎</text>
+        <text x="487" y="322" text-anchor="middle" fill="#64748b" font-size="7.5">低电量&lt;20%</text>
+        <text x="487" y="332" text-anchor="middle" fill="#64748b" font-size="7.5">离线超25h</text>
+
+        <!-- REST API -->
+        <rect x="560" y="270" width="140" height="70" rx="8" fill="white" stroke="#1d4ed8" stroke-width="2"/>
+        <text x="630" y="292" text-anchor="middle" fill="#1e40af" font-size="13">🌐</text>
+        <text x="630" y="310" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">REST API / WebSocket</text>
+        <text x="630" y="322" text-anchor="middle" fill="#64748b" font-size="7.5">HTTP · JWT鉴权</text>
+        <text x="630" y="332" text-anchor="middle" fill="#64748b" font-size="7.5">实时推送</text>
+
+        <!-- 平台内连线 -->
+        <line x1="155" y1="305" x2="170" y2="305" stroke="#93c5fd" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="285" y1="305" x2="300" y2="305" stroke="#93c5fd" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="415" y1="305" x2="430" y2="305" stroke="#93c5fd" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="545" y1="305" x2="560" y2="305" stroke="#93c5fd" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+        <!-- 平台 → 应用 -->
+        <line x1="630" y1="340" x2="630" y2="366" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#ar2)"/>
+
+        <!-- ═══ 应用层 ═══ -->
+        <rect x="35" y="385" width="110" height="65" rx="8" fill="white" stroke="#f97316" stroke-width="1.5"/>
+        <text x="90" y="407" text-anchor="middle" fill="#c2410c" font-size="13">🖥️</text>
+        <text x="90" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">Web 控制台</text>
+        <text x="90" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">资产查询·地图</text>
+
+        <rect x="160" y="385" width="110" height="65" rx="8" fill="white" stroke="#f97316" stroke-width="1.5"/>
+        <text x="215" y="407" text-anchor="middle" fill="#c2410c" font-size="13">📱</text>
+        <text x="215" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">移动 App</text>
+        <text x="215" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">扫码·盘点·告警</text>
+
+        <rect x="285" y="385" width="110" height="65" rx="8" fill="white" stroke="#f97316" stroke-width="1.5"/>
+        <text x="340" y="407" text-anchor="middle" fill="#c2410c" font-size="13">📺</text>
+        <text x="340" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">数据大屏</text>
+        <text x="340" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">楼层热力图</text>
+
+        <rect x="410" y="385" width="110" height="65" rx="8" fill="white" stroke="#f97316" stroke-width="1.5"/>
+        <text x="465" y="407" text-anchor="middle" fill="#c2410c" font-size="13">🔗</text>
+        <text x="465" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">第三方集成</text>
+        <text x="465" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">ERP/OA/CMDB</text>
+
+        <rect x="535" y="385" width="120" height="65" rx="8" fill="white" stroke="#f97316" stroke-width="1.5"/>
+        <text x="595" y="407" text-anchor="middle" fill="#c2410c" font-size="13">🔔</text>
+        <text x="595" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">告警通知</text>
+        <text x="595" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">低电量·离线推送</text>
+
+        <rect x="670" y="385" width="200" height="65" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="770" y="407" text-anchor="middle" fill="#991b1b" font-size="13">🔒</text>
+        <text x="770" y="425" text-anchor="middle" fill="#1e293b" font-size="9" font-weight="600">安全层</text>
+        <text x="770" y="437" text-anchor="middle" fill="#64748b" font-size="7.5">DEV_ID白名单·SEQ防重放·CRC校验</text>
+
+        <!-- API → 应用 -->
+        <line x1="630" y1="366" x2="340" y2="385" stroke="#fdba74" stroke-width="1.2" marker-end="url(#ar2)"/>
+        <line x1="630" y1="366" x2="90" y2="385" stroke="#fdba74" stroke-width="1.2" marker-end="url(#ar2)" stroke-dasharray="4 3"/>
+        <line x1="630" y1="366" x2="595" y2="385" stroke="#fdba74" stroke-width="1.2" marker-end="url(#ar2)"/>
+      </svg>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:12px; margin-top:20px;">
+      <div class="callout callout-teal" style="margin:0;">🟢 <span><strong>感知层</strong>：有源 RFID 卡 5~8mm，CR2450 支持 10+ 年续航，SF10 每天1包。</span></div>
+      <div class="callout callout-green" style="margin:0;">🟢 <span><strong>射频接入</strong>：裸 LoRa 私有协议，单网关覆盖整层，MQTT 直连业务平台。</span></div>
+      <div class="callout callout-blue" style="margin:0;">🔵 <span><strong>业务平台</strong>：认证+解析+时序库+告警，REST/WS 对外，无 LoRaWAN 中间层。</span></div>
+      <div class="callout callout-orange" style="margin:0;">🟠 <span><strong>应用层</strong>：Web/App/大屏/ERP集成，低电量提前 6 个月预警。</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SECTION 6: 方案汇总
+════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">📋</div>
+    <div>
+      <h2>六、v3 方案完整汇总</h2>
+    </div>
+  </div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>维度</th><th>5mm 轻薄版</th><th>6mm 标准版（推荐）</th><th>8mm 双电版</th></tr></thead>
+      <tbody>
+        <tr><td><strong>产品形态</strong></td><td colspan="3" style="text-align:center;"><span class="tag tag-teal">有源 RFID 卡 · 85.6×54mm</span></td></tr>
+        <tr><td><strong>厚度</strong></td><td><strong>5.0 mm</strong></td><td><strong>6.5 mm</strong></td><td><strong>8.0 mm</strong></td></tr>
+        <tr><td><strong>电池</strong></td><td>CR2032</td><td>CR2450</td><td>双 CR2032 并联</td></tr>
+        <tr><td><strong>容量</strong></td><td>225 mAh</td><td>620 mAh</td><td>450 mAh</td></tr>
+        <tr><td><strong>5年用量率</strong></td><td>80%</td><td>29%</td><td>40%</td></tr>
+        <tr><td><strong>实际续航</strong></td><td><span class="tag tag-green">5~6 年</span></td><td><span class="tag tag-blue">10~12 年</span></td><td><span class="tag tag-orange">8~10 年</span></td></tr>
+        <tr><td><strong>通信协议</strong></td><td colspan="3" style="text-align:center;">裸 LoRa 私有协议（16B 帧）</td></tr>
+        <tr><td><strong>扩频因子</strong></td><td colspan="3" style="text-align:center;">SF10 / BW125 / +14dBm / CN470</td></tr>
+        <tr><td><strong>每包 TOA</strong></td><td colspan="3" style="text-align:center;">~330 ms（20B  payload）</td></tr>
+        <tr><td><strong>日均功耗</strong></td><td colspan="3" style="text-align:center;">~59 μAh</td></tr>
+        <tr><td><strong>每层网关数</strong></td><td colspan="3" style="text-align:center;"><span class="tag tag-teal">1 个（SF10 单网关覆盖）</span></td></tr>
+        <tr><td><strong>安全机制</strong></td><td colspan="3" style="text-align:center;">DEV_ID 白名单 + SEQ 防重放 + CRC16</td></tr>
+        <tr><td><strong>推荐场景</strong></td><td>大规模部署</td><td>免维护长周期</td><td>高可靠冗余</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:18px;padding:16px;background:var(--gray-50);border-radius:10px;border:1px solid var(--gray-200);">
+      <p style="font-size:0.85rem;font-weight:700;color:var(--gray-700);margin-bottom:8px;">✅ 最终推荐</p>
+      <ul style="font-size:0.84rem;color:var(--gray-600);padding-left:18px;line-height:1.9;">
+        <li><strong>6mm 标准版（CR2450）</strong>：620mAh 超大容量，10~12 年续航，基本免维护，推荐作为主力型号</li>
+        <li><strong>5mm 轻薄版（CR2032）</strong>：225mAh 满足 5~6 年，最轻薄，适合对外观敏感的场景</li>
+        <li>SF10 扩频使每层仅需 1 个网关，相比 SF7 节省 50% 基础设施成本</li>
+        <li>私有协议去掉 LoRaWAN 协议栈，简化部署，网关直接 MQTT 推送至业务平台</li>
+        <li>有源 RFID 5~8mm 厚度是工业标准，兼容各类卡套、挂绳、证件夹</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:24px;color:var(--gray-500);font-size:0.8rem;">
+  LoRa 有源 RFID 资产管理标签方案 v3 · SF10 · 5~8mm · 5~10年续航 · 2026-03-26
+</div>
+
+</div>
+</body>
+</html>

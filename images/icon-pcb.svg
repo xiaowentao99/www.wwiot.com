@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" fill="none">
+  <!-- PCB板背景 -->
+  <rect x="8" y="12" width="64" height="56" rx="4" fill="#1e3a5f"/>
+  <rect x="10" y="14" width="60" height="52" rx="3" fill="#0f172a" stroke="#60a5fa" stroke-width="1"/>
+  
+  <!-- PCB电路纹理 -->
+  <line x1="15" y1="25" x2="35" y2="25" stroke="#60a5fa" stroke-width="1.5"/>
+  <line x1="35" y1="25" x2="35" y2="40" stroke="#60a5fa" stroke-width="1.5"/>
+  <line x1="35" y1="40" x2="50" y2="40" stroke="#60a5fa" stroke-width="1.5"/>
+  <line x1="50" y1="40" x2="50" y2="55" stroke="#60a5fa" stroke-width="1.5"/>
+  <line x1="45" y1="30" x2="65" y2="30" stroke="#60a5fa" stroke-width="1.5"/>
+  <line x1="65" y1="30" x2="65" y2="50" stroke="#60a5fa" stroke-width="1.5"/>
+  
+  <!-- 芯片主体 -->
+  <rect x="22" y="28" width="20" height="20" rx="2" fill="#0066ff"/>
+  <rect x="24" y="30" width="16" height="16" rx="1" fill="#1e40af"/>
+  
+  <!-- 芯片引脚 -->
+  <line x1="22" y1="32" x2="15" y2="32" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="36" x2="15" y2="36" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="40" x2="15" y2="40" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="44" x2="15" y2="44" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="32" x2="65" y2="32" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="36" x2="65" y2="36" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="40" x2="65" y2="40" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="44" x2="65" y2="44" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 芯片上的标识点 -->
+  <circle cx="28" cy="34" r="2" fill="#60a5fa"/>
+  <circle cx="34" cy="34" r="2" fill="#60a5fa"/>
+  <circle cx="28" cy="42" r="2" fill="#60a5fa"/>
+  <circle cx="34" cy="42" r="2" fill="#60a5fa"/>
+  
+  <!-- 焊点 -->
+  <circle cx="20" cy="58" r="3" fill="#fbbf24"/>
+  <circle cx="32" cy="58" r="3" fill="#fbbf24"/>
+  <circle cx="44" cy="58" r="3" fill="#fbbf24"/>
+  <circle cx="56" cy="58" r="3" fill="#fbbf24"/>
+</svg>

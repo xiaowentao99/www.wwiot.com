@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>解决方案 - 万维物联网 WWIOT</title>
+  <meta name="description" content="万维物联网行业解决方案，涵盖工业制造、智慧城市、能源电力、智慧农业等领域的物联网应用。">
+  <meta name="keywords" content="物联网解决方案, 智慧水务, 智慧能源, 智慧农业, 智慧工业, LoRa物联网方案, 工业物联网解决方案, 智能制造">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ========================================
+       CSS Design System - 与 index.html 保持一致
+       ======================================== */
+    :root {
+      /* Primary - 科技蓝 */
+      --color-primary-50: #eff6ff;
+      --color-primary-100: #dbeafe;
+      --color-primary-200: #bfdbfe;
+      --color-primary-300: #93c5fd;
+      --color-primary-400: #60a5fa;
+      --color-primary-500: #0066ff;
+      --color-primary-600: #0052cc;
+      --color-primary-700: #0047b3;
+      --color-primary-800: #003d99;
+      --color-primary-900: #1e3a8a;
+
+      /* Secondary - 深空灰 */
+      --color-secondary-50: #f8fafc;
+      --color-secondary-100: #f1f5f9;
+      --color-secondary-200: #e2e8f0;
+      --color-secondary-300: #cbd5e1;
+      --color-secondary-400: #94a3b8;
+      --color-secondary-500: #64748b;
+      --color-secondary-600: #475569;
+      --color-secondary-700: #334155;
+      --color-secondary-800: #1e293b;
+      --color-secondary-900: #0f172a;
+
+      /* Accent - 活力橙 */
+      --color-accent-400: #fb923c;
+      --color-accent-500: #ff6b35;
+      --color-accent-600: #ea580c;
+
+      /* Semantic */
+      --color-success: #10b981;
+      --color-warning: #f59e0b;
+      --color-error: #ef4444;
+      --color-info: #0ea5e9;
+
+      /* Backgrounds */
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-dark: #0f172a;
+
+      /* Text */
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+
+      /* Fonts */
+      --font-sans: 'Noto Sans SC', 'Inter', system-ui, -apple-system, sans-serif;
+      --font-display: 'Inter', 'Noto Sans SC', sans-serif;
+
+      /* Spacing */
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+      /* Border Radius */
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --radius-2xl: 1.5rem;
+      --radius-full: 9999px;
+
+      /* Transitions */
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --transition-slow: 300ms ease;
+
+      /* Container */
+      --container-max: 1280px;
+      --container-padding: 1.5rem;
+    }
+
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --color-primary-500: #3b82f6;
+      --color-primary-600: #2563eb;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    }
+
+    /* ========================================
+       Base Styles
+       ======================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--bg-primary);
+      overflow-x: hidden;
+    }
+
+    body.iframe-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ========================================
+       Layout
+       ======================================== */
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--container-padding);
+    }
+
+    /* ========================================
+       Typography
+       ======================================== */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ========================================
+       Header
+       ======================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: all var(--transition-base);
+    }
+
+    [data-theme="dark"] .header {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .header.scrolled {
+      border-bottom-color: var(--color-secondary-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .header__logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .header__logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .header__logo-en {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .header__nav {
+      display: none;
+      gap: var(--space-1);
+    }
+
+    @media (min-width: 1024px) {
+      .header__nav {
+        display: flex;
+      }
+    }
+
+    .header__nav-item {
+      position: relative;
+      padding: var(--space-2) var(--space-4);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+
+    .header__nav-item:hover,
+    .header__nav-item.active {
+      color: var(--color-primary-600);
+      background: var(--color-primary-50);
+    }
+
+    .header__theme-toggle {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+    }
+
+    .header__theme-toggle:hover {
+      color: var(--color-primary-600);
+      background: var(--color-primary-50);
+    }
+
+    /* ========================================
+       Hero Section
+       ======================================== */
+    .hero {
+      position: relative;
+      padding: calc(72px + var(--space-16)) 0 var(--space-16);
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 102, 255, 0.05) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      background: var(--color-primary-50);
+      color: var(--color-primary-600);
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__title {
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: var(--space-6);
+    }
+
+    .hero__subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ========================================
+       Filter Tabs
+       ======================================== */
+    .filter-section {
+      padding: var(--space-8) 0;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--color-secondary-200);
+      position: sticky;
+      top: 72px;
+      z-index: 50;
+    }
+
+    [data-theme="dark"] .filter-section {
+      background: var(--bg-secondary);
+      border-bottom-color: var(--color-secondary-700);
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: var(--space-2);
+    }
+
+    .filter-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-tab {
+      flex-shrink: 0;
+      padding: var(--space-3) var(--space-5);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: var(--bg-primary);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-full);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .filter-tab:hover {
+      border-color: var(--color-primary-400);
+      color: var(--color-primary-600);
+    }
+
+    .filter-tab.active {
+      background: var(--color-primary-500);
+      border-color: var(--color-primary-500);
+      color: white;
+    }
+
+    .filter-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 var(--space-2);
+      margin-left: var(--space-2);
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .filter-tab.active .filter-count {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ========================================
+       Solutions Grid
+       ======================================== */
+    .solutions-section {
+      padding: var(--space-16) 0 var(--space-24);
+    }
+
+    .solutions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--space-6);
+    }
+
+    .solution-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition-slow);
+      cursor: pointer;
+    }
+
+    .solution-card:hover {
+      border-color: var(--color-primary-300);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .solution-card__header {
+      position: relative;
+      height: 160px;
+      background: linear-gradient(135deg, var(--color-primary-50), var(--color-secondary-50));
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .solution-card__header {
+      background: linear-gradient(135deg, var(--color-primary-900), var(--color-secondary-800));
+    }
+
+    .solution-card__icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      font-size: 2rem;
+    }
+
+    .solution-card__badge {
+      position: absolute;
+      top: var(--space-4);
+      right: var(--space-4);
+      padding: var(--space-1) var(--space-3);
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+
+    .solution-card__badge--hot {
+      background: linear-gradient(135deg, var(--color-accent-500), var(--color-accent-600));
+      color: white;
+    }
+
+    .solution-card__badge--new {
+      background: linear-gradient(135deg, var(--color-success), #059669);
+      color: white;
+    }
+
+    .solution-card__badge--update {
+      background: linear-gradient(135deg, var(--color-info), #0284c7);
+      color: white;
+    }
+
+    .solution-card__badge--tech {
+      background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-600));
+      color: white;
+    }
+
+    .solution-card__group {
+      position: absolute;
+      bottom: var(--space-3);
+      left: var(--space-4);
+      padding: var(--space-1) var(--space-3);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    [data-theme="dark"] .solution-card__group {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-secondary);
+    }
+
+    .solution-card__content {
+      flex: 1;
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .solution-card__title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-2);
+      line-height: 1.4;
+    }
+
+    .solution-card__subtitle {
+      font-size: 0.875rem;
+      color: var(--color-primary-500);
+      font-weight: 500;
+      margin-bottom: var(--space-3);
+    }
+
+    .solution-card__desc {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: var(--space-4);
+    }
+
+    .solution-card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+
+    .solution-card__tag {
+      padding: var(--space-1) var(--space-3);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .solution-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-4);
+      border-top: 1px solid var(--color-secondary-100);
+    }
+
+    [data-theme="dark"] .solution-card__footer {
+      border-top-color: var(--color-secondary-700);
+    }
+
+    .solution-card__date {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .solution-card__arrow {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-primary-50);
+      border-radius: var(--radius-full);
+      color: var(--color-primary-600);
+      transition: all var(--transition-fast);
+    }
+
+    .solution-card:hover .solution-card__arrow {
+      background: var(--color-primary-500);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    /* ========================================
+       Iframe Modal - 方案详情弹窗
+       ======================================== */
+    .iframe-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 200;
+      background: var(--bg-primary);
+      display: none;
+      flex-direction: column;
+    }
+
+    .iframe-modal.active {
+      display: flex;
+    }
+
+    .iframe-modal__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--color-secondary-200);
+      flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .iframe-modal__header {
+      background: var(--bg-secondary);
+      border-bottom-color: var(--color-secondary-700);
+    }
+
+    .iframe-modal__title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .iframe-modal__title-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-primary-50);
+      border-radius: var(--radius-lg);
+      font-size: 1.25rem;
+    }
+
+    .iframe-modal__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .iframe-modal__btn {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-fast);
+    }
+
+    .iframe-modal__btn--outline {
+      background: transparent;
+      border: 1px solid var(--color-secondary-300);
+      color: var(--text-secondary);
+    }
+
+    .iframe-modal__btn--outline:hover {
+      border-color: var(--color-primary-400);
+      color: var(--color-primary-600);
+    }
+
+    .iframe-modal__btn--primary {
+      background: var(--color-primary-500);
+      color: white;
+    }
+
+    .iframe-modal__btn--primary:hover {
+      background: var(--color-primary-600);
+    }
+
+    .iframe-modal__btn--close {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+      transition: all var(--transition-fast);
+    }
+
+    .iframe-modal__btn--close:hover {
+      background: var(--color-error);
+      color: white;
+    }
+
+    .iframe-modal__content {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .iframe-modal__iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: var(--bg-primary);
+    }
+
+    /* Loading state */
+    .iframe-modal__loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .iframe-modal.loading .iframe-modal__loading {
+      display: flex;
+    }
+
+    .iframe-modal__spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--color-secondary-200);
+      border-top-color: var(--color-primary-500);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .iframe-modal__loading-text {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    /* ========================================
+       Footer
+       ======================================== */
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--color-secondary-200);
+      padding: var(--space-16) 0 var(--space-8);
+    }
+
+    [data-theme="dark"] .footer {
+      background: var(--bg-secondary);
+      border-top-color: var(--color-secondary-700);
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: var(--space-12);
+      margin-bottom: var(--space-12);
+    }
+
+    @media (max-width: 768px) {
+      .footer__grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+      }
+    }
+
+    .footer__brand-desc {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      margin-top: var(--space-4);
+      max-width: 300px;
+    }
+
+    .footer__title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-4);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .footer__link {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      transition: color var(--transition-fast);
+    }
+
+    .footer__link:hover {
+      color: var(--color-primary-600);
+    }
+
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: var(--space-8);
+      border-top: 1px solid var(--color-secondary-200);
+    }
+
+    [data-theme="dark"] .footer__bottom {
+      border-top-color: var(--color-secondary-700);
+    }
+
+    .footer__copyright {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       Animations
+       ======================================== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .solution-card {
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    /* ========================================
+       Responsive
+       ======================================== */
+    @media (max-width: 640px) {
+      .solutions-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__title {
+        font-size: 2rem;
+      }
+
+      .hero__subtitle {
+        font-size: 1rem;
+      }
+
+      .iframe-modal__header {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .iframe-modal__title {
+        font-size: 1rem;
+      }
+
+      .iframe-modal__btn--outline,
+      .iframe-modal__btn--primary {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="container header__container">
+      <a href="index.html" class="header__logo">
+        <div class="header__logo-icon">W</div>
+        <div class="header__logo-text">
+          <span>WVIOT</span>
+          <span class="header__logo-en">WVIOT Solution Hub</span>
+        </div>
+      </a>
+      
+      <nav class="header__nav">
+        <a href="index.html" class="header__nav-item">首页</a>
+        <a href="products.html" class="header__nav-item">产品中心</a>
+        <a href="solutions.html" class="header__nav-item active">解决方案</a>
+        <a href="about.html" class="header__nav-item">关于我们</a>
+        <a href="contact.html" class="header__nav-item">联系我们</a>
+      </nav>
+      
+      <div class="header__actions">
+        <button class="header__theme-toggle" id="themeToggle" aria-label="切换主题">
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero__content">
+        <div class="hero__badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+          行业解决方案
+        </div>
+        <h1 class="hero__title">
+          赋能千行百业<br>
+          <span class="text-gradient">物联网解决方案专家</span>
+        </h1>
+        <p class="hero__subtitle">
+          基于 LoRa、4G、蓝牙等无线通讯技术，为工业制造、智慧城市、能源电力等领域的数字化转型提供端到端解决方案。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Tabs -->
+  <section class="filter-section">
+    <div class="container">
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-group="all">
+          全部方案 <span class="filter-count" id="count-all">0</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solutions Grid -->
+  <section class="solutions-section">
+    <div class="container">
+      <div class="solutions-grid" id="solutionsGrid">
+        <!-- Solutions will be rendered by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Iframe Modal -->
+  <div class="iframe-modal" id="iframeModal">
+    <div class="iframe-modal__loading">
+      <div class="iframe-modal__spinner"></div>
+      <span class="iframe-modal__loading-text">正在加载方案详情...</span>
+    </div>
+    <div class="iframe-modal__header">
+      <div class="iframe-modal__title">
+        <div class="iframe-modal__title-icon" id="modalIcon">📡</div>
+        <span id="modalTitle">方案详情</span>
+      </div>
+      <div class="iframe-modal__actions">
+        <a href="#" class="iframe-modal__btn iframe-modal__btn--outline" id="openNewTab" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          新标签页打开
+        </a>
+        <button class="iframe-modal__btn iframe-modal__btn--primary" id="closeModal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          返回列表
+        </button>
+        <button class="iframe-modal__btn--close" id="closeBtn" aria-label="关闭">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="iframe-modal__content">
+      <iframe class="iframe-modal__iframe" id="solutionIframe" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="header__logo">
+            <div class="header__logo-icon">W</div>
+            <div class="header__logo-text">
+              <span>WVIOT</span>
+              <span class="header__logo-en">WVIOT Technology</span>
+            </div>
+          </div>
+          <p class="footer__brand-desc">
+            万维物联网专注于低功耗无线通讯技术，提供从传感器、网关到云平台的一站式物联网解决方案。
+          </p>
+        </div>
+        
+        <div class="footer__column">
+          <h4 class="footer__title">产品中心</h4>
+          <div class="footer__links">
+            <a href="products.html" class="footer__link">LoRa传感器</a>
+            <a href="products.html" class="footer__link">LoRaWAN网关</a>
+            <a href="products.html" class="footer__link">4G工业终端</a>
+            <a href="products.html" class="footer__link">云平台</a>
+          </div>
+        </div>
+        
+        <div class="footer__column">
+          <h4 class="footer__title">解决方案</h4>
+          <div class="footer__links">
+            <a href="#" class="footer__link">智慧水务</a>
+            <a href="#" class="footer__link">智慧能源</a>
+            <a href="#" class="footer__link">智慧农业</a>
+            <a href="#" class="footer__link">工业监控</a>
+          </div>
+        </div>
+        
+        <div class="footer__column">
+          <h4 class="footer__title">关于我们</h4>
+          <div class="footer__links">
+            <a href="#" class="footer__link">公司介绍</a>
+            <a href="#" class="footer__link">核心技术</a>
+            <a href="#" class="footer__link">合作伙伴</a>
+            <a href="#" class="footer__link">联系我们</a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer__bottom">
+        <p class="footer__copyright">
+          © 2026 万维物联网(WVIOT). 保留所有权利.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ========================================
+    // Solution Data - 按行业分组
+    // ========================================
+    const solutionGroups = [
+      { id: 'manufacturing', name: '工业制造', icon: '🏭', color: '#3b82f6' },
+      { id: 'smart-city', name: '智慧城市', icon: '🏙️', color: '#8b5cf6' },
+      { id: 'energy', name: '能源电力', icon: '⚡', color: '#f59e0b' },
+      { id: 'agriculture', name: '智慧农业', icon: '🌾', color: '#10b981' },
+      { id: 'logistics', name: '仓储物流', icon: '📦', color: '#ec4899' },
+      { id: 'building', name: '智能建筑', icon: '🏢', color: '#06b6d4' },
+      { id: 'environment', name: '环境监测', icon: '🌡️', color: '#6366f1' }
+    ];
+
+    // 已存在的方案详情页列表
+    const existingSolutionPages = ['lora-asset-tag-solution-v3.html'];
+
+    const solutions = [
+      // 工业制造
+      {
+        id: 'lora-asset-tag',
+        group: 'manufacturing',
+        title: 'LoRa资产追踪定位方案',
+        subtitle: 'LoRa + 蓝牙定位 | 室内外融合',
+        href: 'solutions/lora-asset-tag-solution-v3.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '基于LoRa和蓝牙融合定位技术，实现工厂资产实时追踪、盘点和管理，降低资产丢失风险，提升资产管理效率。',
+        tags: ['资产追踪', '室内定位', '蓝牙BLE', 'LoRa'],
+        date: '2026-01-15'
+      },
+      {
+        id: 'smart-factory-env',
+        group: 'manufacturing',
+        title: '智慧工厂环境监控方案',
+        subtitle: '多参数监测 | 边缘计算 | 工业级',
+        href: 'solutions/smart-factory-solution.html',
+        badge: 'new',
+        badgeText: '新增',
+        desc: '对工厂车间温湿度、粉尘、气体等进行全方位监测，实时掌握生产环境状态，保障工人安全与产品质量。',
+        tags: ['环境监测', '工业安全', '数据采集'],
+        date: '2026-03-20'
+      },
+      {
+        id: 'equipment-monitoring',
+        group: 'manufacturing',
+        title: '设备预测性维护方案',
+        subtitle: '振动监测 | AI诊断 | 提前预警',
+        href: 'solutions/equipment-monitoring-solution.html',
+        badge: 'tech',
+        badgeText: '技术',
+        desc: '通过振动、温度、电流等多维度传感器数据采集，结合AI算法预测设备故障，减少意外停机。',
+        tags: ['预测维护', '振动监测', '边缘计算'],
+        date: '2026-02-28'
+      },
+
+      // 智慧城市
+      {
+        id: 'smart-water-meter',
+        group: 'smart-city',
+        title: '智能远传水表方案',
+        subtitle: 'LoRaWAN | 超声波计量 | 远程抄表',
+        href: 'solutions/smart-water-meter-solution.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '采用超声波计量技术的智能水表，支持LoRaWAN无线通讯，实现远程抄表、漏损监测和分时计费。',
+        tags: ['水务', '超声波', '远程抄表', 'LoRaWAN'],
+        date: '2025-12-10'
+      },
+      {
+        id: 'smart-parking',
+        group: 'smart-city',
+        title: '智慧停车引导系统',
+        subtitle: '地磁检测 | NB-IoT | 车位引导',
+        href: 'solutions/smart-parking-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '地磁车位检测器实时感知停车状态，通过NB-IoT网络上传数据，为车主提供精准车位引导服务。',
+        tags: ['停车', '地磁', 'NB-IoT', '智慧交通'],
+        date: '2026-01-05'
+      },
+      {
+        id: 'smart-streetlight',
+        group: 'smart-city',
+        title: '智慧路灯管理方案',
+        subtitle: '单灯控制 | 能耗监测 | 远程调光',
+        href: 'solutions/smart-streetlight-solution.html',
+        badge: 'update',
+        badgeText: '更新',
+        desc: '对城市路灯进行单灯级控制与能耗监测，支持按需调光、故障报警和远程运维，降低能耗50%以上。',
+        tags: ['路灯', '能耗管理', '4G Cat.1'],
+        date: '2026-04-01'
+      },
+
+      // 能源电力
+      {
+        id: 'power-monitor',
+        group: 'energy',
+        title: '配电房远程监控方案',
+        subtitle: '电力监控 | 动环监测 | 4G通讯',
+        href: 'solutions/power-monitor-solution.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '对配电房的电气参数、环境温湿度、烟雾水浸等进行实时监测，支持4G全网通，保障电力设施安全运行。',
+        tags: ['电力', '动环监控', '4G', '电气安全'],
+        date: '2025-11-20'
+      },
+      {
+        id: 'solar-monitor',
+        group: 'energy',
+        title: '光伏电站监测方案',
+        subtitle: '光伏专用 | 直流监测 | 组串监测',
+        href: 'solutions/solar-monitor-solution.html',
+        badge: 'new',
+        badgeText: '新增',
+        desc: '专为光伏电站设计的监测方案，监测光伏板温度、电流、电压等参数，实现组串级精细化管理和故障定位。',
+        tags: ['光伏', '新能源', '组串监测'],
+        date: '2026-03-15'
+      },
+      {
+        id: 'ems-energy',
+        group: 'energy',
+        title: '企业能源管理系统',
+        subtitle: '能耗监测 | 碳排放 | 数据分析',
+        href: 'solutions/energy-management-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '对企业各产线、设备的用能情况进行实时监测和统计分析，为节能改造提供数据支撑，助力碳中和目标。',
+        tags: ['能耗管理', '碳排放', '数据分析'],
+        date: '2026-02-01'
+      },
+
+      // 智慧农业
+      {
+        id: 'greenhouse',
+        group: 'agriculture',
+        title: '智慧大棚方案',
+        subtitle: '环境监测 | 灌溉控制 | 作物模型',
+        href: 'solutions/greenhouse-solution.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '监测大棚内土壤温湿度、光照、二氧化碳等参数，结合作物生长模型，实现精准灌溉和温室调控。',
+        tags: ['农业', '大棚', '灌溉', '土壤监测'],
+        date: '2025-10-25'
+      },
+      {
+        id: 'livestock-monitor',
+        group: 'agriculture',
+        title: '畜牧养殖监测方案',
+        subtitle: '牛羊定位 | 健康监测 | 畜牧专用',
+        href: 'solutions/livestock-solution.html',
+        badge: 'new',
+        badgeText: '新增',
+        desc: '为牛羊佩戴LoRa定位项圈，实时追踪位置和运动量，监测健康状态，预防疾病发生，提升养殖效率。',
+        tags: ['养殖', '定位追踪', 'LoRa', '健康监测'],
+        date: '2026-04-10'
+      },
+      {
+        id: 'cold-chain',
+        group: 'agriculture',
+        title: '冷链物流监测方案',
+        subtitle: '温湿度监测 | 定位追踪 | 报警联动',
+        href: 'solutions/cold-chain-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '对冷链运输全过程的温湿度和位置进行监测，数据实时上传云平台，异常立即报警，保障食品安全。',
+        tags: ['冷链', '温湿度', '物流追踪'],
+        date: '2026-01-20'
+      },
+
+      // 仓储物流
+      {
+        id: 'warehouse-monitoring',
+        group: 'logistics',
+        title: '智慧仓储环境监测',
+        subtitle: '温湿度 | 气体监测 | 库区管理',
+        href: 'solutions/warehouse-monitoring-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '对仓库温湿度、气体浓度、光照等进行监测，保障仓储产品质量安全，支持库区划分和电子围栏管理。',
+        tags: ['仓储', '环境监测', '库区管理'],
+        date: '2026-02-15'
+      },
+      {
+        id: 'cargo-tracking',
+        group: 'logistics',
+        title: '货物追踪定位方案',
+        subtitle: '资产追踪 | GPS+LoRa | 运输监控',
+        href: 'cargo-tracking-solution.html',
+        badge: 'update',
+        badgeText: '更新',
+        desc: '为货物和集装箱配备追踪定位终端，实时掌握货物位置和运输状态，优化物流调度和资产管理。',
+        tags: ['货物追踪', 'GPS', 'LoRa', '物流'],
+        date: '2026-03-28'
+      },
+
+      // 智能建筑
+      {
+        id: 'hvac-monitoring',
+        group: 'building',
+        title: 'HVAC暖通监控系统',
+        subtitle: '空调监测 | 能耗管理 | 舒适度',
+        href: 'hvac-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '监测楼宇空调系统的运行状态和能耗数据，优化暖通控制策略，提升舒适度的同时降低能耗。',
+        tags: ['楼宇', 'HVAC', '能耗管理', '舒适度'],
+        date: '2026-01-08'
+      },
+      {
+        id: 'fire-monitoring',
+        group: 'building',
+        title: '智慧消防监测方案',
+        subtitle: '烟雾探测 | 电气火灾 | 联动报警',
+        href: 'fire-monitoring-solution.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '对建筑内的烟雾、温度、电气参数进行实时监测，实现早期火灾预警和远程报警联动。',
+        tags: ['消防', '烟雾探测', '电气火灾', '安全'],
+        date: '2025-12-15'
+      },
+      {
+        id: 'elevator-monitor',
+        group: 'building',
+        title: '电梯物联网监测',
+        subtitle: '电梯专用 | 故障预警 | 远程运维',
+        href: 'elevator-solution.html',
+        badge: 'tech',
+        badgeText: '技术',
+        desc: '为电梯加装IoT监测终端，实时采集电梯运行参数，预测故障风险，实现预测性维护。',
+        tags: ['电梯', '预测维护', '工业物联网'],
+        date: '2026-02-20'
+      },
+
+      // 环境监测
+      {
+        id: 'air-quality',
+        group: 'environment',
+        title: '空气质量监测方案',
+        subtitle: 'PM2.5 | VOC | 气象参数',
+        href: 'air-quality-solution.html',
+        badge: 'hot',
+        badgeText: '热门',
+        desc: '对空气中PM2.5、PM10、VOC、二氧化碳等污染物进行实时监测，为空气治理提供数据依据。',
+        tags: ['空气质量', 'PM2.5', 'VOC', '环境监测'],
+        date: '2025-09-10'
+      },
+      {
+        id: 'water-quality',
+        group: 'environment',
+        title: '水质监测方案',
+        subtitle: 'pH | 浊度 | 溶解氧 | 多参数',
+        href: 'solutions/water-quality-solution.html',
+        badge: '',
+        badgeText: '',
+        desc: '对河流、湖泊、污水排放口等水体进行pH、浊度、溶解氧等多参数监测，守护水环境安全。',
+        tags: ['水质', 'pH监测', '环境监测', '污水'],
+        date: '2026-01-12'
+      },
+      {
+        id: 'noise-monitoring',
+        group: 'environment',
+        title: '噪声污染监测方案',
+        subtitle: '环境噪声 | 工业噪声 | 合规监测',
+        href: 'noise-monitoring-solution.html',
+        badge: 'new',
+        badgeText: '新增',
+        desc: '对城市环境噪声、工业厂界噪声进行实时监测，数据超标自动报警，满足环保合规要求。',
+        tags: ['噪声监测', '环保合规', '环境监测'],
+        date: '2026-04-15'
+      }
+    ];
+
+    // ========================================
+    // Iframe Modal Functions
+    // ========================================
+    const iframeModal = document.getElementById('iframeModal');
+    const solutionIframe = document.getElementById('solutionIframe');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalIcon = document.getElementById('modalIcon');
+    const openNewTab = document.getElementById('openNewTab');
+    const closeModal = document.getElementById('closeModal');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // 检查方案详情页是否存在
+    function checkSolutionExists(solutionHref) {
+      // 从href中提取文件名
+      const fileName = solutionHref.split('/').pop();
+      return existingSolutionPages.includes(fileName);
+    }
+
+    function openSolutionModal(solution) {
+      // 检查方案详情是否存在
+      if (!checkSolutionExists(solution.href)) {
+        // 方案不存在，显示提示
+        alert('该方案详情正在完善中，敬请期待！');
+        return;
+      }
+
+      const group = solutionGroups.find(g => g.id === solution.group);
+
+      // Update modal header
+      modalTitle.textContent = solution.title;
+      modalIcon.textContent = group?.icon || '📡';
+      openNewTab.href = solution.href;
+
+      // Show loading state
+      iframeModal.classList.add('loading');
+
+      // Load iframe content
+      solutionIframe.src = solution.href;
+
+      // Show modal
+      iframeModal.classList.add('active');
+      document.body.classList.add('iframe-open');
+
+      // Hide scrollbar of body
+      document.documentElement.style.overflow = 'hidden';
+    }
+
+    function closeSolutionModal() {
+      iframeModal.classList.remove('active', 'loading');
+      document.body.classList.remove('iframe-open');
+      document.documentElement.style.overflow = '';
+      
+      // Clear iframe src to stop any loading
+      solutionIframe.src = '';
+    }
+
+    // Event listeners
+    closeModal.addEventListener('click', closeSolutionModal);
+    closeBtn.addEventListener('click', closeSolutionModal);
+    
+    // Close on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && iframeModal.classList.contains('active')) {
+        closeSolutionModal();
+      }
+    });
+
+    // Hide loading when iframe loads
+    solutionIframe.addEventListener('load', () => {
+      iframeModal.classList.remove('loading');
+    });
+
+    // ========================================
+    // Render Functions
+    // ========================================
+    function renderFilterTabs() {
+      const container = document.getElementById('filterTabs');
+      
+      // Add group tabs
+      solutionGroups.forEach(group => {
+        const count = solutions.filter(s => s.group === group.id).length;
+        if (count > 0) {
+          const tab = document.createElement('button');
+          tab.className = 'filter-tab';
+          tab.dataset.group = group.id;
+          tab.innerHTML = `${group.icon} ${group.name} <span class="filter-count">${count}</span>`;
+          container.appendChild(tab);
+        }
+      });
+      
+      // Update total count
+      document.getElementById('count-all').textContent = solutions.length;
+      
+      // Add click handlers
+      container.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          container.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          renderSolutions(tab.dataset.group);
+        });
+      });
+    }
+
+    function renderSolutions(groupId = 'all') {
+      const grid = document.getElementById('solutionsGrid');
+      
+      const filteredSolutions = groupId === 'all' 
+        ? solutions 
+        : solutions.filter(s => s.group === groupId);
+      
+      grid.innerHTML = filteredSolutions.map((solution, index) => {
+        const group = solutionGroups.find(g => g.id === solution.group);
+        const badgeHtml = solution.badge 
+          ? `<span class="solution-card__badge solution-card__badge--${solution.badge}">${solution.badgeText}</span>` 
+          : '';
+        
+        return `
+          <div class="solution-card" data-solution-id="${solution.id}" style="animation-delay: ${index * 0.05}s">
+            <div class="solution-card__header">
+              <div class="solution-card__icon" style="color: ${group?.color || 'var(--color-primary-500)'}">
+                ${group?.icon || '📡'}
+              </div>
+              ${badgeHtml}
+              <span class="solution-card__group">${group?.name || ''}</span>
+            </div>
+            <div class="solution-card__content">
+              <h3 class="solution-card__title">${solution.title}</h3>
+              <p class="solution-card__subtitle">${solution.subtitle}</p>
+              <p class="solution-card__desc">${solution.desc}</p>
+              <div class="solution-card__tags">
+                ${solution.tags.map(tag => `<span class="solution-card__tag">${tag}</span>`).join('')}
+              </div>
+              <div class="solution-card__footer">
+                <span class="solution-card__date">${solution.date}</span>
+                <span class="solution-card__arrow">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Add click handlers to cards
+      grid.querySelectorAll('.solution-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const solutionId = card.dataset.solutionId;
+          const solution = solutions.find(s => s.id === solutionId);
+          if (solution) {
+            openSolutionModal(solution);
+          }
+        });
+      });
+    }
+
+    // ========================================
+    // Theme Toggle
+    // ========================================
+    function initTheme() {
+      const themeToggle = document.getElementById('themeToggle');
+      const iconMoon = themeToggle.querySelector('.icon-moon');
+      const iconSun = themeToggle.querySelector('.icon-sun');
+      
+      const currentTheme = document.documentElement.dataset.theme;
+      if (currentTheme === 'dark') {
+        iconMoon.style.display = 'none';
+        iconSun.style.display = 'block';
+      }
+      
+      themeToggle.addEventListener('click', () => {
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        document.documentElement.dataset.theme = isDark ? 'light' : 'dark';
+        iconMoon.style.display = isDark ? 'block' : 'none';
+        iconSun.style.display = isDark ? 'none' : 'block';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+      });
+      
+      // Restore saved theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.dataset.theme = savedTheme;
+        iconMoon.style.display = savedTheme === 'dark' ? 'none' : 'block';
+        iconSun.style.display = savedTheme === 'dark' ? 'block' : 'none';
+      }
+    }
+
+    // ========================================
+    // Header Scroll Effect
+    // ========================================
+    function initHeaderScroll() {
+      const header = document.getElementById('header');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+    }
+
+    // ========================================
+    // Initialize
+    // ========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      renderFilterTabs();
+      renderSolutions();
+      initTheme();
+      initHeaderScroll();
+    });
+  </script>
+</body>
+</html>
