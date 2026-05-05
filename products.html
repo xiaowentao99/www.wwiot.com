@@ -276,6 +276,90 @@
     }
 
     /* ========================================
+       Mobile Menu
+       ======================================== */
+    .mobile-menu__overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .mobile-menu__overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg-primary);
+      z-index: 2001;
+      transform: translateX(100%);
+      transition: transform var(--transition-base);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+
+    .mobile-menu__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-6);
+      border-bottom: 1px solid var(--color-secondary-200);
+    }
+
+    .mobile-menu__close {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-lg);
+      color: var(--text-secondary);
+    }
+
+    .mobile-menu__close:hover {
+      background: var(--color-secondary-100);
+    }
+
+    .mobile-menu__nav {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-4);
+      gap: var(--space-2);
+    }
+
+    .mobile-menu__item {
+      padding: var(--space-3) var(--space-4);
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-fast);
+    }
+
+    .mobile-menu__item:hover,
+    .mobile-menu__item.active {
+      color: var(--color-primary-600);
+      background: var(--color-primary-50);
+    }
+
+    [data-theme="dark"] .mobile-menu {
+      background: var(--bg-secondary);
+    }
+
+    /* ========================================
        Hero / Page Header
        ======================================== */
     .page-hero {
@@ -1346,17 +1430,61 @@
       <nav class="header__nav">
         <a href="index.html" class="header__nav-item">首页</a>
         <a href="products.html" class="header__nav-item active">产品中心</a>
-        <a href="#" class="header__nav-item">解决方案</a>
+        <a href="solutions.html" class="header__nav-item">解决方案</a>
         <a href="#" class="header__nav-item">技术支持</a>
-        <a href="#" class="header__nav-item">关于我们</a>
+        <a href="about.html" class="header__nav-item">关于我们</a>
       </nav>
 
       <div class="header__actions">
-        <button class="header__theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
-        <button class="header__mobile-toggle" onclick="toggleMobileMenu()">☰</button>
+        <button class="header__theme-toggle" id="themeToggle" aria-label="切换主题" onclick="toggleTheme()">
+          <svg class="icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+          <svg class="icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <a href="contact.html" class="btn btn--primary header__cta">联系我们</a>
+        <button class="header__mobile-toggle" id="mobileToggle" aria-label="打开菜单" onclick="toggleMobileMenu()">
+          <svg class="icon" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu__overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu__header">
+      <span class="header__logo-text" style="font-weight: 600;">菜单</span>
+      <button class="mobile-menu__close" id="mobileClose" onclick="toggleMobileMenu()">
+        <svg class="icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-menu__nav">
+      <a href="index.html" class="mobile-menu__item">首页</a>
+      <a href="products.html" class="mobile-menu__item active">产品中心</a>
+      <a href="solutions.html" class="mobile-menu__item">解决方案</a>
+      <a href="#" class="mobile-menu__item">技术支持</a>
+      <a href="about.html" class="mobile-menu__item">关于我们</a>
+      <a href="contact.html" class="btn btn--primary" style="margin-top: 1rem;">联系我们</a>
+    </nav>
+  </div>
 
   <!-- Page Hero -->
   <section class="page-hero">
@@ -2181,7 +2309,20 @@
       const currentTheme = html.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', newTheme);
-      document.querySelector('.header__theme-toggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      
+      const themeToggle = document.getElementById('themeToggle');
+      const iconMoon = themeToggle.querySelector('.icon-moon');
+      const iconSun = themeToggle.querySelector('.icon-sun');
+      
+      if (newTheme === 'dark') {
+        iconMoon.style.display = 'none';
+        iconSun.style.display = 'block';
+      } else {
+        iconMoon.style.display = 'block';
+        iconSun.style.display = 'none';
+      }
+      
+      localStorage.setItem('theme', newTheme);
     }
 
     // Setup filters
@@ -2677,9 +2818,32 @@
 
     // Mobile menu toggle
     function toggleMobileMenu() {
-      // Simplified - in production would toggle mobile menu
-      alert('移动端菜单功能');
+      const overlay = document.getElementById('mobileOverlay');
+      const menu = document.getElementById('mobileMenu');
+      
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+      
+      // Toggle body scroll
+      document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
     }
+    
+    // Initialize theme from localStorage
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          const iconMoon = themeToggle.querySelector('.icon-moon');
+          const iconSun = themeToggle.querySelector('.icon-sun');
+          if (savedTheme === 'dark') {
+            iconMoon.style.display = 'none';
+            iconSun.style.display = 'block';
+          }
+        }
+      }
+    })();
   </script>
 </body>
 </html>
