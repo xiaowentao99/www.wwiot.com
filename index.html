@@ -17,6 +17,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
   
+  <script>
+  window.WWIOTNetworkEffectConfig = {
+    selector: '.hero',
+    apTop: '11%',
+    networkCenterY: 0.42,
+    fullWidthOrbit: true
+  };
+</script>
+<script src="./assets/js/wwiot-sensor-network-effect.js"></script>
+
   <style>
     /* ========================================
        CSS Design System - Design Tokens
@@ -1590,10 +1600,11 @@
       <!-- Desktop Navigation -->
       <nav class="header__nav">
         <a href="#" class="header__nav-item active">首页</a>
+        <a href="https://iot.wwiot.com" target="_blank" class="header__nav-item">万维云平台</a>
         <a href="#products" class="header__nav-item">产品中心</a>
         <a href="#solutions" class="header__nav-item">解决方案</a>
         <a href="#" class="header__nav-item">技术支持</a>
-        <a href="#" class="header__nav-item">关于我们</a>
+        <a href="about.html" class="header__nav-item">关于我们</a>
       </nav>
 
       <!-- Actions -->
@@ -1639,10 +1650,11 @@
     </div>
     <nav class="mobile-menu__nav">
       <a href="#" class="mobile-menu__item active">首页</a>
+      <a href="https://iot.wwiot.com" target="_blank" class="mobile-menu__item">万维云平台</a>
       <a href="#products" class="mobile-menu__item">产品中心</a>
       <a href="#solutions" class="mobile-menu__item">解决方案</a>
       <a href="#" class="mobile-menu__item">技术支持</a>
-      <a href="#" class="mobile-menu__item">关于我们</a>
+      <a href="about.html" class="mobile-menu__item">关于我们</a>
       <a href="contact.html" class="btn btn--primary" style="margin-top: 1rem;">联系我们</a>
     </nav>
   </div>
@@ -1831,7 +1843,7 @@
               <span class="product-card__tag">20+型号</span>
               <span class="product-card__tag">IP67</span>
             </div>
-            <a href="#" class="product-card__link">
+            <a href="products.html" class="product-card__link">
               了解详情
               <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1850,7 +1862,7 @@
               <span class="product-card__tag">室内/室外</span>
               <span class="product-card__tag">8通道</span>
             </div>
-            <a href="#" class="product-card__link">
+            <a href="products.html" class="product-card__link">
               了解详情
               <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1871,7 +1883,7 @@
               <span class="product-card__tag">透传/LoRaWAN</span>
               <span class="product-card__tag">AT指令</span>
             </div>
-            <a href="#" class="product-card__link">
+            <a href="products.html" class="product-card__link">
               了解详情
               <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1890,7 +1902,7 @@
               <span class="product-card__tag">SaaS服务</span>
               <span class="product-card__tag">私有化</span>
             </div>
-            <a href="#" class="product-card__link">
+            <a href="https://iot.wwiot.com" target="_blank" class="product-card__link">
               了解详情
               <svg class="icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -2173,7 +2185,11 @@
 
       <div class="footer__bottom">
         <p class="footer__copyright">
-          © 2024-2026 万维物联网(WWIOT) 版权所有 | ICP备案号：京ICP备XXXXXXXX号
+          © 2024-2026 万维物联网(WWIOT) 版权所有 | ICP备案号：苏ICP备2020049247号
+          <span class="footer__stats">
+             | 总访问 <span id="busuanzi_value_site_pv"></span> 次
+             | 访客 <span id="busuanzi_value_site_uv"></span> 人
+          </span>
         </p>
         <div class="footer__legal">
           <a href="#" class="footer__legal-link">隐私政策</a>
@@ -2183,6 +2199,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- 不蒜子访问统计 -->
+  <script async src="https://busuanzi.9420.ltd/js/busuanzi.puremini.js"></script>
 
   <!-- JavaScript -->
   <script>

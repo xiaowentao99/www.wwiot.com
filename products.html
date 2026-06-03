@@ -209,6 +209,11 @@
       font-weight: 400;
     }
 
+    .header__logo-img {
+      height: 40px;
+      width: auto;
+    }
+
     .header__nav {
       display: none;
       gap: var(--space-1);
@@ -1420,7 +1425,7 @@
   <header class="header" id="header">
     <div class="container header__container">
       <a href="index.html" class="header__logo">
-        <div class="header__logo-icon">WW</div>
+        <img src="images/logo.png" alt="万维物联网 WWIOT" class="header__logo-img" style="height: 40px;">
         <div class="header__logo-text">
           <span>万维物联网</span>
           <span class="header__logo-en">WWIOT</span>
@@ -1429,6 +1434,7 @@
 
       <nav class="header__nav">
         <a href="index.html" class="header__nav-item">首页</a>
+        <a href="https://iot.wwiot.com" target="_blank" class="header__nav-item">云平台</a>
         <a href="products.html" class="header__nav-item active">产品中心</a>
         <a href="solutions.html" class="header__nav-item">解决方案</a>
         <a href="#" class="header__nav-item">技术支持</a>
@@ -1478,6 +1484,7 @@
     </div>
     <nav class="mobile-menu__nav">
       <a href="index.html" class="mobile-menu__item">首页</a>
+      <a href="https://iot.wwiot.com" target="_blank" class="mobile-menu__item">云平台</a>
       <a href="products.html" class="mobile-menu__item active">产品中心</a>
       <a href="solutions.html" class="mobile-menu__item">解决方案</a>
       <a href="#" class="mobile-menu__item">技术支持</a>
@@ -1772,10 +1779,15 @@
       </div>
       
       <div class="footer__bottom">
-        <p>© 2026 万维物联网（南京）科技有限公司 版权所有</p>
+        <p>© 2026 万维物联网（南京）有限公司 版权所有
+          <span class="footer__stats"> | 总访问 <span id="busuanzi_value_site_pv"></span> 次 | 访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+        </p>
       </div>
     </div>
   </footer>
+
+  <!-- 不蒜子访问统计 -->
+  <script async src="https://busuanzi.9420.ltd/js/busuanzi.puremini.js"></script>
 
   <script>
     // Product Data - 全部来自CSV，无SL开头产品
@@ -1945,10 +1957,10 @@
       { id: 128, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D3HW", protocols: ["lorawan-hf"], power: "battery" },
       
       // ==================== 网关设备 ====================
-      { id: 129, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G1-610", protocols: ["wired"], power: "external" },
-      { id: 130, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G1", protocols: ["wired"], power: "external" },
-      { id: 131, category: "gateway", subCategory: "网关", name: "室内网关【RK3568】", model: "WW-G2", protocols: ["wired"], power: "external" },
-      { id: 132, category: "gateway", subCategory: "网关", name: "室内网关【ESP32】", model: "WW-G3", protocols: ["wired"], power: "external" },
+      { id: 129, category: "gateway", subCategory: "网关", name: "工业网关", model: "WW-G1-610", protocols: ["wired"], power: "external" },
+      { id: 130, category: "gateway", subCategory: "网关", name: "工业网关【Rk3506】", model: "WW-G1", protocols: ["wired"], power: "external" },
+      { id: 131, category: "gateway", subCategory: "网关", name: "边缘计算网关【RK3568】", model: "WW-G2", protocols: ["wired"], power: "external" },
+      { id: 132, category: "gateway", subCategory: "网关", name: "单信道网关【ESP32】", model: "WW-G3", protocols: ["wired"], power: "external" },
       { id: 133, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G6-B", protocols: ["wired"], power: "external" },
       
       { id: 134, category: "gateway", subCategory: "单通道网关", name: "小网关LoRa转RS485", model: "WW-G0-RS", protocols: ["lora", "rs485"], power: "external" },
@@ -2599,7 +2611,7 @@
           { label: '测量精度', value: '±0.3°C / ±3%RH' },
           { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
           { label: '电池型号', value: product.model.includes('11') || product.model.includes('12') ? 'ER14505×2' : 'ER34615×2' },
-          { label: '防护等级', value: product.model.includes('11') || product.model.includes('12') ? 'IP30' : 'IP65' },
+          { label: '防护等级', value: product.model.includes('11') || product.model.includes('12') ? 'IP54' : 'IP30' },
           { label: '产品尺寸', value: product.model.includes('11') || product.model.includes('12') ? '86×55×22mm' : '112×72×38mm' },
           { label: '显示方式', value: 'LCD实时显示' }
         ];
