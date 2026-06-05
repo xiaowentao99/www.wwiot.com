@@ -1641,6 +1641,7 @@
             <div class="product-detail__desc" id="modal-desc">
               工业级无线温湿度采集终端，采用低功耗设计，支持LoRa/LoRaWAN/4G多种通讯方式。适用于车间、仓库、机房等工业环境的温湿度监测。
             </div>
+            <div id="modal-manual-link" style="display:none;"></div>
             
             <!-- 技术参数 -->
             <div class="product-detail__section">
@@ -1793,37 +1794,37 @@
     // Product Data - 全部来自CSV，无SL开头产品
     const products = [
       // ==================== 温湿度传感器 ====================
-      { id: 1, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-10L", protocols: ["lora"], power: "battery" },
-      { id: 2, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-10HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 3, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-10LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 4, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G", model: "WW-10C", protocols: ["4g"], power: "external" },
-      { id: 5, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-10L-SP1", protocols: ["lora"], power: "battery" },
-      { id: 6, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-10HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 7, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-10LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 8, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-10C-SP1", protocols: ["4g"], power: "external" },
+      { id: 1, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-10L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 2, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-10HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 3, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-10LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 4, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G", model: "WW-10C", protocols: ["4g"], power: "external", manualUrl: "manuals/ww10.html" },
+      { id: 5, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-10L-SP1", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 6, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-10HW-SP1", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 7, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-10LW-SP1", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww10.html" },
+      { id: 8, category: "temp", subCategory: "工业温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-10C-SP1", protocols: ["4g"], power: "external", manualUrl: "manuals/ww10.html" },
       
-      { id: 9, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-11L", protocols: ["lora"], power: "battery" },
-      { id: 10, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-11HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 11, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-11LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 12, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-11C", protocols: ["4g"], power: "external" },
+      { id: 9, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-11L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww11.html" },
+      { id: 10, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-11HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww11.html" },
+      { id: 11, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-11LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww11.html" },
+      { id: 12, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-11C", protocols: ["4g"], power: "external", manualUrl: "manuals/ww11.html" },
       // { id: 13, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-11L-SP1", protocols: ["lora"], power: "battery" },
       // { id: 14, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-11HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
       // { id: 15, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-11LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
       // { id: 16, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-11C-SP1", protocols: ["4g"], power: "external" },
       
-      { id: 17, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-12L", protocols: ["lora"], power: "battery" },
-      { id: 18, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-12HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 19, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-12LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 20, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-12C", protocols: ["4g"], power: "external" },
-      { id: 21, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-12L-SP1", protocols: ["lora"], power: "battery" },
-      { id: 22, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-12HW-SP1", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 23, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-12LW-SP1", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 24, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-12C-SP1", protocols: ["4g"], power: "external" },
+      { id: 17, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa", model: "WW-12L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 18, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN", model: "WW-12HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 19, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN", model: "WW-12LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 20, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G", model: "WW-12C", protocols: ["4g"], power: "external", manualUrl: "manuals/ww12.html" },
+      { id: 21, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/LoRa-外置探头", model: "WW-12L-SP1", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 22, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/高频LoRaWAN-外置探头", model: "WW-12HW-SP1", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 23, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/低频LoRaWAN-外置探头", model: "WW-12LW-SP1", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww12.html" },
+      { id: 24, category: "temp", subCategory: "室内温湿度", name: "无线温湿度采集终端/4G-外置探头", model: "WW-12C-SP1", protocols: ["4g"], power: "external", manualUrl: "manuals/ww12.html" },
       
-      { id: 25, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/LoRa", model: "WW-13L", protocols: ["lora"], power: "battery" },
-      { id: 26, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/高频LoRaWAN", model: "WW-13HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 27, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/低频LoRaWAN", model: "WW-13LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 28, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/4G", model: "WW-13C", protocols: ["4g"], power: "external" },
+      { id: 25, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/LoRa", model: "WW-13L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww13.html" },
+      { id: 26, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/高频LoRaWAN", model: "WW-13HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww13.html" },
+      { id: 27, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/低频LoRaWAN", model: "WW-13LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww13.html" },
+      { id: 28, category: "temp", subCategory: "测温杆", name: "无线温湿度测温杆/4G", model: "WW-13C", protocols: ["4g"], power: "external", manualUrl: "manuals/ww13.html" },
       
       { id: 29, category: "temp", subCategory: "母线测温", name: "无线红外母线测温/LoRa", model: "WW-16L", protocols: ["lora"], power: "battery" },
       { id: 30, category: "temp", subCategory: "母线测温", name: "有线母线测温RS485", model: "WW-16-RS", protocols: ["wired"], power: "external" },
@@ -1839,38 +1840,38 @@
       // { id: 37, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/低频LoRaWAN", model: "WW-20LW", protocols: ["lorawan-lf"], power: "battery" },
       // { id: 38, category: "io", subCategory: "开关量IO", name: "无线开关量采集终端/4G", model: "WW-20C", protocols: ["4g"], power: "external" },
       
-      { id: 39, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/LoRa", model: "WW-20L-SP20", protocols: ["lora"], power: "battery" },
-      { id: 40, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/高频LoRaWAN", model: "WW-20HW-SP20", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 41, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/低频LoRaWAN", model: "WW-20LW-SP20", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 42, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/4G", model: "WW-20C-SP20", protocols: ["4g"], power: "battery" },
-      { id: 43, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-20L-SP21", protocols: ["lora"], power: "battery" },
-      { id: 44, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-20HW-SP21", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 45, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-20LW-SP21", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 46, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-20C-SP21", protocols: ["4g"], power: "battery" },
+      { id: 39, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/LoRa", model: "WW-20L-SP20", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 40, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/高频LoRaWAN", model: "WW-20HW-SP20", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 41, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/低频LoRaWAN", model: "WW-20LW-SP20", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 42, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极式)/4G", model: "WW-20C-SP20", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 43, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-20L-SP21", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 44, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-20HW-SP21", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 45, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-20LW-SP21", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 46, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-20C-SP21", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww20.html" },
       
-      { id: 47, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/LoRa", model: "WW-20L-SP22", protocols: ["lora"], power: "battery" },
-      { id: 48, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/高频LoRaWAN", model: "WW-20HW-SP22", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 49, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/低频LoRaWAN", model: "WW-20LW-SP22", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 50, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/4G", model: "WW-20C-SP22", protocols: ["4g"], power: "battery" },
+      { id: 47, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/LoRa", model: "WW-20L-SP22", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 48, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/高频LoRaWAN", model: "WW-20HW-SP22", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 49, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/低频LoRaWAN", model: "WW-20LW-SP22", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww20.html" },
+      { id: 50, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/4G", model: "WW-20C-SP22", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww20.html" },
       
-      { id: 51, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/LoRa", model: "WW-21L", protocols: ["lora"], power: "battery" },
-      { id: 52, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/高频LoRaWAN", model: "WW-21HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 53, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/低频LoRaWAN", model: "WW-21LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 54, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/4G", model: "WW-21C", protocols: ["4g"], power: "battery" },
+      { id: 51, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/LoRa", model: "WW-21L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww21.html" },
+      { id: 52, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/高频LoRaWAN", model: "WW-21HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww21.html" },
+      { id: 53, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/低频LoRaWAN", model: "WW-21LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww21.html" },
+      { id: 54, category: "io", subCategory: "开关量IO", name: "无线人体感应智能终端/4G", model: "WW-21C", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww21.html" },
       
-      { id: 55, category: "io", subCategory: "开关量IO", name: "无线烟感LoRa", model: "WW-22L", protocols: ["lora"], power: "battery" },
-      { id: 56, category: "io", subCategory: "开关量IO", name: "无线烟感高频LoRaWAN", model: "WW-22HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 57, category: "io", subCategory: "开关量IO", name: "无线烟感低频LoRaWAN", model: "WW-22LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 58, category: "io", subCategory: "开关量IO", name: "无线烟感4G", model: "WW-22C", protocols: ["4g"], power: "battery" },
+      { id: 55, category: "io", subCategory: "开关量IO", name: "无线烟感LoRa", model: "WW-22L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww22.html" },
+      { id: 56, category: "io", subCategory: "开关量IO", name: "无线烟感高频LoRaWAN", model: "WW-22HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww22.html" },
+      { id: 57, category: "io", subCategory: "开关量IO", name: "无线烟感低频LoRaWAN", model: "WW-22LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww22.html" },
+      { id: 58, category: "io", subCategory: "开关量IO", name: "无线烟感4G", model: "WW-22C", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww22.html" },
       
-      { id: 59, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/LoRa", model: "WW-26L-SP20", protocols: ["lora"], power: "battery" },
-      { id: 60, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/高频LoRaWAN", model: "WW-26HW-SP20", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 61, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/低频LoRaWAN", model: "WW-26LW-SP20", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 62, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/4G", model: "WW-26C-SP20", protocols: ["4g"], power: "battery" },
-      { id: 63, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-26L-SP21", protocols: ["lora"], power: "battery" },
-      { id: 64, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-26HW-SP21", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 65, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-26LW-SP21", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 66, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-26C-SP21", protocols: ["4g"], power: "battery" },
+      { id: 59, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/LoRa", model: "WW-26L-SP20", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 60, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/高频LoRaWAN", model: "WW-26HW-SP20", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 61, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/低频LoRaWAN", model: "WW-26LW-SP20", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 62, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(电极)/4G", model: "WW-26C-SP20", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 63, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/LoRa", model: "WW-26L-SP21", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 64, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/高频LoRaWAN", model: "WW-26HW-SP21", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 65, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/低频LoRaWAN", model: "WW-26LW-SP21", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww26.html" },
+      { id: 66, category: "io", subCategory: "开关量IO", name: "无线水浸采集终端(绕线)/4G", model: "WW-26C-SP21", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww26.html" },
       
       { id: 67, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/LoRa", model: "WW-27L", protocols: ["lora"], power: "battery" },
       { id: 68, category: "io", subCategory: "开关量IO", name: "无线门磁采集终端/高频LoRaWAN", model: "WW-27HW", protocols: ["lorawan-hf"], power: "battery" },
@@ -1902,27 +1903,33 @@
       { id: 86, category: "sensor", subCategory: "运动位置传感器", name: "震动传感器", model: "WW-51L", protocols: ["lora", "4g"], power: "battery", note: "新品" },
       
       // ==================== 压力/液位 ====================
-      { id: 87, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/LoRa", model: "WW-70L", protocols: ["lora"], power: "battery", note: "新品" },
-      { id: 88, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/低频LoRaWAN", model: "WW-70LW", protocols: ["lorawan-lf"], power: "battery"  ,note: "新品"},
-      { id: 89, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/高频LoRaWAN", model: "WW-70HW", protocols: ["lorawan-hf"], power: "battery" , note: "新品"},
-      { id: 90, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/4G", model: "WW-70C", protocols: ["4g"], power: "battery" , note: "热销"},
+      { id: 87, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/LoRa", model: "WW-70L", protocols: ["lora"], power: "battery", note: "新品", manualUrl: "manuals/ww70.html" },
+      { id: 88, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/低频LoRaWAN", model: "WW-70LW", protocols: ["lorawan-lf"], power: "battery"  ,note: "新品", manualUrl: "manuals/ww70.html" },
+      { id: 89, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/高频LoRaWAN", model: "WW-70HW", protocols: ["lorawan-hf"], power: "battery" , note: "新品", manualUrl: "manuals/ww70.html" },
+      { id: 90, category: "pressure", subCategory: "压力", name: "无线消防压力采集终端/4G", model: "WW-70C", protocols: ["4g"], power: "battery" , note: "热销", manualUrl: "manuals/ww70.html" },
       
-      { id: 91, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/LoRa", model: "WW-71L-P1", protocols: ["lora"], power: "battery" , note: "新品"},
-      { id: 92, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/低频LoRaWAN", model: "WW-71LW-P1", protocols: ["lorawan-lf"], power: "battery", note: "新品" },
-      { id: 93, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/高频LoRaWAN", model: "WW-71HW-P1", protocols: ["lorawan-hf"], power: "battery" , note: "新品"},
-      { id: 94, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/4G", model: "WW-71C-P1", protocols: ["4g"], power: "battery" , note: "新品"},
+      { id: 91, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/LoRa", model: "WW-71L-P1", protocols: ["lora"], power: "battery" , note: "新品", manualUrl: "manuals/ww71.html" },
+      { id: 92, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/低频LoRaWAN", model: "WW-71LW-P1", protocols: ["lorawan-lf"], power: "battery", note: "新品", manualUrl: "manuals/ww71.html" },
+      { id: 93, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/高频LoRaWAN", model: "WW-71HW-P1", protocols: ["lorawan-hf"], power: "battery" , note: "新品", manualUrl: "manuals/ww71.html" },
+      { id: 94, category: "pressure", subCategory: "压力", name: "无线工业压力采集终端/4G", model: "WW-71C-P1", protocols: ["4g"], power: "battery" , note: "新品", manualUrl: "manuals/ww71.html" },
       
-      { id: 95, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/LoRa", model: "WW-72L", protocols: ["lora"], power: "battery" },
-      { id: 96, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/低频LoRaWAN", model: "WW-72LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 97, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/高频LoRaWAN", model: "WW-72HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 98, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/蓝牙", model: "WW-72B", protocols: ["bluetooth"], power: "battery" },
+      { id: 95, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/LoRa", model: "WW-72L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww72.html" },
+      { id: 96, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/低频LoRaWAN", model: "WW-72LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww72.html" },
+      { id: 97, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/高频LoRaWAN", model: "WW-72HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww72.html" },
+      { id: 98, category: "pressure", subCategory: "迷你工业压力", name: "无线工业压力传感器(迷你)/蓝牙", model: "WW-72B", protocols: ["bluetooth"], power: "battery", manualUrl: "manuals/ww72.html" },
       
-      { id: 99, category: "pressure", subCategory: "液位", name: "无线液位传感器/LoRa", model: "WW-73L", protocols: ["lora"], power: "battery" },
-      { id: 100, category: "pressure", subCategory: "液位", name: "无线液位传感器/低频LoRaWAN", model: "WW-73LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 101, category: "pressure", subCategory: "液位", name: "无线液位传感器/高频LoRaWAN", model: "WW-73HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 102, category: "pressure", subCategory: "液位", name: "无线液位传感器/4G", model: "WW-73C", protocols: ["4g"], power: "battery" },
+      { id: 99, category: "pressure", subCategory: "液位", name: "无线液位传感器/LoRa", model: "WW-73L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww73.html" },
+      { id: 100, category: "pressure", subCategory: "液位", name: "无线液位传感器/低频LoRaWAN", model: "WW-73LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww73.html" },
+      { id: 101, category: "pressure", subCategory: "液位", name: "无线液位传感器/高频LoRaWAN", model: "WW-73HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww73.html" },
+      { id: 102, category: "pressure", subCategory: "液位", name: "无线液位传感器/4G", model: "WW-73C", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww73.html" },
       
       { id: 103, category: "pressure", subCategory: "拉力", name: "无线拉力传感器/LoRa", model: "WW-74L", protocols: ["lora"], power: "battery" },
+      // ==================== 微差压 ====================
+      { id: 161, category: "pressure", subCategory: "微差压", name: "无线微差压传感器/LoRa", model: "WW-78L", protocols: ["lora"], power: "battery", manualUrl: "manuals/ww78.html", note: "新品" },
+      { id: 162, category: "pressure", subCategory: "微差压", name: "无线微差压传感器/LoRaWAN", model: "WW-78LW", protocols: ["lorawan-lf"], power: "battery", manualUrl: "manuals/ww78.html", note: "新品" },
+      { id: 163, category: "pressure", subCategory: "微差压", name: "无线微差压传感器/高频LoRaWAN", model: "WW-78HW", protocols: ["lorawan-hf"], power: "battery", manualUrl: "manuals/ww78.html", note: "新品" },
+      { id: 164, category: "pressure", subCategory: "微差压", name: "无线微差压传感器/4G", model: "WW-78C", protocols: ["4g"], power: "battery", manualUrl: "manuals/ww78.html", note: "新品" },
+
       
       // ==================== 控制/报警 ====================
       { id: 104, category: "control", subCategory: "控制类", name: "继电器输出控制（直流交流）", model: "WW-C10L/C", protocols: ["lora", "4g"], power: "external" },
@@ -2434,6 +2441,7 @@
                   <div class="product-card__image">
                     ${getProductCardImageHTML(product.model)}
                     ${product.note ? `<span class="product-card__badge">${product.note}</span>` : ''}
+                    ${product.manualUrl ? `<span class="product-card__badge product-card__badge--new" style="background:var(--color-primary-500);">📖 说明书</span>` : ''}
                   </div>
                   <div class="product-card__body">
                     <div class="product-card__category">${product.subCategory}</div>
@@ -2571,6 +2579,18 @@
       document.getElementById('modal-name').textContent = product.name;
       document.getElementById('modal-model').textContent = product.model;
       document.getElementById('modal-desc').textContent = productDescriptions[product.category] || '高性能物联网产品，广泛应用于各种监测场景。';
+
+      // 说明书链接
+      const manualLinkEl = document.getElementById('modal-manual-link');
+      if (manualLinkEl && product.manualUrl) {
+        manualLinkEl.innerHTML = `<a href="${product.manualUrl}" target="_blank" class="btn btn--primary" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;">
+          📖 查看产品说明书
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>`;
+        manualLinkEl.style.display = 'block';
+      } else if (manualLinkEl) {
+        manualLinkEl.style.display = 'none';
+      }
 
       // 更新产品图片
       updateProductImage(product.model);

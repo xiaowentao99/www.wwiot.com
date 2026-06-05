@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-12 系列无屏温湿度传感器 - 产品说明书 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-12系列无屏温湿度传感器产品说明书，涵盖Lora/4G通信、技术参数、安装指导、配置方法、数据报文格式等完整资料。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary-50: #eff6ff;
+      --color-primary-100: #dbeafe;
+      --color-primary-500: #2563eb;
+      --color-primary-600: #1d4ed8;
+      --color-primary-700: #1e40af;
+      --color-secondary-200: #e5e7eb;
+      --color-secondary-400: #94a3b8;
+      --color-secondary-500: #64748b;
+      --color-secondary-700: #334155;
+      --color-secondary-800: #1e293b;
+      --text-primary: #1e293b;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --border-color: #e2e8f0;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-12: 3rem;
+      --radius-lg: 12px;
+      --transition-fast: 0.2s ease;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+    }
+
+    [data-theme="dark"] {
+      --color-primary-50: #1e293b;
+      --color-primary-100: #1e3a5f;
+      --color-secondary-200: #334155;
+      --color-secondary-400: #64748b;
+      --color-secondary-500: #94a3b8;
+      --color-secondary-700: #cbd5e1;
+      --color-secondary-800: #e2e8f0;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --bg-page: #0f172a;
+      --bg-card: #1e293b;
+      --border-color: #334155;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-page);
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .header__container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .header__logo-img { height: 36px; width: auto; }
+
+    .header__nav { display: flex; gap: var(--space-2); }
+    .header__nav-item {
+      padding: var(--space-2) var(--space-3);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all var(--transition-fast);
+    }
+    .header__nav-item:hover { color: var(--color-primary-500); background: var(--color-primary-50); }
+
+    .header__theme-toggle {
+      width: 36px; height: 36px;
+      background: none; border: 1px solid var(--border-color);
+      border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-secondary);
+      margin-left: var(--space-4);
+    }
+
+    @media (max-width: 768px) {
+      .header__nav { display: none; }
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      padding: var(--space-4) 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .breadcrumb a { color: var(--color-primary-500); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+
+    /* Title Section */
+    .manual-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-12) var(--space-8);
+      margin-bottom: var(--space-8);
+    }
+
+    .manual-hero__badge {
+      display: inline-block;
+      background: var(--color-primary-50);
+      color: var(--color-primary-600);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: var(--space-4);
+    }
+
+    .manual-hero h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: var(--space-3);
+      line-height: 1.3;
+    }
+
+    .manual-hero__meta {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    /* Company Info Banner */
+    .company-banner {
+      background: linear-gradient(135deg, var(--color-primary-50), #e0e7ff);
+      border: 1px solid var(--color-primary-100);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.8;
+    }
+
+    .company-banner strong { color: var(--color-primary-600); }
+
+    /* TOC */
+    .toc {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      margin-bottom: var(--space-8);
+    }
+
+    .toc h2 { font-size: 1.1rem; margin-bottom: var(--space-4); }
+    .toc ol { padding-left: 1.5rem; columns: 2; }
+    .toc li { margin-bottom: 6px; }
+    .toc a {
+      color: var(--color-primary-500);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .toc ol { columns: 1; }
+    }
+
+    /* Content Sections */
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: var(--space-8);
+      margin-bottom: var(--space-6);
+    }
+
+    .section h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: var(--space-6);
+      padding-bottom: var(--space-3);
+      border-bottom: 2px solid var(--color-primary-100);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .section h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      background: var(--color-primary-500);
+      color: white;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: var(--space-6) 0 var(--space-3);
+      color: var(--color-primary-600);
+    }
+
+    .section p {
+      margin-bottom: var(--space-3);
+      color: var(--text-secondary);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      margin: var(--space-4) 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+    }
+
+    th {
+      background: var(--color-primary-50);
+      font-weight: 600;
+      color: var(--color-primary-700);
+      white-space: nowrap;
+    }
+
+    td { color: var(--text-secondary); }
+    tr:hover td { background: var(--color-primary-50); }
+
+    /* Feature List */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-3);
+      margin: var(--space-4) 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      background: var(--color-primary-50);
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .feature-item__icon {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--color-primary-500);
+      color: white;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* Code Block */
+    .code-block {
+      background: #1e293b;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: var(--space-4);
+      margin: var(--space-4) 0;
+      font-family: 'Fira Code', 'Monaco', monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    [data-theme="dark"] .code-block {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Note / Warning */
+    .note {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: var(--space-4);
+      border-radius: 0 8px 8px 0;
+      margin: var(--space-4) 0;
+      font-size: 0.9rem;
+    }
+
+    [data-theme="dark"] .note {
+      background: #422006;
+    }
+
+    .note--info {
+      background: #dbeafe;
+      border-left-color: var(--color-primary-500);
+    }
+
+    [data-theme="dark"] .note--info {
+      background: #1e3a5f;
+    }
+
+    /* Process flow */
+    .process-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      padding: var(--space-6);
+      background: var(--color-primary-50);
+      border-radius: var(--radius-lg);
+      margin: var(--space-4) 0;
+    }
+
+    .process-step {
+      text-align: center;
+      padding: var(--space-4);
+      background: var(--bg-card);
+      border-radius: 8px;
+      min-width: 100px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .process-step__icon { font-size: 1.5rem; margin-bottom: var(--space-2); }
+    .process-step__label { font-size: 0.8rem; font-weight: 600; }
+
+    .process-arrow {
+      font-size: 1.2rem;
+      color: var(--color-primary-500);
+      font-weight: 700;
+    }
+
+    /* Document version */
+    .version-badge {
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: var(--color-primary-500);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+    .download-btn:hover {
+      background: var(--color-primary-600);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+    }
+    /* Print styles */
+    @media print {
+      .header, .footer, .breadcrumb, .toc, .download-btn, .note, .code-block, #download-area {
+        display: none !important;
+      }
+      .section {
+        break-inside: avoid;
+        border: none;
+        box-shadow: none;
+        margin-bottom: 12px;
+        padding: 8px 0;
+      }
+      body { font-size: 11px; }
+      h1 { font-size: 18px; }
+      h2 { font-size: 14px; }
+      table { font-size: 9px; }
+    }      display: inline-block;
+      background: #e0f2fe;
+      color: #0284c7;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: var(--space-12);
+      padding: var(--space-8) 0;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer a { color: var(--color-primary-500); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__container">
+      <a href="../index.html" class="header__logo">
+        <img src="../images/logo.png" alt="万维物联网 WWIOT" class="header__logo-img">
+      </a>
+      <nav class="header__nav">
+        <a href="../index.html" class="header__nav-item">首页</a>
+        <a href="https://iot.wwiot.com" target="_blank" class="header__nav-item">云平台</a>
+        <a href="../products.html" class="header__nav-item">产品中心</a>
+        <a href="../solutions.html" class="header__nav-item">解决方案</a>
+        <a href="../about.html" class="header__nav-item">关于我们</a>
+      </nav>
+      <button class="header__theme-toggle" id="themeToggle" aria-label="切换主题" title="切换深色/浅色模式">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5" id="sunIcon"></circle>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" id="moonIcon" style="display:none"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="../index.html">首页</a> &rsaquo;
+      <a href="../products.html">产品中心</a> &rsaquo;
+      WW-73 系列 无线液位传感器说明书
+    </nav>
+  </div>
+
+  <!-- Hero -->
+  <div class="container">
+    <div class="manual-hero">
+      <span class="manual-hero__badge">📖 产品说明书</span>
+      <h1>WW-73 系列 无线液位传感器</h1>
+      <p style="color:var(--text-secondary);font-size:1rem;margin-bottom:var(--space-4);">
+        投入式液位监测，适用于水箱、水池、地下水位等场景。Lora / 4G 无线传输。
+      </p>
+      <div class="manual-hero__meta">
+        <span>📅 修订日期：2025.12</span>
+        <span class="version-badge">V1.0</span>
+        <span>🏢 万维物联网（南京）有限公司</span>
+      <div style="margin-top:var(--space-6);" id="download-area">
+        <button class="download-btn" onclick="window.print()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          下载 PDF / 打印
+        </button>
+      </div>
+      </div>
+    </div>
+
+    <!-- Company Info -->
+    <div class="company-banner">
+      <strong>万维物联网（南京）有限公司</strong><br>
+      地址：南京市浦口高新区星火路 20 号 &nbsp;|&nbsp;
+      邮箱：x@wwiot.com &nbsp;|&nbsp;
+      电话：136 7512 0926 &nbsp;|&nbsp;
+      网址：www.wwiot.com
+    </div>
+
+    <!-- TOC -->
+    <div class="toc" id="toc">
+      <h2>📑 目录</h2>
+      <ol>
+        <li><a href="#s1">产品概述</a></li>
+        <li><a href="#s2">功能特点</a></li>
+        <li><a href="#s3">结构尺寸和产品展示</a></li>
+        <li><a href="#s4">应用场景和方案流程</a></li>
+        <li><a href="#s5">产品规格</a></li>
+        <li><a href="#s6">产品安装指导</a></li>
+        <li><a href="#s7">云平台功能和展示</a></li>
+        <li><a href="#s8">产品按键和面板介绍</a></li>
+        <li><a href="#s9">数据报文格式</a></li>
+        <li><a href="#s10">性能测试</a></li>
+        <li><a href="#s11">文档版本</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- Section 1: 产品概述 -->
+  <div class="container">
+    <div class="section" id="s1">
+      <h2><span class="num">1</span> 产品概述</h2>
+      <p>WW-73 系列是一款投入式无线液位传感器。采用静压式测量原理，传感器投入液体底部即可精准测量液位高度。广泛应用于水箱液位、消防水池、地下水监测、水文监测等场景，实现液位的远程实时监控。</p>
+
+      <h3>产品订货型号</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>分类</th><th>订货型号</th><th>备注</th></tr>
+          </thead>
+          <tbody><tr><td>投入式液位</td><td><strong>WW-73L</strong></td><td>Lora，433~510 MHz</td></tr>
+<tr><td>投入式液位</td><td><strong>WW-73LW</strong></td><td>低频 LoRaWAN，433~510 MHz</td></tr>
+<tr><td>投入式液位</td><td><strong>WW-73HW</strong></td><td>高频 LoRaWAN，863~928 MHz</td></tr>
+<tr><td>投入式液位</td><td><strong>WW-73C</strong></td><td>4G 全网通</td></tr>
+</tbody>
+        </table>
+      </div>
+
+      <h3>产品认证</h3>
+      <p>已通过第三方质检认证，质检报告编号：CISZR250922402（WW-12C 型号）。</p>
+    </div>
+
+    <!-- Section 2: 功能特点 -->
+    <div class="section" id="s2">
+      <h2><span class="num">2</span> 功能特点</h2>
+
+      <h3>通用特性</h3>
+      <div class="feature-grid"><div class="feature-item"><span class="feature-item__icon">1</span>投入式静压测量原理</div>
+<div class="feature-item"><span class="feature-item__icon">2</span>不锈钢探头，耐腐蚀</div>
+<div class="feature-item"><span class="feature-item__icon">3</span>线缆长度可定制（5~50米）</div>
+<div class="feature-item"><span class="feature-item__icon">4</span>高精度液位测量</div>
+<div class="feature-item"><span class="feature-item__icon">5</span>适用于清水、污水等多种液体</div>
+<div class="feature-item"><span class="feature-item__icon">6</span>安装简单，直接投入即可</div>
+<div class="feature-item"><span class="feature-item__icon">7</span>IP68 探头防护（水下）</div>
+<div class="feature-item"><span class="feature-item__icon">8</span>主机 IP67 防护</div>
+<div class="feature-item"><span class="feature-item__icon">9</span>多种协议选择：私有 Lora、LoRaWAN、4G 通信</div>
+<div class="feature-item"><span class="feature-item__icon">10</span>超低功耗设计，电池供电，续航 3~5 年</div>
+<div class="feature-item"><span class="feature-item__icon">11</span>支持蓝牙和 Type-C 两种本地配置</div>
+<div class="feature-item"><span class="feature-item__icon">12</span>支持远程指令修改参数</div>
+<div class="feature-item"><span class="feature-item__icon">13</span>免费使用万维云平台 / 小程序 / App</div>
+<div class="feature-item"><span class="feature-item__icon">14</span>阈值触发电话/短信/微信预警通知</div>
+<div class="feature-item"><span class="feature-item__icon">15</span>高防护等级 IP67</div>
+<div class="feature-item"><span class="feature-item__icon">16</span>支持 TCP/UDP/MQTT 对接客户平台</div>
+</div>
+
+      
+        <div class="feature-item"><span class="feature-item__icon">B</span>支持外插 SIM 卡</div>
+        <div class="feature-item"><span class="feature-item__icon">C</span>支持 TCP / UDP / MQTT 方式对接客户平台</div>
+      </div>
+
+      
+        <div class="feature-item"><span class="feature-item__icon">B</span>功耗更低、性能更稳、传输距离更远</div>
+        <div class="feature-item"><span class="feature-item__icon">C</span>配套网关支持 TCP/UDP/MQTT/MODBUS-RTU/MODBUS-TCP 标准协议</div>
+      </div>
+    </div>
+
+    <!-- Section 3: 结构尺寸 -->
+    <div class="section" id="s3">
+      <h2><span class="num">3</span> 结构尺寸和产品展示</h2>
+      <p style="text-align:center;color:var(--text-muted);padding: var(--space-12) 0;">
+        📦 产品尺寸：67mm × 24.5mm × 18mm<br><br>
+        <em>（实物图请参考产品彩页或联系销售人员获取）</em>
+      </p>
+    </div>
+
+    <!-- Section 4: 应用场景 -->
+    <div class="section" id="s4">
+      <h2><span class="num">4</span> 应用场景和方案流程</h2>
+      <p>
+        WW-12 温湿度检测系列产品借助无线远距离传输的特性，广泛应用到从工业到民生、从城市到乡村的各类场景中，尤其在商业办公、冷链物流、智能制造、医疗监管、智慧农业等领域，已成为实现数字化、智能化管理的基础设施。
+      </p>
+      <p><strong>主要应用场景：</strong></p><p style="display:flex;flex-wrap:wrap;gap:8px;"><span class="scene-tag">🛁 水箱液位</span><span class="scene-tag">🏊 水池监测</span><span class="scene-tag">💧 地下水位</span><span class="scene-tag">🌊 水文监测</span><span class="scene-tag">🏭 工业储罐</span></p>
+      <p>对于老旧场所的升级改造，选择无线技术的设备能最大限度绕过结构限制、降低施工成本、缩短改造周期。</p>
+
+      <h3>Lora 方案流程</h3>
+      <div class="process-flow">
+        <div class="process-step"><div class="process-step__icon">📡</div><div class="process-step__label">WW-73L/H<br>传感器</div></div>
+        <span class="process-arrow">→ LoRa →</span>
+        <div class="process-step"><div class="process-step__icon">📶</div><div class="process-step__label">LoRa 网关</div></div>
+        <span class="process-arrow">→ 以太网/4G →</span>
+        <div class="process-step"><div class="process-step__icon">☁️</div><div class="process-step__label">万维云平台/<br>客户私有云</div></div>
+      </div>
+      <p style="text-align:center;margin-top:var(--space-3);color:var(--text-muted);font-size:0.85rem;">低功耗、传输距离远、信号抗干扰能力强，适用于工业、农业、商业办公、医疗、仓储物流等场景。</p>
+
+      <h3>4G 方案流程</h3>
+      <div class="process-flow">
+        <div class="process-step"><div class="process-step__icon">📡</div><div class="process-step__label">WW-12C<br>传感器</div></div>
+        <span class="process-arrow">→ 4G 网络 →</span>
+        <div class="process-step"><div class="process-step__icon">☁️</div><div class="process-step__label">万维云平台/<br>客户私有云</div></div>
+      </div>
+      <p style="text-align:center;margin-top:var(--space-3);color:var(--text-muted);font-size:0.85rem;">借助密集的 4G 移动网络，适用于 4G 信号良好的场景，免去网关部署。</p>
+    </div>
+
+    <!-- Section 5: 产品规格 -->
+    <div class="section" id="s5">
+      <h2><span class="num">5</span> 产品规格</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>参数</th><th>参数值</th></tr></thead>
+          <tbody><tr><td>测量介质</td><td>水及非腐蚀性液体</td></tr>
+<tr><td>量程</td><td>0~5m / 10m / 20m / 50m</td></tr>
+<tr><td>精度</td><td>±0.5%FS</td></tr>
+<tr><td>通讯方式</td><td>Lora / LoRaWAN / 4G</td></tr>
+<tr><td>供电</td><td>ER34615×2 电池</td></tr>
+<tr><td>电池寿命</td><td>3~5 年</td></tr>
+<tr><td>探头防护</td><td>IP68（水下）</td></tr>
+<tr><td>线缆长度</td><td>默认 5 米（可定制）</td></tr>
+</tbody>
+        </table>
+      </div>
+
+      <h3>电源键操作</h3>
+      <p>按键位于设备左侧。设备上电时自动开机。</p>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);margin-bottom:var(--space-4);">
+        <li><strong>短按（0.1~3秒）：</strong>开启 / 关闭蓝牙，或判断设备开关机状态</li>
+        <li><strong>长按 5 秒：</strong>开关机操作</li>
+        <li>也可用于测试外接探头连通性或无线性能测试</li>
+      </ul>
+
+      <h3>面板显示区域</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>区域</th><th>位置</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>编号区域</td><td>段码屏左下方</td><td>运行时显示设备编号，配置时显示参数内容</td></tr>
+            <tr><td>时间区域</td><td>段码屏右下方</td><td>显示当前时间（时/分），掉电则时间重置</td></tr>
+            <tr><td>信号强度</td><td>屏幕左侧</td><td>4G 信号强度指示</td></tr>
+            <tr><td>电量指示</td><td>屏幕上方</td><td>电池电压等级指示，共 4 格</td></tr>
+            <tr><td>温度单位</td><td>屏幕右侧</td><td>摄氏度（℃）图标</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>配置方法（Type-C + SensorTool）</h3>
+      <div class="note">
+        <strong>操作步骤：</strong><br>
+        1. 用 USB Type-C 数据线连接设备（接口在设备左侧面）和电脑。<br>
+        2. 提前安装串口驱动（CH340 芯片）。<br>
+        3. 打开 SensorTool 上位机软件，波特率默认 115200。<br>
+        4. 选择对应 COM 端口，点击"打开串口"自动读取设备参数。<br>
+        5. 等待读取完成后即可查阅或修改参数。
+      </div>
+
+      <p style="margin-top:var(--space-4);"><em>设备同时支持蓝牙配置方式，开机状态下短按按键开启蓝牙。</em></p>
+
+      <h3>配置项详细说明</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>参数</th><th>说明</th><th>默认值</th></tr></thead>
+          <tbody>
+            <tr><td><strong>上报周期</strong></td><td>定时采集并上报传感器数据的间隔，单位秒</td><td>600 秒（10 分钟）</td></tr>
+            <tr><td><strong>检测周期</strong></td><td>设备主动唤醒读取传感器的间隔。若变化量超过阈值则立即上报，否则不上报。单位秒，最小 1 秒，最大 65535 秒</td><td>60 秒</td></tr>
+            <tr><td><strong>变化量</strong></td><td>当检测数据与上次发送数据差值超过此阈值时立即上报（不等待上报周期），兼顾响应速度和功耗平衡</td><td>温度 0.1℃ / 湿度 1%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note note--info">
+        <strong>提示：</strong>检测周期设为 0 时，设备不做变化量判断，仅按上报周期定时上报。检测周期越小响应越灵敏，但功耗更高。
+      </div>
+    </div>
+
+    <!-- Section 9: 数据报文格式 -->
+    <div class="section" id="s9">
+      <h2><span class="num">9</span> 数据报文格式</h2>
+
+      <p>压力/液位类产品采用标準 TLV 数据报文格式，与温湿度系列共享底层协议。数据载荷部分为压力值（单位可选 kPa/MPa）或液位值（单位 cm/m），以 int32_t 或 float 格式编码。详细报文格式请参考 WW-12 说明书第 9 节。</p>
+<div class="note note--info"><strong>注意：</strong>压力/液位类产品与温湿度系列使用相同的传输协议框架，CRC 校验算法请咨询技术人员。</div>
+
+</div>
+</div>
+
+<h2><span class="num">10</span> 性能测试</h2>
+
+      <h3>接收灵敏度</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>扩频因子 SF</th><th>接收灵敏度 dBm（BW=125kHz, 470MHz）</th></tr></thead>
+          <tbody>
+            <tr><td>SF=7</td><td>-126</td></tr>
+            <tr><td>SF=8</td><td>-129</td></tr>
+            <tr><td>SF=9</td><td>-131</td></tr>
+            <tr><td>SF=10</td><td>-134</td></tr>
+            <tr><td>SF=11</td><td>-136</td></tr>
+            <tr><td>SF=12</td><td>-139</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>发射功率</h3>
+      <p>Lora 版本最大发射功率：<strong>+22 dBm</strong></p>
+    </div>
+
+    <!-- Section 11: 文档版本 -->
+    <div class="section" id="s11">
+      <h2><span class="num">11</span> 文档版本</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>修订日期</th><th>版本</th><th>发布说明</th></tr></thead>
+          <tbody>
+            <tr><td>2025.12</td><td>V1.0</td><td>初稿发布</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="text-align:center;margin-top:var(--space-6);color:var(--text-muted);font-size:0.9rem;">
+        —— 文档结束 ——
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>© 2024-2026 万维物联网(WWIOT) 版权所有 | <a href="../contact.html">联系我们</a></p>
+      <span id="busuanzi_container_site_pv" style="display:none">
+        总访问 <span id="busuanzi_value_site_pv"></span> 次 | 访客 <span id="busuanzi_value_site_uv"></span> 人
+      </span>
+    </div>
+  </footer>
+
+  <!-- 不蒜子统计 -->
+  <script async src="https://cdn.bootcdn.net/ajax/libs/busuanzi/2.3.0/busuanzi.pure.mini.js"></script>
+
+  <!-- Theme Toggle -->
+  <script>
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    updateIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme');
+      const next = current === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateIcon(next);
+    });
+
+    function updateIcon(theme) {
+      document.getElementById('sunIcon').style.display = theme === 'dark' ? 'none' : '';
+      document.getElementById('moonIcon').style.display = theme === 'dark' ? '' : 'none';
+    }
+  </script>
+</body>
+</html>
