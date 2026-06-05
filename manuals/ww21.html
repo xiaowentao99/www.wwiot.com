@@ -131,6 +131,11 @@
       padding: var(--space-4) 0;
       font-size: 0.875rem;
       color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-3);
     }
     .breadcrumb a { color: var(--color-primary-500); text-decoration: none; }
     .breadcrumb a:hover { text-decoration: underline; }
@@ -392,26 +397,28 @@
     .download-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: var(--color-primary-500);
-      color: white;
+      gap: 6px;
+      padding: 7px 18px;
+      background: #2563eb;
+      color: #fff;
       border: none;
-      border-radius: 8px;
-      font-size: 0.95rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all var(--transition-fast);
+      transition: all 0.2s;
       text-decoration: none;
-    }
-    .download-btn:hover {
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      background: #1d4ed8;
+      box-shadow: 0 2px 8px rgba(37,99,235,0.35);
       background: var(--color-primary-600);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(37,99,235,0.3);
     }
     /* Print styles */
     @media print {
-      .header, .footer, .breadcrumb, .toc, .download-btn, .note, .code-block, #download-area {
+      .header, .footer, .breadcrumb, .toc, .download-btn, .note, .code-block {
         display: none !important;
       }
       .section {
@@ -478,6 +485,7 @@
       <a href="../index.html">首页</a> &rsaquo;
       <a href="../products.html">产品中心</a> &rsaquo;
       WW-21 系列 无线人体感应智能终端说明书
+    <button class="download-btn" onclick="window.print()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> 下载 PDF</button>
     </nav>
   </div>
 
@@ -493,12 +501,6 @@
         <span>📅 修订日期：2025.08</span>
         <span class="version-badge">V1.0</span>
         <span>🏢 万维物联网（南京）有限公司</span>
-      <div style="margin-top:var(--space-6);" id="download-area">
-        <button class="download-btn" onclick="window.print()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          下载 PDF / 打印
-        </button>
-      </div>
       </div>
     </div>
 
