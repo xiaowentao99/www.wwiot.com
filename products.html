@@ -1892,14 +1892,14 @@
       { id: 75, category: "power", subCategory: "电力能源检测", name: "无线电表计量终端", model: "WW-61C", protocols: ["lora", "lorawan-hf", "4g"], power: "external" , note: "定制"},
       
       // ==================== 位置/运动传感器 ====================
-      { id: 78, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/LoRa", model: "WW-50L", protocols: ["lora"], power: "battery" },
-      { id: 79, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/高频LoRaWAN", model: "WW-50HW", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 80, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/低频LoRa", model: "WW-50LW", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 81, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/4G", model: "WW-50C", protocols: ["4g"], power: "battery" },
-      { id: 82, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/LoRa", model: "WW-50L-P2", protocols: ["lora"], power: "battery" },
-      { id: 83, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/高频LoRaWAN", model: "WW-50HW-P2", protocols: ["lorawan-hf"], power: "battery" },
-      { id: 84, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/低频LoRa", model: "WW-50LW-P2", protocols: ["lorawan-lf"], power: "battery" },
-      { id: 85, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/4G", model: "WW-50C-P2", protocols: ["4g"], power: "battery" },
+      { id: 78, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/LoRa", model: "WW-50L", protocols: ["lora"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 79, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/高频LoRaWAN", model: "WW-50HW", protocols: ["lorawan-hf"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 80, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/低频LoRa", model: "WW-50LW", protocols: ["lorawan-lf"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 81, category: "sensor", subCategory: "运动位置传感器", name: "无线高精度倾角采集终端/4G", model: "WW-50C", protocols: ["4g"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 82, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/LoRa", model: "WW-50L-P2", protocols: ["lora"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 83, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/高频LoRaWAN", model: "WW-50HW-P2", protocols: ["lorawan-hf"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 84, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/低频LoRa", model: "WW-50LW-P2", protocols: ["lorawan-lf"], power: "battery" , manualUrl: "manuals/ww50.html"},
+      { id: 85, category: "sensor", subCategory: "运动位置传感器", name: "无线低精度倾角采集终端/4G", model: "WW-50C-P2", protocols: ["4g"], power: "battery" , manualUrl: "manuals/ww50.html"},
       { id: 86, category: "sensor", subCategory: "运动位置传感器", name: "震动传感器", model: "WW-51L", protocols: ["lora", "4g"], power: "battery", note: "新品" },
       
       // ==================== 压力/液位 ====================
@@ -1946,12 +1946,12 @@
       { id: 114, category: "control", subCategory: "报警类", name: "无线声光报警器/4G", model: "WW-C18C", protocols: ["4g"], power: "external" },
       
       // ==================== 数据采集器 ====================
-      { id: 115, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D1L", protocols: ["lora"], power: "external" },
-      { id: 116, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(4~20mA)/LoRa", model: "WW-D1L-AI", protocols: ["lora"], power: "external" },
-      { id: 117, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(开关量)/LoRa", model: "WW-D1L-IO", protocols: ["lora"], power: "external" },
-      { id: 118, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/4G", model: "WW-D1C", protocols: ["4g"], power: "external" },
-      { id: 119, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/低频LoRaWAN", model: "WW-D1LW", protocols: ["lorawan-lf"], power: "external" },
-      { id: 120, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D1HW", protocols: ["lorawan-hf"], power: "external" },
+      { id: 115, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D1L", protocols: ["lora"], power: "external" , manualUrl: "manuals/ww-d1.html"},
+      { id: 116, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(4~20mA)/LoRa", model: "WW-D1L-AI", protocols: ["lora"], power: "external" , manualUrl: "manuals/ww-d1.html"},
+      { id: 117, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(开关量)/LoRa", model: "WW-D1L-IO", protocols: ["lora"], power: "external" , manualUrl: "manuals/ww-d1.html"},
+      { id: 118, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/4G", model: "WW-D1C", protocols: ["4g"], power: "external" , manualUrl: "manuals/ww-d1.html"},
+      { id: 119, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/低频LoRaWAN", model: "WW-D1LW", protocols: ["lorawan-lf"], power: "external" , manualUrl: "manuals/ww-d1.html"},
+      { id: 120, category: "collector", subCategory: "无线数据采集器/外供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D1HW", protocols: ["lorawan-hf"], power: "external" , manualUrl: "manuals/ww-d1.html"},
       
       { id: 121, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/LoRa", model: "WW-D2L", protocols: ["lora"], power: "solar" },
       { id: 122, category: "collector", subCategory: "无线数据采集器/电池供电", name: "无线数据采集器(RS485)/4G", model: "WW-D2C", protocols: ["4g"], power: "solar" },
@@ -1964,8 +1964,8 @@
       { id: 128, category: "collector", subCategory: "无线数据采集器/太阳能供电", name: "无线数据采集器(RS485)/高频LoRaWAN", model: "WW-D3HW", protocols: ["lorawan-hf"], power: "battery" },
       
       // ==================== 网关设备 ====================
-      { id: 129, category: "gateway", subCategory: "网关", name: "工业网关", model: "WW-G1-610", protocols: ["wired"], power: "external" },
-      { id: 130, category: "gateway", subCategory: "网关", name: "工业网关【Rk3506】", model: "WW-G1", protocols: ["wired"], power: "external" },
+      { id: 129, category: "gateway", subCategory: "网关", name: "工业网关", model: "WW-G1-610", protocols: ["wired"], power: "external" , manualUrl: "manuals/ww-g1.html"},
+      { id: 130, category: "gateway", subCategory: "网关", name: "工业网关【Rk3506】", model: "WW-G1", protocols: ["wired"], power: "external" , manualUrl: "manuals/ww-g1.html"},
       { id: 131, category: "gateway", subCategory: "网关", name: "边缘计算网关【RK3568】", model: "WW-G2", protocols: ["wired"], power: "external" },
       { id: 132, category: "gateway", subCategory: "网关", name: "单信道网关【ESP32】", model: "WW-G3", protocols: ["wired"], power: "external" },
       { id: 133, category: "gateway", subCategory: "网关", name: "室内网关", model: "WW-G6-B", protocols: ["wired"], power: "external" },
@@ -1976,12 +1976,12 @@
       
       // ==================== PCBA/配件 ====================
       { id: 137, category: "pcba", subCategory: "PCBA", name: "倾角主板", model: "WW-D2L-50-PCB", protocols: [], power: "external" },
-      { id: 138, category: "pcba", subCategory: "PCBA", name: "网关主板", model: "WW-G1-PCB", protocols: [], power: "external" },
+      { id: 138, category: "pcba", subCategory: "PCBA", name: "网关主板", model: "WW-G1-PCB", protocols: [], power: "external"},
       { id: 139, category: "pcba", subCategory: "PCBA", name: "人体红外主板", model: "WW-21LF-PCB", protocols: [], power: "external" },
       { id: 140, category: "pcba", subCategory: "PCBA", name: "LoRa温湿度/水浸/门磁主板", model: "WW-10LF-PCB", protocols: [], power: "external" },
       { id: 141, category: "pcba", subCategory: "PCBA", name: "4G温湿度/水浸/门磁主板", model: "WW-10C1-PCB", protocols: [], power: "external" },
-      { id: 142, category: "pcba", subCategory: "PCBA", name: "LoRa采集器主板", model: "WW-D1LF-PCB", protocols: [], power: "external" },
-      { id: 143, category: "pcba", subCategory: "PCBA", name: "4G采集器主板", model: "WW-D1C1-PCB", protocols: [], power: "external" },
+      { id: 142, category: "pcba", subCategory: "PCBA", name: "LoRa采集器主板", model: "WW-D1LF-PCB", protocols: [], power: "external"},
+      { id: 143, category: "pcba", subCategory: "PCBA", name: "4G采集器主板", model: "WW-D1C1-PCB", protocols: [], power: "external"},
       { id: 144, category: "pcba", subCategory: "PCBA", name: "低频LoRa透传模组", model: "WW-M1-L", protocols: ["lora"], power: "external" },
       { id: 145, category: "pcba", subCategory: "PCBA", name: "高频LoRa透传模组", model: "WW-M1-H", protocols: ["lora"], power: "external" },
       { id: 146, category: "pcba", subCategory: "PCBA", name: "LoRa转4G模组", model: "WW-M1-C", protocols: ["lora", "4g"], power: "external" },

@@ -392,6 +392,21 @@
     }
 
     /* Document version */
+    
+    
+    
+    @media (max-width: 640px) {
+      .manual-hero { flex-direction: column-reverse; }
+      
+    }
+    
+    .product-showcase-img {
+      max-width: 320px;
+      max-height: 240px;
+      object-fit: contain;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
     .version-badge {
 
     .download-btn {
@@ -500,9 +515,7 @@
       <div class="manual-hero__meta">
         <span>📅 修订日期：2025.08</span>
         <span class="version-badge">V1.0</span>
-        <span>🏢 万维物联网（南京）有限公司</span>
-      </div>
-    </div>
+        <span>🏢 万维物联网（南京）有限公司</span></div>
 
     <!-- Company Info -->
     <div class="company-banner">
@@ -602,6 +615,10 @@
     <!-- Section 3: 结构尺寸 -->
     <div class="section" id="s3">
       <h2><span class="num">3</span> 结构尺寸和产品展示</h2>
+      <div style="text-align:center;margin:var(--space-6) 0;">
+        <img src="../images/WW-12.png" alt="产品图片" class="product-showcase-img" onerror="this.style.display='none'">
+      </div>
+      
       <p style="text-align:center;color:var(--text-muted);padding: var(--space-12) 0;">
         📦 产品尺寸：67mm × 24.5mm × 18mm<br><br>
         <em>（实物图请参考产品彩页或联系销售人员获取）</em>
