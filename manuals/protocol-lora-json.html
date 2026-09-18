@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LoRa 传感器 JSON 协议 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="LoRa 传感器 JSON 协议，介绍多通道网关 JSON 报文格式与上行、下行交互流程。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>LoRa 传感器 JSON 协议</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">通信协议</span>
+      <h1>LoRa 传感器 JSON 协议</h1>
+      <p>介绍 JSON 格式报文及交互流程，适用于 GL6xx 系列网关的通信。</p>
+      <div class="meta"><span>最新版本：1.2.1</span><span class="version">V1.2.x</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">简介</a></li>
+      <li><a href="#s2">JSON 格式 1.1.x</a></li>
+      <li><a href="#s3">JSON 格式 1.2.x</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>简介</h2>
+      <p>该文档介绍 JSON 格式报文及交互流程，适用于 GL6xx 系列网关的通信。目前 JSON 格式最新版本为 1.2.1。</p>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>JSON 格式 1.1.x</h2>
+      <h3>2.1 上行数据格式</h3>
+      <h4>2.1.1 JSON 字段描述</h4>
+      <p>未说明字段为保留字段，用户可以不用关心。</p>
+      <p><strong>顶层字段：</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>gw</td><td>网关消息标识</td><td>对象</td><td>网关 JSON 数据包含在该字段下</td></tr>
+      </table></div>
+      <p><strong>gw 下字段：</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>gwid</td><td>网关地址</td><td>字符串</td><td>8 字节十六进制字符串，即 16 个字符</td></tr>
+        <tr><td>gwpv</td><td>网关协议版本</td><td>字符串</td><td>版本字符串</td></tr>
+        <tr><td>gwdv</td><td>网关设备版本</td><td>字符串</td><td>版本字符串</td></tr>
+        <tr><td>gwsq</td><td>网关包序号</td><td>数字</td><td>4 字节无符号整型，由网关生成；操作节点、操作网关流程中取下行数据的 gwsq 字段</td></tr>
+        <tr><td>gwifty</td><td>网关消息类型</td><td>数字</td><td>0 射频包数据 / 1 网关配置回复 / 2 4G 终端 / 99 网关心跳报文 / 100 网关注册报文</td></tr>
+        <tr><td>gwak</td><td>网关配置回复</td><td>数组</td><td>只在 gwifty 为 1 时有效</td></tr>
+        <tr><td>rxpk</td><td>射频包数据</td><td>数组</td><td>只在 gwifty 为 0 或 10 时有效</td></tr>
+      </table></div>
+      <p><strong>gwak 下字段：</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>gwakob</td><td>执行对象</td><td>字符串</td><td>值为定义的执行对象字符串</td></tr>
+        <tr><td>gwakrt</td><td>执行结果</td><td>数字</td><td>0 执行成功，1 执行失败</td></tr>
+        <tr><td>gwakif</td><td>附带信息</td><td>字符串</td><td>预留</td></tr>
+      </table></div>
+      <p><strong>rxpk 下字段：</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>tmst</td><td>时间戳</td><td>字符串</td><td>射频计时器值</td></tr>
+        <tr><td>time</td><td>接收时间</td><td>字符串</td><td>合法的时间戳字符串，单位为秒</td></tr>
+        <tr><td>chan</td><td>信道号</td><td>数字</td><td>无符号整型</td></tr>
+        <tr><td>freq</td><td>频点</td><td>数字</td><td>单位 Hz</td></tr>
+        <tr><td>foff</td><td>频偏</td><td>数字</td><td>1.1.0 协议版本支持，有符号整型，单位 Hz</td></tr>
+        <tr><td>rssi</td><td>信号强度</td><td>数字</td><td>有符号整型，单位 dBm</td></tr>
+        <tr><td>lsnr</td><td>信噪比</td><td>数字</td><td>浮点型</td></tr>
+        <tr><td>rfch</td><td>通道号</td><td>数字</td><td>无符号整型</td></tr>
+        <tr><td>stat</td><td>状态</td><td>数字</td><td>无线 CRC 状态</td></tr>
+        <tr><td>modu</td><td>调制模式</td><td>字符串</td><td>LORA、FSK</td></tr>
+        <tr><td>datr</td><td>扩频因子</td><td>字符串</td><td>SF5 ~ SF12</td></tr>
+        <tr><td>codr</td><td>编码率</td><td>字符串</td><td>4/5、4/6、4/7、4/8</td></tr>
+        <tr><td>pksz</td><td>数据包长度</td><td>数字</td><td>无符号整型，不超过 256</td></tr>
+        <tr><td>pkdt</td><td>数据包内容</td><td>字符串</td><td>十六进制字符串，长度为 pksz*2</td></tr>
+      </table></div>
+      <h4>2.1.2 实例数据</h4>
+      <p>实际网关报文为节省长度做了压缩处理，去掉不必要换行和空格，但 JSON 含义不变。实际报文展示如下：</p>
+      <div class="code">{"gw":{"gwid":"231809d75a9e9b0a","gwpv":"1.0.0","gwdv":"1.0.6","gwsq":40,"gwifty":0,"rxpk":[{"tmst":"751007902","time":"1610335333","chan":3,"freq":476100000,"rssi":-67,"lsnr":7.5,"rfch":0,"stat":16,"modu":"LORA","datr":"SF12","codr":"4/5","pksz":32,"pkdt":"030f354cde000023000e210103ff300000ff5082040000050008000000001f4a","ndty":1}]}}</div>
+      <p>多包数据示例：</p>
+      <div class="code">{
+  "gw": {
+    "gwid": "3c1809d75a9e9b0a",
+    "gwpv": "1.0.0",
+    "gwdv": "1.0.5",
+    "gwsq": 2,
+    "gwifty": 0,
+    "rxpk": [{
+      "tmst": "30846567", "time": "1607408329", "chan": 7,
+      "freq": 476900000, "rssi": -73, "lsnr": 5.75, "rfch": 1,
+      "stat": 16, "modu": "LORA", "datr": "SF7", "codr": "4/5",
+      "pksz": 13, "pkdt": "03070f180c00293b0020048d02", "ndty": 1
+    }, {
+      "tmst": "30846567", "time": "1607408329", "chan": 7,
+      "freq": 476900000, "rssi": -73, "lsnr": 5.75, "rfch": 1,
+      "stat": 16, "modu": "LORA", "datr": "SF7", "codr": "4/5",
+      "pksz": 30, "pkdt": "0300000576000097004c2001000007fff900f5000300000400a605319104", "ndty": 1
+    }]
+  }
+}</div>
+      <p>报文表示网关 ID 为 3c1809d75a9e9b0a，收到 2 包射频数据包：第 1 包长度 13 字节，内容为 <span class="inline-code">03070f180c00293b0020048d02</span>；第 2 包长度 30 字节，内容为 <span class="inline-code">0300000576000097004c2001000007fff900f5000300000400a605319104</span>。</p>
+      <p>网关心跳与配置回复示例：</p>
+      <div class="code">{
+  "gw": {
+    "gwid": "231809d75a9e9b0a",
+    "gwpv": "1.0.0",
+    "gwdv": "1.0.5",
+    "gwsq": 2,
+    "gwifty": 99
+  }
+}</div>
+      <h3>2.2 下行数据格式</h3>
+      <p><strong>gw 下字段：</strong></p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>gwid</td><td>网关地址</td><td>字符串</td><td>8 字节十六进制字符串</td></tr>
+        <tr><td>gwpv</td><td>网关协议版本</td><td>字符串</td><td>版本字符串</td></tr>
+        <tr><td>gwdv</td><td>网关设备版本</td><td>字符串</td><td>版本字符串</td></tr>
+        <tr><td>gwsq</td><td>包序号</td><td>数字</td><td>4 字节无符号整型，其值由发送端生成</td></tr>
+        <tr><td>gwifty</td><td>消息类型</td><td>数字</td><td>0 表示节点配置，1 表示网关配置</td></tr>
+        <tr><td>gwcfg</td><td>网关配置</td><td>对象</td><td>只在 gwifty 为 1 时有效</td></tr>
+        <tr><td>ndcfg</td><td>节点配置</td><td>数组</td><td>只在 gwifty 为 0 时有效，值为十六进制字符串数组。数组长度不超过 32，单条数据不超过 255 字节</td></tr>
+      </table></div>
+      <p>实例：</p>
+      <div class="code">{
+  "gw": {
+    "gwid": "3c1809d75a9e9b0a",
+    "gwpv": "1.0.2",
+    "gwdv": "swxxx_hwxxx",
+    "gwsq": 1233123,
+    "gwifty": 0,
+    "ndcfg": [
+      "030dcf4b0c004a05002b200400000500140800570057005700570900dfae",
+      "0300000576000097004c2001000007fff900f5000300000400a605319104"
+    ]
+  }
+}</div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>JSON 格式 1.2.x</h2>
+      <p>本章节主要描述相对于 1.1.x 版本的修改，着重描述差异部分，相同部分不做重复说明。</p>
+      <h3>3.1 上行数据格式</h3>
+      <h4>3.1.1 整体数据格式</h4>
+      <div class="code">{
+  "gw": {
+    "gwid": "", "gwpv": "", "gwdv": "",
+    "lati": 0, "long": 0,
+    "gwsq": 0, "gwifty": 0,
+    "rxpk": [{
+      "is_cache": 0, "tmst": "", "time": "", "chan": 0,
+      "freq": 0, "foff": 0, "rssi": 0, "lsnr": 0, "rfch": 0,
+      "stat": 0, "modu": "", "datr": "", "codr": "", "pksz": 0, "pkdt": "",
+      "sensor": { "version": 0, "device_no": "", "seq": 0, "...": "" }
+    }]
+  }
+}</div>
+      <h4>3.1.2 变动字段描述</h4>
+      <p>相对于 1.1.0 版本：顶层字段添加 lati、long 字段，为网关经纬度信息；gw 下字段、gwak 下字段没有变化；rxpk 下字段添加 sensor 字段，删除保留字段 ndifty，其他字段没有变化。</p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>类型</th><th>说明</th></tr>
+        <tr><td>lati</td><td>网关纬度</td><td>数字</td><td>可配置静态经纬度信息；如果网关有卫星定位功能则上报获取的经纬度信息</td></tr>
+        <tr><td>long</td><td>网关经度</td><td>数字</td><td>经度信息</td></tr>
+        <tr><td>is_cache</td><td>离线缓存标记</td><td>数字</td><td>0 表示实时数据，1 表示离线缓存数据（1.2.1 版本支持）</td></tr>
+        <tr><td>sensor</td><td>传感器内容</td><td>对象</td><td>扩展项，网关能够解析传感器则有，否则无</td></tr>
+      </table></div>
+      <h4>3.1.3 sensor 下公共字段</h4>
+      <p>公共字段是所有传感器可以使用的字段，并非每次数据上报都包含所有字段。</p>
+      <div class="table-wrap"><table>
+        <tr><th>关键词</th><th>描述</th><th>说明</th></tr>
+        <tr><td>version</td><td>协议版本</td><td>传感器报文协议版本，一般为 3</td></tr>
+        <tr><td>device_no</td><td>设备编号</td><td>4 个字节十六进制字符串</td></tr>
+        <tr><td>seq</td><td>包序号</td><td>0-65535 依次递增循环使用</td></tr>
+        <tr><td>firmware</td><td>设备版本</td><td>0-7 依次递增循环使用</td></tr>
+        <tr><td>battery</td><td>电量</td><td>0-100</td></tr>
+        <tr><td>device_type</td><td>设备类型</td><td>不同类型传感器的值不同</td></tr>
+        <tr><td>is_abnormal</td><td>设备/数据异常</td><td>0 正常，1 异常</td></tr>
+        <tr><td>freq_tx</td><td>用户参数，发送频点</td><td>单位 Hz</td></tr>
+        <tr><td>sf_tx</td><td>用户参数，发送扩频因子</td><td></td></tr>
+        <tr><td>preamble_rx</td><td>用户参数，接收前导长度</td><td></td></tr>
+        <tr><td>period_detect</td><td>用户参数，检测周期</td><td>单位秒</td></tr>
+        <tr><td>period_report</td><td>用户参数，上报周期</td><td>单位秒</td></tr>
+        <tr><td>calibration</td><td>用户参数，校准值</td><td></td></tr>
+        <tr><td>parameter_var1~5</td><td>用户参数，变量 1~5</td><td></td></tr>
+        <tr><td>ack_type</td><td>应答命令</td><td>回复操作类型</td></tr>
+        <tr><td>ack_result</td><td>应答结果</td><td>0 失败，1 成功</td></tr>
+      </table></div>
+      <h4>3.1.4 sensor 下匹配传感器字段</h4>
+      <p><strong>温湿度类型（WW-12、WW-10、WW-13、WW-SL102）</strong></p>
+      <p>单探头：device_type 为 16（0x10）或 18（0x12）；temperature 单位度；humidity 在 0x10 时单位 1%，在 0x12 时单位 0.1%。</p>
+      <p>多探头（如 SL100/101 内置和外置双探头，第 1 路内置、第 2 路外置）：temperature_inner、temperature_outer、humidity_inner、humidity_outer。</p>
+      <p><strong>温度类型（SL103、SL114~SL117、SL162）</strong></p>
+      <p>单探头：device_type 为 17（0x11），temperature。多探头（3 路温度面贴 S1、S2、S3）：temperature_s1、temperature_s2、temperature_s3。</p>
+      <p><strong>水浸传感器（SL200）</strong>：device_type 为 32（0x20），water_status 0 无水、1 有水。</p>
+      <p><strong>门磁传感器（SL210）</strong>：device_type 为 33（0x21），switch_status 0 关、1 开。</p>
+      <p><strong>烟雾传感器（SL230 系列）</strong>：device_type 为 35（0x23），包含 is_power_on、is_actived、is_dismantled、is_test、low_battery、is_fault、is_alarmed 等标记。</p>
+      <p><strong>二氧化碳传感器（SL310、SL311、SL341）</strong>：device_type 为 52（0x34），co2_ppm 单位 ppm，附 temperature、humidity。</p>
+      <p><strong>氧气传感器（SL360）</strong>：device_type 为 54（0x36），adc 采样值，o2_vol 单位 %VOL。</p>
+      <p><strong>震动传感器（SL500）</strong>：device_type 为 80（0x50），acce_event、acce_x/y/z 单位 mg、angle_z 单位°。</p>
+      <p><strong>倾角传感器（SL510）</strong>：device_type 为 81（0x51），temperature、angle_x、angle_y、angle_z。数据类型项一般为（0x00, 0x04, 0x11）。</p>
+      <p><strong>大气压力温湿度传感器（SL701）</strong>：device_type 为 112（0x70），temperature、humidity、pressure 单位 Pa。</p>
+      <p><strong>压力传感器（SL710）</strong>：device_type 为 7（0x07），temperature、pressure。数据类型项一般为（0x00, 0x04, 0x07）。</p>
+      <p><strong>拉力传感器（SL721）</strong>：device_type 为 114（0x72），tension 单位 N。数据类型项一般为（0x00, 0x07）。</p>
+      <p><strong>无线交流控制器（CT100）</strong>：device_type 为 9（0x09），electricity 单位 mA、voltage 单位 V、active_power 单位 W、switch_status。数据类型项一般为（0x00, 0x09, 0x1A, 0x1B）。</p>
+      <p><strong>双路控制器（CT201）</strong>：device_type 为 4（0x04），包含 motor_adc、motor1_status / motor2_status、motor1_is_locked / motor2_is_locked、motor1_is_idling / motor2_is_idling。</p>
+      <p><strong>4~20mA 传感器（DT420）</strong>：device_type 为 3（0x03）。单通道测量时含 adc、sense；多通道测量时含 adc1、adc2、sense1、sense2。</p>
+      <p><strong>通用采集器（DT200、DT400）</strong>：device_type 为 1（0x01），含 user_data、modbus_data、command_index、command_data。数据类型项一般为（0x00, 0x21, 0x24 或 0x25）。0x21 外部数据主动上报；0x24 采集器 Modbus 指令主动采集；0x25 采集器自定义指令主动采集。</p>
+      <h4>3.1.5 sensor 下通用字段</h4>
+      <p>设备类型无匹配时，使用以下字段：acce_event、acce_x、acce_y、acce_z、longitude、latitude、adc、temperature、humidity、concentration、pressure、sense、sense_unit、switch_status、angle_x、angle_y、angle_z、multi_adc、multi_temperature、multi_humidity、multi_concentration、multi_pressure、multi_sense、multi_switch、electricity、voltage、active_power、user_data、modbus_data、command_index、command_data、ch4_lel、co_ppm、h2s_ppm、co2_ppm、nh3_ppm、instrument_address。</p>
+      <h4>3.1.6 实例数据</h4>
+      <p><strong>温湿度传感器（WW-12C）</strong></p>
+      <div class="code">{
+  "gw": {
+    "gwid": "1C0661D75D619880", "gwpv": "1.2.0", "gwdv": "1.9.0-103393ac",
+    "gwsq": 14750, "gwifty": 0,
+    "rxpk": [{
+      "tmst": "1458944609", "time": "1698795278", "chan": 5,
+      "freq": 476500000, "foff": 1615, "rssi": -67, "lsnr": 12.5,
+      "rfch": 1, "stat": 16, "modu": "LORA", "datr": "SF9", "codr": "4/5",
+      "pksz": 18, "pkdt": "0330000161002A94007F100400EF0564BB9D",
+      "sensor": {
+        "version": 3, "device_no": "30000161", "seq": 10900,
+        "firmware": 3, "battery": 100, "device_type": 16, "is_abnormal": 0,
+        "temperature": 23.9, "humidity": 100
+      }
+    }]
+  }
+}</div>
+      <p><strong>水浸传感器（SL200）</strong></p>
+      <div class="code">{
+  "gw": {
+    "gwid": "1C0661D75D619880", "gwpv": "1.2.0", "gwdv": "1.9.0-103393ac",
+    "gwsq": 8940, "gwifty": 0,
+    "rxpk": [{
+      "chan": 0, "freq": 475500000, "foff": -474, "rssi": -86, "lsnr": 7.5,
+      "modu": "LORA", "datr": "SF9", "codr": "4/5", "pksz": 15,
+      "pkdt": "0300003C3700C696005F200900E11B",
+      "sensor": {
+        "version": 3, "device_no": "00003C37", "seq": 50838,
+        "firmware": 2, "battery": 100, "device_type": 32, "is_abnormal": 0,
+        "water_status": 0
+      }
+    }]
+  }
+}</div>
+      <p><strong>门磁传感器（SL210）</strong></p>
+      <div class="code">{
+  "gw": {
+    "gwid": "1C0661D75D619880", "gwpv": "1.2.0", "gwdv": "1.9.0-4cab8a26",
+    "lati": 32.165039, "long": 118.692483, "gwsq": 7, "gwifty": 0,
+    "rxpk": [{
+      "chan": 0, "freq": 490500000, "rssi": -46, "modu": "LORA",
+      "datr": "SF7", "codr": "4/5", "pksz": 18,
+      "pkdt": "0360008749007B9B0060210901200101FB31",
+      "sensor": {
+        "version": 3, "device_no": "60008749", "seq": 31643,
+        "firmware": 3, "battery": 0, "device_type": 33, "is_abnormal": 0,
+        "switch_status": 1
+      }
+    }]
+  }
+}</div>
+      <p><strong>二氧化碳传感器（SL310 / SL311 / SL341）</strong></p>
+      <div class="code">{
+  "gw": {
+    "gwid": "1C0661D75D619880", "gwpv": "1.2.0", "gwsq": 9048, "gwifty": 0,
+    "rxpk": [{
+      "freq": 475900000, "rssi": -54, "modu": "LORA", "datr": "SF9",
+      "pksz": 21, "pkdt": "03000060C10008A9007F340301DA0400C4053EE41A",
+      "sensor": {
+        "version": 3, "device_no": "000060C1", "seq": 2217, "firmware": 3,
+        "battery": 100, "device_type": 52, "is_abnormal": 0,
+        "co2_ppm": 474, "temperature": 19.6, "humidity": 62
+      }
+    }]
+  }
+}</div>
+      <p><strong>4G 终端数据（WW-21 人体感应 / WW-70C / WW-73C 压力液位 / WW-20C-SPX 门磁）</strong></p>
+      <p>4G 终端使用 gwifty 为 2，并附加 ccid 字段。WW-21 的 switch_status 为人状态：0 无人，1 红外上报有人，2 雷达上报有人。WW-70C/WW-73C 上报 sense 压力值与 sense_unit 单位（液位出厂默认 kPa，平台展示需换算成对应液位高度）。</p>
+      <div class="code">{
+  "gw": {
+    "gwid": "0866475082110377", "gwpv": "3", "gwdv": "1002", "gwifty": 2,
+    "ccid": "89860895102690058658",
+    "rxpk": [{
+      "csq": 19,
+      "sensor": {
+        "device_no": "10001195", "fctrl": 16, "seq": 34, "firmware": 3,
+        "battery": 100, "device_type": 8, "is_abnormal": 0,
+        "adc": 279, "sense": 0, "sense_unit": "MPa"
+      }
+    }]
+  }
+}</div>
+      <p><strong>4G 简化报文（WW-12C 温湿度 / WW-26C-SP2X 水浸）</strong></p>
+      <div class="code">{
+  "iccid": "898608321123D1225554", "seq": 306, "imei": "862323085589300",
+  "ts": 1788415298, "batt": 100, "sn": "08558930", "csq": 23,
+  "hum": 59, "tmp": 291
+}</div>
+      <p>信号强度 csq：25~31 信号优秀，17~24 信号良好，16 及以下信号差。</p>
+      <h4>3.1.7 4G 烟感 MQTT 报文（WW-22C）</h4>
+      <p>心跳数据：payload 含 TERMINAL_TYPE、SIGNAL_POWER、BATTERY_VALUE。</p>
+      <p>报警事件：ALARM_STATE_REPORT 与 SMOKE_DATA_REPORT，ALARM_STATE 为 1 报警、0 正常，SMOKE_VALUE 为烟雾值。</p>
+      <p>故障数据：TROUBLE_REPORT，TROUBLE 为 21 电池电量低、1 传感器故障、101 通讯故障。</p>
+      <p>故障恢复：TROUBLE_RES_REPORT，TROUBLE_RES 对应 21 电池电量恢复、1 传感器故障恢复、101 通讯故障恢复。</p>
+      <p>自检数据：SELF_TEST_REPORT，SELF_TEST_MODE 为 1 远程自检、2 按键自检，另含 TAMPER_ALARM、SIGNAL_POWER、BATTERY_VALUE、ALARM_STATE。</p>
+      <div class="note">SAAS 平台收到数据需回复 HTTP 200。超过 48 小时无任何数据时，平台判断该设备为掉线状态。</div>
+      <h3>3.2 下行数据格式</h3>
+      <p>下行格式相对于 1.1.0 没有变化。</p>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · LoRa 传感器 JSON 协议</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

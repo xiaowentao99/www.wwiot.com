@@ -4,7 +4,8 @@
 
 set -e
 
-REMOTE_HOST="lanneng.wwiot.com"
+REMOTE_HOST="api.wwiot.com"
+# REMOTE_HOST="lanneng.wwiot.com"
 REMOTE_USER="iot"
 REMOTE_PATH="/home/$REMOTE_USER/www.wwiot.com"
 PACKAGE_NAME="www.wwiot.com.tar.gz"

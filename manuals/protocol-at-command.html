@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>传感器配置 AT 指令手册 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="万维终端传感器 AT 指令手册，涵盖查询指令、设置指令、发送接收指令及错误代码说明。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>传感器配置 AT 指令手册</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">配置指令</span>
+      <h1>传感器配置 AT 指令手册</h1>
+      <p>AT 指令说明，涵盖进入配置模式、查询指令、设置指令、数据发送与接收测试以及常见错误代码。</p>
+      <div class="meta"><span class="version">V1.3.8</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">指令备注与基本约定</a></li>
+      <li><a href="#s2">AT 模式与短指令</a></li>
+      <li><a href="#s3">查询指令</a></li>
+      <li><a href="#s4">设置指令</a></li>
+      <li><a href="#s5">数据发送与接收</a></li>
+      <li><a href="#s6">低功耗与链路参数</a></li>
+      <li><a href="#s7">扩展指令</a></li>
+      <li><a href="#s8">4G 相关指令</a></li>
+      <li><a href="#s9">DTU 采集指令</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>指令备注与基本约定</h2>
+      <p>指令备注说明：默认基站和终端都适用，特殊指令标注如下：</p>
+      <div class="table-wrap"><table>
+        <tr><th>标注</th><th>含义</th></tr>
+        <tr><td>*</td><td>只作用终端</td></tr>
+        <tr><td>◆</td><td>只作用基站</td></tr>
+      </table></div>
+      <h3>附录：AT 指令说明</h3>
+      <p>本手册中所有命令行必须以“AT”作为开头，以回车换行（&lt;CR&gt;&lt;LF&gt;）作为结尾。只有在 AT（配置）模式才能响应指令，否则模块将处于透传模式。指令响应格式为 &lt;CR&gt;&lt;LF&gt;响应内容&lt;CR&gt;&lt;LF&gt;。</p>
+      <p>本手册中只有 &lt;响应内容&gt; 被介绍，&lt;CR&gt;&lt;LF&gt; 被有意省略。&lt;响应内容&gt; 和设置参数值 &lt;x&gt; 为十六进制字符串。设备串口支持多种波特率，网关默认使用 115200，终端默认使用 9600，8 位数据位，无校验位，1 位停止位。</p>
+      <p>在 AT 配置模式下，每一条 AT 指令都有回响，用户使用时须等待指令回响结果再做下一步操作。如果命令执行失败，响应对应错误代码。</p>
+      <h3>常见错误代码</h3>
+      <div class="table-wrap"><table>
+        <tr><th>代码</th><th>含义</th><th>代码</th><th>含义</th></tr>
+        <tr><td>ER00</td><td>语法错误</td><td>ER05</td><td>保存失败</td></tr>
+        <tr><td>ER01</td><td>参数错误</td><td>ER06</td><td>缓冲区满</td></tr>
+        <tr><td>ER02</td><td>执行失败</td><td>ER07</td><td>发送超时</td></tr>
+        <tr><td>ER03</td><td>信道忙</td><td>ER08</td><td>命令不支持</td></tr>
+        <tr><td>ER04</td><td>长度错误</td><td>ER09</td><td>不可读</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>AT 模式与短指令</h2>
+      <p>AT 模式：可由 ++ 指令进入或引脚 AT 口拉高进入，建议使用指令切换方式，AT 口不用可悬空或拉低处理。</p>
+      <p>当模块 AT 脚置低或悬空时，发送特殊字符“+++”（无需回车结尾），可使模块进入配置模式。如需退出配置模式，可使用“ATT”指令。</p>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响内容</th><th>说明</th></tr>
+        <tr><td>+++</td><td>OK</td><td>网关进入配置模式</td></tr>
+        <tr><td>AT</td><td>OK</td><td>查询是否支持 AT 命令</td></tr>
+        <tr><td>ATI</td><td>+ATI:&lt;version 1&gt;, &lt;version 2&gt;</td><td>查询设备版本信息，Version 1 为硬件版本，Version 2 为软件版本。GW1 显示两行，GW1P、GW2 或终端只有一行</td></tr>
+        <tr><td>ATZ</td><td>OK</td><td>恢复默认参数，终端模组恢复后会自动重启设备</td></tr>
+        <tr><td>ATR</td><td>OK</td><td>软件复位，模块重启</td></tr>
+        <tr><td>ATT</td><td>OK</td><td>退出配置模式进入透传</td></tr>
+        <tr><td>ATH</td><td>示意如下</td><td>查询所支持的 AT 命令，不同产品及版本支持数量有差异</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>查询指令</h2>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响内容</th><th>说明</th></tr>
+        <tr><td>AT+CFG?</td><td>示意如下</td><td>查询接收配置参数，不同基站终端版本有所差别</td></tr>
+        <tr><td>AT+ID?</td><td>+ID: &lt;hex&gt;</td><td>8 字节十六进制字符串，查询设备 ID，LoRaWAN 模式下用于 DevEUI，只读不可修改</td></tr>
+        <tr><td>AT+AID?</td><td>+AID: &lt;hex&gt;</td><td>8 字节十六进制字符串，LoRaWAN 模式下用于 AppEUI 或 JoinEUI</td></tr>
+        <tr><td>AT+CSQ?</td><td>+CSQ:SNR,RSSI</td><td>查询无线接收信号质量，示例 +CSQ:9,-92。仅终端产品支持，接收数据后才有，否则返回 ER09</td></tr>
+        <tr><td>AT+AK?</td><td>+AK:&lt;hex&gt;</td><td>16 字节十六进制密钥，仅显示最后 4 个字节。AK 非 0 则开启 AES 功能</td></tr>
+        <tr><td>AT+ADDR?</td><td>+ADDR: &lt;hex&gt;</td><td>查询单播地址，默认取自 ID 后 4 个字节，可修改</td></tr>
+        <tr><td>AT+MADDR?（*）</td><td>+MADDR: &lt;hex&gt;</td><td>查询组播地址，默认取自 ID 前 4 个字节，可修改</td></tr>
+        <tr><td>AT+SYNC?</td><td>+SYNC: &lt;hex&gt;</td><td>查询同步字配置</td></tr>
+        <tr><td>AT+SYWD?</td><td>+SYWD: &lt;hex&gt;</td><td>查询同步字配置，LoRa 模式只取最后 2 个字节</td></tr>
+        <tr><td>AT+POW?</td><td>+POW: &lt;hex&gt;</td><td>查询发射功率，示例 +POW:14 代表 Power 为 20</td></tr>
+        <tr><td>AT+BW?</td><td>+BW: &lt;hex&gt;</td><td>查询带宽，示例 +BW:07 代表 125KHz</td></tr>
+        <tr><td>AT+CR?</td><td>+CR: &lt;hex&gt;</td><td>查询编码率，示例 +CR:01 代表 4/5</td></tr>
+        <tr><td>AT+CRC?</td><td>+CRC: &lt;hex&gt;</td><td>查询无线 CRC 开关</td></tr>
+        <tr><td>AT+TFREQ?</td><td>+TFREQ: &lt;hex&gt;</td><td>查询发射频点</td></tr>
+        <tr><td>AT+RFREQ?</td><td>+RFREQ: &lt;hex&gt;</td><td>查询接收频点</td></tr>
+        <tr><td>AT+FREQA?（◆）</td><td>+FREQA: &lt;hex&gt;</td><td>查询网关 A 通道起始频点</td></tr>
+        <tr><td>AT+FREQB?（◆）</td><td>+FREQB: &lt;hex&gt;</td><td>查询网关 B 通道起始频点</td></tr>
+        <tr><td>AT+TSF?</td><td>+TSF: &lt;hex&gt;</td><td>查询发射扩频因子，示例 +TSF:0C 代表 SF12</td></tr>
+        <tr><td>AT+RSF?</td><td>+RSF: &lt;hex&gt;</td><td>查询接收扩频因子</td></tr>
+        <tr><td>AT+ROLE?</td><td>+ROLE: &lt;hex&gt;</td><td>查询测距角色</td></tr>
+        <tr><td>AT+SIP?</td><td>+SIP: &lt;hex&gt;</td><td>查询序号协议设置</td></tr>
+        <tr><td>AT+RGN?</td><td>+RGN: &lt;hex&gt;</td><td>查询地区规范</td></tr>
+        <tr><td>AT+SEN?</td><td>+SEN: &lt;hex&gt;</td><td>查询传感器类型，00 为未指定</td></tr>
+        <tr><td>AT+URC?</td><td>+URC: &lt;hex&gt;</td><td>查询 URC 输出设置，00 为禁止</td></tr>
+        <tr><td>AT+FPORT?</td><td>+FPORT: &lt;hex&gt;</td><td>查询 FPort 值</td></tr>
+        <tr><td>AT+CEREG?</td><td>+CEREG: 0 或 1</td><td>查询 LoRaWAN 入网（JOIN）状态，0 未入网，1 已入网</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>设置指令</h2>
+      <p>以下指令 &lt;x&gt; 用于代表配置参数，为十六进制（hex）格式字符串，具体内容请参考说明或示例。</p>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>参数说明</th></tr>
+        <tr><td>AT+NET=&lt;x&gt;（*）</td><td>OK</td><td>网络模式：00 定频模式 / 01 跳频模式。定频用于点对点测试，跳频用于点对基站通信</td></tr>
+        <tr><td>AT+AID=&lt;x&gt;</td><td>OK</td><td>8 字节十六进制，LoRaWAN 模式下用作 AppEUI 或 JoinEUI</td></tr>
+        <tr><td>AT+AK=&lt;x&gt;</td><td>OK</td><td>16 字节十六进制，配置 AES 密钥。默认未配置，配置后自动开启 AES，配置全 0 关闭</td></tr>
+        <tr><td>AT+ADDR=&lt;x&gt;</td><td>OK</td><td>4 字节单播地址，默认取自模块 ID 后 4 字节，建议不要修改</td></tr>
+        <tr><td>AT+MADDR=&lt;x&gt;（*）</td><td>OK</td><td>4 字节组播地址，默认取自模块 ID 前 4 字节，可实现模块分组接收</td></tr>
+        <tr><td>AT+MODE=&lt;x&gt;</td><td>OK</td><td>调制方式：00 FSK / 01 LoRa</td></tr>
+        <tr><td>AT+TPREM=&lt;x&gt;</td><td>OK</td><td>发送前导码，默认 0008</td></tr>
+        <tr><td>AT+RPREM=&lt;x&gt;</td><td>OK</td><td>接收前导码，默认 000A</td></tr>
+        <tr><td>AT+LDR=&lt;xy&gt;</td><td>OK</td><td>低速率优化，x 高 4bit 为发送 LDR，y 低 4bit 为接收 LDR。0 AUTO / 1 全部开启 / 2 全部关闭。收发两端必须一致</td></tr>
+        <tr><td>AT+SYNC=&lt;x&gt;</td><td>OK</td><td>同步字，默认 0x12，收发两端必须一致</td></tr>
+        <tr><td>AT+SYWD=&lt;x&gt;</td><td>OK</td><td>同步字，可配置 1~4 个字节</td></tr>
+        <tr><td>AT+POW=&lt;x&gt;</td><td>OK</td><td>发射功率值（十六进制），14 对应 20dBm</td></tr>
+        <tr><td>AT+BW=&lt;x&gt;</td><td>OK</td><td>带宽：07 125K / 08 250K / 09 500K</td></tr>
+        <tr><td>AT+CR=&lt;x&gt;</td><td>OK</td><td>编码率：01 4/5 / 02 4/6 / 03 4/7 / 04 4/8</td></tr>
+        <tr><td>AT+TFREQ=&lt;x&gt;</td><td>OK</td><td>发送频点，示例 1E3093A0 对应 506.5MHz</td></tr>
+        <tr><td>AT+RFREQ=&lt;x&gt;</td><td>OK</td><td>接收起始频点，4 字节 8 字符，每个频点间隔 200KHz，总计 8 个频点</td></tr>
+        <tr><td>AT+FREQA=&lt;x&gt;（◆）</td><td>OK</td><td>通道 A 起始频点，每个频点间隔 200KHz，总计 4 个频点</td></tr>
+        <tr><td>AT+FREQB=&lt;x&gt;（◆）</td><td>OK</td><td>通道 B 起始频点，每个频点间隔 200KHz，总计 4 个频点。需将默认接收频点配置为 0 才能使用</td></tr>
+        <tr><td>AT+TSF=&lt;x&gt;</td><td>OK</td><td>发送扩频因子，0C 对应 SF12</td></tr>
+        <tr><td>AT+RSF=&lt;x&gt;（*）</td><td>OK</td><td>接收扩频因子，0C 对应 SF12</td></tr>
+        <tr><td>AT+TIQ=&lt;x&gt;</td><td>OK</td><td>发送载波反转：00 不反转 / 01 反转。收发反转配置必须一致</td></tr>
+        <tr><td>AT+RIQ=&lt;x&gt;</td><td>OK</td><td>接收载波反转：00 不反转 / 01 反转</td></tr>
+        <tr><td>AT+SIP=&lt;x&gt;</td><td>OK</td><td>序号及协议功能：00 默认 / 01 私有协议 / 10 包序号功能 / 11 包序号及私有协议 / 02 LoRaWAN ABP / 03 LoRaWAN OTAA。高 4 位为 SEQ 功能，低 4 位为 IP 功能</td></tr>
+        <tr><td>AT+RGN=&lt;x&gt;</td><td>OK</td><td>地区规范：00 无 / 01 EU868 / 02 US915 / 03 CN779 / 04 EU433 / 05 AU915 / 06 CN470（国内默认）/ 07 AS923 / 08 KR920 / 09 IN865 / 0A RU864 / 0B LA915</td></tr>
+        <tr><td>AT+SEN=&lt;x&gt;</td><td>OK</td><td>传感器类型，用于 DT2xx/4xx 二次集成设备：00 未指定 / 01 0~5V / 02 4~20mA / 03 温湿度 / 04 PT100 / 05 DS18B20 / 06 K 型热电偶 / 07 NTC 测温 / 08 红外测温 / 09 水浸 / 0A I/O 门磁 / 0B 震动 / 0C 倾角 / 0D 压力</td></tr>
+        <tr><td>AT+URC=&lt;x&gt;</td><td>OK</td><td>URC 输出控制：00 禁止（默认）/ 01 开启</td></tr>
+        <tr><td>AT+FPORT=&lt;x&gt;</td><td>OK</td><td>FPort 值，主要用于 LoRaWAN，有效范围 0x01~0xDF</td></tr>
+        <tr><td>AT+ACK=&lt;x&gt;（*）</td><td>OK</td><td>模块应答开关：00 不应答（默认）/ 01 应答。暂只针对透传模式且需开启 IP 功能</td></tr>
+        <tr><td>AT+BRATE=&lt;x&gt;</td><td>OK</td><td>串口波特率：00 1200 / 01 2400 / 02 4800 / 03 9600（默认）/ 04 19200 / 05 38400 / 06 57600 / 07 115200（网关默认）/ 08 230400 / 09 460800</td></tr>
+        <tr><td>AT+PAR=&lt;x&gt;</td><td>OK</td><td>串口奇偶校验：00 None / 01 Even / 02 Odd</td></tr>
+        <tr><td>AT+TYPE=&lt;x&gt;</td><td>OK</td><td>基站数据格式：00 SIMPLE 透传 / 01 TLV / 02 FRAME / 03 JSON / 04 TLV V1 定制版本</td></tr>
+      </table></div>
+      <h3>终端特殊配置（AT+TYPE）</h3>
+      <p>AT+TYPE 在终端侧用于定制化参数设置，各 Bit 说明如下：</p>
+      <div class="table-wrap"><table>
+        <tr><th>bit 7</th><th>bit 6</th><th>bit 5</th><th>bit 4</th><th>bit 3~0</th></tr>
+        <tr><td>接收方式：0 连续 / 1 单包</td><td>原始数据：0 默认 / 1 原始数据</td><td>碰撞检测方式：0 能量侦听（默认）/ 1 信号侦听</td><td>硬件增益选择：0 PA Boost（默认）/ 1 RFO</td><td>定制化参数</td></tr>
+      </table></div>
+      <h3>AT+LCP 与 AT+RXW 配合说明</h3>
+      <div class="table-wrap"><table>
+        <tr><th>场景模式</th><th>LCP</th><th>RXW</th><th>备注</th></tr>
+        <tr><td>透传</td><td>0</td><td>0</td><td>默认配置，不主动休眠，持续接收，类似 LoRaWAN Class C</td></tr>
+        <tr><td>透传</td><td>0</td><td>&gt;0</td><td>LCP 为 0 不主动休眠，RXW 参数无意义</td></tr>
+        <tr><td>周期性侦听</td><td>&gt;0</td><td>0</td><td>空中唤醒功能，周期性休眠</td></tr>
+        <tr><td>窗口式接收</td><td>&gt;0</td><td>&gt;0</td><td>类似 LoRa Class A，发送完成开启 RXW 秒接收后关闭，自动进入休眠</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>数据发送与接收</h2>
+      <h3>AT+TX 发送数据</h3>
+      <p>除透传方式外，还可使用 AT 命令发送数据。为匹配 ASCII 命令格式，发送数据需将每个字节的 ASCII 码转成十六进制字符串。</p>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>说明</th></tr>
+        <tr><td>AT+TX=&lt;x&gt;</td><td>OK</td><td>&lt;x&gt; 为数据内容（十六进制）。如 AT+TX=123456 发送 0x12,0x34,0x56。成功返回 OK，失败返回错误码</td></tr>
+        <tr><td>AT+RX=&lt;x&gt;</td><td>OK</td><td>00 关闭接收 / 01 开启接收测试模式。主要用于性能测试，配置不保存，复位后关闭。基站为工厂测试模式，打印 FRAME 格式</td></tr>
+        <tr><td>AT+TXF=&lt;x&gt;</td><td>OK</td><td>按频点发送数据，在数据最前面增加 4 字节频点 HEX 字符串。如 AT+TXF=1E3093A0123456 表示在 506.5MHz 发送 0x12,0x34,0x56。该频点只临时作用于当次发送，不保存</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>低功耗与链路参数</h2>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>说明</th></tr>
+        <tr><td>AT+LCP=&lt;x&gt;</td><td>OK</td><td>链路检测周期，2 字节十六进制，单位秒，设置为 0 则不开启。基站用于 1301 检测周期；终端模组为休眠周期，休眠周期到开启 LoRa 信号监测用于空中唤醒。示例 0708 即 1800 秒</td></tr>
+        <tr><td>AT+LFT=&lt;x&gt;（◆）</td><td>OK</td><td>存活周期，2 字节十六进制，单位秒，设置为 0 则不开启 Life Time 检测</td></tr>
+        <tr><td>AT+LAT=&lt;x&gt;（◆）</td><td>OK</td><td>设置纬度，4 字节浮点数十六进制字符串。如 41E1DA2D 对应 28.23153</td></tr>
+        <tr><td>AT+LGT=&lt;x&gt;（◆）</td><td>OK</td><td>设置经度，4 字节浮点数十六进制字符串。如 42EA1252 对应 117.03578</td></tr>
+        <tr><td>AT+EL=&lt;x&gt;（*）</td><td>OK</td><td>休眠时间，2 字节十六进制，如 0020 为 32 秒，最长 12 小时 A8C0。0000 为长期低功耗模式。参数配置不保存，重启失效</td></tr>
+        <tr><td>AT+PARAM=&lt;x&gt;（*）</td><td>OK</td><td>扩展参数，备用命令，定制化需求使用，最多 16 字节（32 字符）</td></tr>
+        <tr><td>AT+CMD=&lt;x&gt;（*）</td><td>OK</td><td>扩展命令，备用命令，定制化需求使用</td></tr>
+        <tr><td>AT+TFIX=&lt;x&gt;（*）</td><td>OK</td><td>固定发送长度，1 字节十六进制，设置为 0 则不固定。使用 SF6 收发时必须固定长度（HL9、KL9 127x 系列）</td></tr>
+        <tr><td>AT+RFIX=&lt;x&gt;（*）</td><td>OK</td><td>固定接收长度，1 字节十六进制，设置为 0 则不固定。使用 SF6 收发时必须固定长度</td></tr>
+        <tr><td>AT+FNB=&lt;x&gt;（*）</td><td>OK</td><td>退避策略，1 字节十六进制。bit7 表示退避失败是否强制发送（0 丢弃 / 1 仍发送），bit6~0 为退避次数，系统默认 4 次</td></tr>
+        <tr><td>AT+RXW=&lt;x&gt;（*）</td><td>OK</td><td>接收窗口时间，1 字节十六进制，单位秒，需配合 LCP 配置使用</td></tr>
+      </table></div>
+      <div class="note">针对 HL9 模组，LCP 与休眠不能同时配置。由于 HL9 支持低功耗串口，在波特率 9600 及以下可由串口直接唤醒模组，因此 <= 9600 暂不支持 AT+EL 命令。</div>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>扩展指令</h2>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>说明</th></tr>
+        <tr><td>AT+ROLE=&lt;x&gt;（*）</td><td>OK</td><td>设置测距角色，1 字节十六进制：00 Slave / 01 Master。用于 HL20 模组（SX1280）</td></tr>
+      </table></div>
+      <p>技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、模组版本、指令内容及回响结果。</p>
+    </section>
+
+    <section class="section" id="s8"><h2><span class="num">8</span>4G 相关指令</h2>
+      <p>4G 相关指令采用十进制或字符串方式，兼容原 PC100C1 终端指令。</p>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>说明</th></tr>
+        <tr><td>AT+SERV=&lt;idx&gt;,&lt;host&gt;,&lt;port&gt;</td><td>OK</td><td>设置服务器地址信息。<br>idx 服务器序号，目前固定为 0，只支持连接一个服务器<br>host 服务器地址，可以是 IP 或域名，不超过 60 字符<br>port 端口号 1-65535<br>示例：AT+SERV=0,114.221.142.25,60000</td></tr>
+        <tr><td>AT+APN=&lt;apn&gt;</td><td>OK</td><td>设置 APN，字符串不超过 30 字符。一般不需要手动设置，设备会根据卡类型自动获取 APN，示例 AT+APN=ctnet</td></tr>
+        <tr><td>AT+WAY=&lt;way&gt;</td><td>OK</td><td>设置通信方式，十进制数，取值 0/1/2，分别为 UDP、TCP、MQTT。示例 AT+WAY=2 表示 MQTT</td></tr>
+        <tr><td>AT+SIM=&lt;sim&gt;</td><td>OK</td><td>选择卡槽，十进制数，取值 0/1，分别为卡槽 1 和卡槽 2。默认卡槽 1，双卡槽版本可按需设置</td></tr>
+        <tr><td>AT+TOPIC=&lt;topic&gt;</td><td>OK</td><td>设置 MQTT 的 Topic 前缀，不超过 30 字符。设备会自动补全设备编号和数据分类，形成完整 Topic</td></tr>
+        <tr><td>AT+USPD=&lt;uname&gt;,&lt;passwd&gt;</td><td>OK</td><td>设置 MQTT 用户名和密码，均为字符串，各自不超过 30 字符，示例 AT+USPD=wwiot,wwiot</td></tr>
+        <tr><td>AT+CLID=&lt;clientid&gt;</td><td>OK</td><td>设置 MQTT 的 ClientID，不超过 30 字符。默认使用设备编号的后 8 位字符串，可按需修改</td></tr>
+        <tr><td>AT+OPT=&lt;opt&gt;</td><td>OK</td><td>是否默认服务器，十进制数，取值 0/1，分别为自定义和固定服务器。一般不需要设置，默认为自定义服务器</td></tr>
+      </table></div>
+      <h3>MQTT Topic 补全规则</h3>
+      <p>此处配置的 Topic 为前缀部分。以设备编号 3000100F、前缀 <span class="inline-code">wwiot/devices</span> 为例，采用 MQTT 通信时主要分为 3 个 Topic：</p>
+      <div class="table-wrap"><table>
+        <tr><th>用途</th><th>Topic</th></tr>
+        <tr><td>数据上报</td><td>wwiot/devices/3000100F/data</td></tr>
+        <tr><td>终端应答</td><td>wwiot/devices/3000100F/ack</td></tr>
+        <tr><td>订阅下行</td><td>wwiot/devices/3000100F/dw</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s9"><h2><span class="num">9</span>DTU 采集指令</h2>
+      <p>采集指令相关，支持自定义和复合类型。</p>
+      <div class="table-wrap"><table>
+        <tr><th>命令语句</th><th>回响</th><th>说明</th></tr>
+        <tr><td>AT+REGS?</td><td>+REGS:num</td><td>查询采集指令，num 为采集指令数量。num 不为 0 则继续列出对应的采集指令</td></tr>
+        <tr><td>AT+AREG=&lt;index&gt;,&lt;param1&gt;,...,&lt;paramN&gt;</td><td>OK</td><td>添加采集指令。index 为指令索引号，取值 0~59，即最大 60 条；param 个数根据设备指令类型，分别为 1 个（自定义类型）和 4 个（复合类型）</td></tr>
+        <tr><td>AT+DREG=&lt;index&gt;</td><td>OK</td><td>删除采集指令。index 为指令索引号，取值 0~59</td></tr>
+      </table></div>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · 传感器配置 AT 指令手册</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

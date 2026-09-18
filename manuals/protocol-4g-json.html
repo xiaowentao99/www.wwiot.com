@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4G 传感器 JSON 协议 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="4G 设备 JSON 报文格式说明，包含温湿度、水浸及烟感 MQTT 上报格式。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>4G 传感器 JSON 协议</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">通信协议</span>
+      <h1>4G 传感器 JSON 协议</h1>
+      <p>4G 设备 JSON 报文格式说明，涵盖温湿度、水浸等简化报文与烟感 MQTT 上报格式。</p>
+      <div class="meta"><span>适用型号：WW-12C / WW-26C / WW-21C / WW-22C / WW-70C / WW-73C</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">简化 JSON 报文</a></li>
+      <li><a href="#s2">烟感 MQTT 报文</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>简化 JSON 报文</h2>
+      <h3>1.1 WW-12C 小白盒温湿度</h3>
+      <div class="code">{
+  "iccid": "898608321123D1225554",   /* 设备 CCID，对接客户平台需记录，充值使用 */
+  "seq": 306,                         /* 包序号 */
+  "imei": "862323085589300",          /* 设备 IMEI */
+  "ts": 1788415298,
+  "batt": 100,                        /* 电池电量 */
+  "sn": "08558930",                   /* 设备唯一编号 */
+  "csq": 23,                          /* 信号强度 25~31 优秀，17~24 良好，16 及以下较差 */
+  "hum": 59,                          /* 湿度，59% */
+  "tmp": 291                          /* 温度，29.1° */
+}</div>
+      <h3>1.2 WW-26C-SP2X 小白盒水浸</h3>
+      <div class="code">{
+  "csq": 30,                          /* 信号强度 */
+  "iccid": "898608321123D1225559",    /* 设备 CCID */
+  "sn": "08558950",                   /* 设备唯一编号 */
+  "seq": 200,                         /* 包序号 */
+  "imei": "862323085589508",          /* 设备 IMEI */
+  "water": 0,                         /* 水的状态，有水：1，无水：0 */
+  "ts": 1788747296,
+  "batt": 100                         /* 电池电量 */
+}</div>
+      <div class="note">信号强度 csq 取值参考：25~31 信号优秀，17~24 信号良好，16 及以下信号较差。</div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>烟感 MQTT 报文（WW-22C）</h2>
+      <h3>2.1 上电数据</h3>
+      <p>设备上电后分多条 Topic 上报基础属性：</p>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/property/post  QoS: 0
+{"id":"1","version":"1.0","params":{"TERMINAL_TYPE":{"value":"4G-SMOKE_V2.0"},"SOFT_VERSION":{"value":"Version8.0.2"},"MANUFACTURER_NAME":{"value":"Alean"},"COMM_RESTRY_TIME":{"value":30},"COMM_RESTRY_NUM":{"value":3},"DATA_RESEND_NUMBER":{"value":3}}}</div>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/property/post  QoS: 0
+{"id":"2","version":"1.0","params":{"HEARTBEAT_TIME":{"value":85800},"SIGNAL_POWER":{"value":26},"ALARM_STATE":{"value":0},"BATTERY_VALUE":{"value":86},"SMOKE_VALUE":{"value":13},"SMOKE_ALARM_VALUE":{"value":42}}}</div>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/property/post  QoS: 0
+{"id":"3","version":"1.0","params":{"ALARM_MODE":{"value":1},"LOW_BATTERY_VOLTAGE":{"value":80},"IMSI":{"value":"460113889580836"},"IMEI":{"value":"862856076748666"}}}</div>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/property/post  QoS: 0
+{"id":"4","version":"1.0","params":{"MQTT_NAME_ID":{"value":"WW/4G-SMOKE"},"MQTT_KEY":{"value":"nB1#vR"},"MQTT_NAME":{"value":"wwiot_smoke"}}}</div>
+      <p>数据解析参考模型文档：万维 4G 烟感数据模型.xlsx。</p>
+      <h3>2.2 心跳数据</h3>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/property/post  QoS: 0
+{"id":"5","version":"1.0","params":{"TERMINAL_TYPE":"SMOKE","SIGNAL_POWER":10,"BATTERY_VALUE":90}}</div>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>含义</th></tr>
+        <tr><td>serviceId</td><td>HEARTBEAT 心跳</td></tr>
+        <tr><td>deviceId</td><td>设备 ID 号</td></tr>
+        <tr><td>messageType</td><td>post</td></tr>
+        <tr><td>payload</td><td>数据内容</td></tr>
+        <tr><td>TERMINAL_TYPE</td><td>设备名称</td></tr>
+        <tr><td>SIGNAL_POWER</td><td>信号强度</td></tr>
+        <tr><td>BATTERY_VALUE</td><td>电池电量</td></tr>
+      </table></div>
+      <h3>2.3 报警事件数据</h3>
+      <div class="code">Topic: WW/4G-SMOKE/862856072847785/thing/event/post  QoS: 0
+{"id":"6","version":"1.0","params":{"ALARM_STATE_REPORT":{"value":{"ALARM_STATE":1}}}}
+
+Topic: WW/4G-SMOKE/862856072847785/thing/event/post  QoS: 0
+{"id":"7","version":"1.0","params":{"SMOKE_DATA_REPORT":{"value":{"TERMINAL_TYPE":"4G-SMOKE_V2.0","SIGNAL_POWER":18,"BATTERY_VALUE":86,"SMOKE_VALUE":168,"ALARM_STATE":1}}}}
+
+Topic: WW/4G-SMOKE/862856072847785/thing/event/post  QoS: 0
+{"id":"8","version":"1.0","params":{"ALARM_STATE_REPORT":{"value":{"ALARM_STATE":0}}}}
+
+Topic: WW/4G-SMOKE/862856072847785/thing/event/post  QoS: 0
+{"id":"9","version":"1.0","params":{"SMOKE_DATA_REPORT":{"value":{"TERMINAL_TYPE":"4G-SMOKE_V2.0","SIGNAL_POWER":18,"BATTERY_VALUE":86,"SMOKE_VALUE":11,"ALARM_STATE":0}}}}</div>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>含义</th></tr>
+        <tr><td>ALARM_STATE_REPORT</td><td>报警事件上报，ALARM_STATE 为 1 报警、0 恢复正常</td></tr>
+        <tr><td>SMOKE_DATA_REPORT</td><td>烟感实时数据：TERMINAL_TYPE 产品类型、BATTERY_VALUE 电池电量、ALARM_STATE 报警类型、SIGNAL_POWER 信号强度、SMOKE_VALUE 烟雾值</td></tr>
+        <tr><td>messageType</td><td>event</td></tr>
+      </table></div>
+      <h3>2.4 故障数据</h3>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/event/post  QoS: 0
+{"id":"10","version":"1.0","params":{"TROUBLE_REPORT":{"value":{"TROUBLE":21}}}}</div>
+      <div class="table-wrap"><table>
+        <tr><th>TROUBLE</th><th>含义</th></tr>
+        <tr><td>21</td><td>电池电量低</td></tr>
+        <tr><td>1</td><td>传感器故障</td></tr>
+        <tr><td>101</td><td>通讯故障</td></tr>
+      </table></div>
+      <h3>2.5 故障恢复数据</h3>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/event/post  QoS: 0
+{"id":"11","version":"1.0","params":{"TROUBLE_RES_REPORT":{"value":{"TROUBLE":21}}}}</div>
+      <p>TROUBLE_RES 为 21 电池电量恢复、1 传感器故障恢复、101 通讯故障恢复。</p>
+      <h3>2.6 自检数据</h3>
+      <div class="code">Topic: WW/4G-SMOKE/862856076748666/thing/event/post  QoS: 0
+{"id":"5","version":"1.0","params":{"SELF_TEST_REPORT":{"value":{"SELF_TEST_MODE":2,"ALARM_STATE":0,"TAMPER_ALARM":0,"SIGNAL_POWER":26,"BATTERY_VALUE":86}}}}</div>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>含义</th></tr>
+        <tr><td>SELF_TEST_MODE</td><td>1 远程自检，2 按键自检</td></tr>
+        <tr><td>TAMPER_ALARM</td><td>防拆状态</td></tr>
+        <tr><td>SIGNAL_POWER</td><td>信号强度</td></tr>
+        <tr><td>BATTERY_VALUE</td><td>电池电量</td></tr>
+        <tr><td>ALARM_STATE</td><td>报警状态</td></tr>
+      </table></div>
+      <div class="note">SAAS 平台收到数据需回复 HTTP 200。超过 48 小时无任何数据时，平台判断该设备为掉线状态。</div>
+      <p>技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、IMEI、CCID 及报文样例。</p>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · 4G 传感器 JSON 协议</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

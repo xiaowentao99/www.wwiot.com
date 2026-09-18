@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AT 指令配置（新版）- 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-D5-L 产品 AT 指令手册与配置寄存器一览，涵盖接口模式、指令清单、LoRa 远程 AT、串口 OTA 与寄存器地址表。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>AT 指令配置（新版）</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">配置指令 · 新版</span>
+      <h1>AT 指令配置（新版）</h1>
+      <p>面向新一代终端产品的 AT 指令手册与配置寄存器一览，含接口模式、指令清单、LoRa 空中配置、串口 OTA 与寄存器地址表。</p>
+      <div class="meta"><span>产品：WW-D5-L / WW75L</span><span class="version">FW 1.5.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">接口与模式</a></li>
+      <li><a href="#s2">应答与 ERR</a></li>
+      <li><a href="#s3">指令一览</a></li>
+      <li><a href="#s4">LoRa 远程 AT</a></li>
+      <li><a href="#s5">常用指令说明</a></li>
+      <li><a href="#s6">串口 OTA</a></li>
+      <li><a href="#s7">LoRa TLV 业务</a></li>
+      <li><a href="#s8">配置存储</a></li>
+      <li><a href="#s9">休眠与功耗</a></li>
+      <li><a href="#s10">寄存器配置一览</a></li>
+      <li><a href="#s11">LoRa 下发帧与 Demo</a></li>
+      <li><a href="#s12">WW75L 产品说明（消防压力）</a></li>
+      <li><a href="#s13">WW105C 产品说明（4G 温湿度）</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>接口与模式</h2>
+      <p>产品型号 <strong>WW-D5-L</strong>；固件版本见 <span class="inline-code">AT+VER?</span> / <span class="inline-code">AT+INFO?</span> 中的「固件（FW）」（当前 <strong>1.5.0</strong>）。功能定位：<strong>RS485 Modbus 采集 → LoRa 私有网 TLV 转发</strong>（无 4G、无 JSON 上报）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>项目</th><th>说明</th></tr>
+        <tr><td>物理口</td><td>调试 UART：LPUART0（PB0 TX / PB11 RX）</td></tr>
+        <tr><td>波特率</td><td>115200，8N1</td></tr>
+        <tr><td>行结束</td><td>\r\n 或 \n（<span class="inline-code">+++</span> 建议单独发送）</td></tr>
+        <tr><td>成功</td><td>OK\r\n</td></tr>
+        <tr><td>失败</td><td>ERRn\r\n（见第 2 章）</td></tr>
+        <tr><td>配置落盘</td><td>写入类成功后写 UserCfg（Flash 0x1D000）</td></tr>
+        <tr><td>空口业务</td><td>仅 LoRa TLV（注册 / 心跳 / Modbus 采集结果）</td></tr>
+      </table></div>
+      <h3>1.1 命令态 / 数据模式</h3>
+      <div class="table-wrap"><table>
+        <tr><th>状态</th><th>进入方式</th><th>行为</th></tr>
+        <tr><td>命令态（已解锁）</td><td>默认空密码上电即进；或 +++</td><td>可发全部 AT</td></tr>
+        <tr><td>命令态（待解锁）</td><td>已设密码时 +++ → OK.SER</td><td>仅 AT / ATO / AT+SER=</td></tr>
+        <tr><td>数据模式</td><td>ATO；有密码时命令态空闲 60s</td><td>普通 AT 无应答</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>规则</th><th>说明</th></tr>
+        <tr><td>默认密码</td><td>空</td></tr>
+        <tr><td>最大长度</td><td>9</td></tr>
+        <tr><td>改密 / 清空</td><td>解锁后 AT+SER=&lt;新&gt; / AT+SER=</td></tr>
+        <tr><td>查询密码</td><td>不支持 → ERR2</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>应答与 ERR</h2>
+      <div class="table-wrap"><table>
+        <tr><th>应答</th><th>含义</th><th>应答</th><th>含义</th></tr>
+        <tr><td>OK</td><td>成功</td><td>ERR4</td><td>参数格式错误</td></tr>
+        <tr><td>OK.SER</td><td>需先 AT+SER=&lt;密码&gt; 解锁</td><td>ERR5</td><td>参数取值非法</td></tr>
+        <tr><td>ERR1</td><td>未解锁</td><td>ERR6</td><td>Flash 落盘失败</td></tr>
+        <tr><td>ERR2</td><td>密码错误 / 禁止查密</td><td>ERR8</td><td>执行失败</td></tr>
+        <tr><td>ERR3</td><td>未知命令</td><td>ERR9</td><td>当前为数据模式</td></tr>
+      </table></div>
+      <div class="note">无 ERR7。</div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>指令一览</h2>
+      <div class="table-wrap"><table>
+        <tr><th>指令</th><th>查询</th><th>写入</th><th>落盘</th><th>说明</th></tr>
+        <tr><td>+++</td><td>—</td><td>✓</td><td>—</td><td>进命令态</td></tr>
+        <tr><td>ATO</td><td>—</td><td>✓</td><td>—</td><td>退数据模式</td></tr>
+        <tr><td>ATR / AT+R</td><td>—</td><td>✓</td><td>—</td><td>软重启</td></tr>
+        <tr><td>AT</td><td>—</td><td>—</td><td>—</td><td>连通</td></tr>
+        <tr><td>ATH / AT+H?</td><td>✓</td><td>—</td><td>—</td><td>列出全部支持的 AT 指令</td></tr>
+        <tr><td>AT+SER=</td><td>—</td><td>✓</td><td>✓</td><td>解锁 / 改密</td></tr>
+        <tr><td>AT+VER? / =</td><td>✓</td><td>✓</td><td>✓*</td><td>型号,产品版本</td></tr>
+        <tr><td>AT+LOG? / =</td><td>✓</td><td>✓</td><td>✓</td><td>调试日志 0/1</td></tr>
+        <tr><td>AT+INFO?</td><td>✓</td><td>—</td><td>—</td><td>设备信息（纯文本，非 JSON）</td></tr>
+        <tr><td>AT+DATA?</td><td>✓</td><td>—</td><td>—</td><td>Modbus 配置摘要 + 注册 TLV hex</td></tr>
+        <tr><td>AT+REPORT</td><td>—</td><td>✓</td><td>—</td><td>立即上报（注册/心跳）</td></tr>
+        <tr><td>AT+OTA=1</td><td>—</td><td>✓</td><td>—</td><td>武装串口 OTA（停上报，等二进制帧），见第 6 章</td></tr>
+        <tr><td>AT+SLEEP=n</td><td>—</td><td>✓</td><td>—</td><td>先硬关 LoRa/RS485/PC09/调试口，再 DeepSleep 1..30 秒，见第 9 章</td></tr>
+        <tr><td>AT+BUSOFF / =n</td><td>—</td><td>✓</td><td>—</td><td>立刻硬关四路（可选再深睡 n 秒）；MCU 仍醒时可对照电流</td></tr>
+        <tr><td>AT+AIRLISTEN? / =</td><td>✓</td><td>✓</td><td>—</td><td>空中听 0/1；上电默认 0（不落盘）</td></tr>
+        <tr><td>AT+PER? / =</td><td>✓</td><td>✓</td><td>✓</td><td>检测秒,发送秒；0,0 关闭周期（仅空中听/按键/REPORT）</td></tr>
+        <tr><td>AT+PWR? / =</td><td>✓</td><td>✓</td><td>✓</td><td>外设供电：预供电秒,采后保持秒</td></tr>
+        <tr><td>AT+ACK? / =</td><td>✓</td><td>✓</td><td>✓</td><td>LoRa 客户 ACK 0/1</td></tr>
+        <tr><td>AT+BATT? / =</td><td>✓</td><td>✓</td><td>✓</td><td>电量区间 0.1V：lo,hi</td></tr>
+        <tr><td>AT+LORA? / =</td><td>✓</td><td>✓</td><td>✓</td><td>LoRa 射频参数</td></tr>
+        <tr><td>AT+MBUART? / =</td><td>✓</td><td>✓</td><td>✓</td><td>RS485：baud,parity,stop</td></tr>
+        <tr><td>AT+MBMODE? / =</td><td>✓</td><td>✓</td><td>✓</td><td>0 指令表 / 1 地址轮询 / 2 两者</td></tr>
+        <tr><td>AT+MBCMD? / =</td><td>✓</td><td>✓</td><td>✓</td><td>固定采集指令（最多 10 条）</td></tr>
+        <tr><td>AT+MBSCAN? / =</td><td>✓</td><td>✓</td><td>✓</td><td>地址轮询模板（1~247）</td></tr>
+        <tr><td>AT+MBRAW=</td><td>—</td><td>✓</td><td>—</td><td>Modbus RTU 透传（hex，含 CRC）→ RS485，应答 TLV 0x24 上报</td></tr>
+      </table></div>
+      <h3>已移除（本产品不适用）</h3>
+      <p><span class="inline-code">AT+UNIT</span> / <span class="inline-code">RAN</span> / <span class="inline-code">THRE</span> / <span class="inline-code">VAR</span> / <span class="inline-code">ZERO</span> / <span class="inline-code">RST</span> / <span class="inline-code">SERVER</span> / <span class="inline-code">MQTT</span> 等压力机或 4G 试用指令 → ERR3。<span class="inline-code">AT+MBPOLL</span>（空闲轮询周期与 PER 发送周期重叠；应答超时固定 500 ms）→ ERR3。</p>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>LoRa 远程 AT（空中配置）</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>侦听</td><td>默认关（AT+AIRLISTEN=0）。打开后每 1s RX 900ms，静态电流会到数 mA，无法 µA 休眠</td></tr>
+        <tr><td>网关联调</td><td>先 AT+AIRLISTEN=1。COM19：+++ 配射频/TPREM → ATT 透传</td></tr>
+        <tr><td>载荷</td><td>ASCII：8hex 设备号 + AT…，例 <span class="inline-code">A1B2C3D4AT+PER?</span>；无烧录号时可用 00000000 / 广播 FFFFFFFF</td></tr>
+        <tr><td>广播</td><td>FFFFFFFF + AT；可写配置；不上行应答；禁止 MBRAW</td></tr>
+        <tr><td>单播应答</td><td>查询/配置文本经 TLV 0x25 上行；MBRAW 应答经 0x24</td></tr>
+        <tr><td>仍保留</td><td>上报后约 5s 下行窗口（兼容旧 Modbus 二进制配置）</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>常用指令说明</h2>
+      <h3>5.1 AT+VER</h3>
+      <div class="code">AT+VER?
+→ AT+VER=WW-D5-L,1.0
+→ OK</div>
+      <p>开机仍以固件内置型号覆盖显示字段。</p>
+      <h3>5.2 AT+INFO?（纯文本）</h3>
+      <p>字段名格式：<strong>中文（KEY）=值</strong>（UTF-8）。查询/设置指令本身仍用英文 KEY（如 AT+PER?）。</p>
+      <div class="code">设备号（NO）=...
+型号（MODEL）=WW-D5-L
+产品版本（PVER）=1.0
+固件（FW）=1.5.0
+模组（MOD）=WW-D5-L
+电池电压（BAT_MV）=...
+电量（BAT）=...
+射频类型（RADIO）=lora
+频率（FREQ）=470500000
+扩频因子（SF）=7
+网络号（NETID）=0x5A
+发射IQ（IQ_TX）=0
+接收IQ（IQ_RX）=1
+LoRa就绪（LORA）=1
+日志（LOG）=0
+周期（PER）=10,20
+供电（PWR）=3,1
+RS485波特率（MB_BAUD）=9600
+采集模式（MB_MODE）=0
+OK</div>
+      <p>ATH / AT+H? 列表同样带中文名，例如：周期（PER） AT+PER?。</p>
+      <h3>5.3 AT+DATA?</h3>
+      <p>首行 Modbus 配置摘要，次行注册帧 TLV 十六进制（便于对照空口）。</p>
+      <h3>5.4 AT+LORA</h3>
+      <div class="code">AT+LORA=txHz,txSF,rxHz,rxSF,netId,pwr[,hop,bwHz,preamble,iqTx,iqRx,pollMs,chN,stepHz,cr]
+AT+LORA=470500000,7,500500000,7,0x5A,22</div>
+      <p>设置后立即装入射频并落盘。</p>
+      <h3>5.5 RS485 / Modbus</h3>
+      <div class="code">AT+MBUART=9600,0,1          # parity: 0=N 1=E 2=O（当前硬件按 8N1）
+AT+MBMODE=0
+AT+MBCMD=0,1,1,0x03,0,2     # idx,en,slave,fc,reg,qty
+AT+MBSCAN=1,1,10,0x03,0,1   # en,start,end,fc,reg,qty
+AT+MBRAW=010300000002C40B   # 整帧 RTU hex（含 CRC）透传</div>
+      <ul>
+        <li>固定指令最多 10 条（idx 0~9）</li>
+        <li>地址轮询按 start~end 循环，不限制条数</li>
+        <li>采集节奏由 AT+PER 发送秒驱动；AT+PER=0,0 关闭周期</li>
+        <li>单次应答超时固定 500 ms（APP_MB_TIMEOUT_MS）</li>
+        <li>采集/透传成功经 LoRa 上报 TLV 0x24（TLV_TYPE_MODBUS）</li>
+      </ul>
+      <h3>5.6 PER / PWR / ACK / BATT / LOG / REPORT</h3>
+      <div class="table-wrap"><table>
+        <tr><th>指令</th><th>示例</th><th>说明</th></tr>
+        <tr><td>PER</td><td>AT+PER=10,20</td><td>配置 检测,发送（秒）；本产品不跑检测，按 20s 发送周期供电采集</td></tr>
+        <tr><td>PER</td><td>AT+PER=0,0</td><td>检测/发送周期均关闭，仅空中短听、按键、AT+REPORT</td></tr>
+        <tr><td>PWR</td><td>AT+PWR=3,1</td><td>上电后等 3s 再采；采完再供电 1s 后断电</td></tr>
+        <tr><td>ACK</td><td>AT+ACK=0 / 1</td><td>LoRa 客户 ACK 开关</td></tr>
+        <tr><td>BATT</td><td>AT+BATT=28,42</td><td>电量区间 2.8V~4.2V</td></tr>
+        <tr><td>LOG</td><td>AT+LOG=1</td><td>调试日志开关</td></tr>
+        <tr><td>REPORT</td><td>AT+REPORT</td><td>立即跑一轮（含供电采集）</td></tr>
+        <tr><td>MBRAW</td><td>AT+MBRAW=01…</td><td>RS485 透传，应答 hex + LoRa TLV</td></tr>
+      </table></div>
+      <p>默认：PWR=3,1。供电脚见 board_config.h：BOARD_EXT_PWR_*（PC09，高有效；空闲默认低电平关断）。RS485 PA09/PA10 空闲推挽拉低；与 PC09 同时上电时先拉高再切 UART。</p>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>串口 OTA（固件升级）</h2>
+      <p>口：LPUART0（调试 USB）115200 8N1，原始字节流（二进制帧 + 少量 ASCII AT/ACK）。开关：APP_OTA_ENABLE=1。禁止 LoRa 远程 AT+OTA（ERR8）。</p>
+      <h3>6.1 总流程（状态机）</h3>
+      <div class="code">业务运行中  --+++ / AT(+SER)-->  AT 命令态
+                                    | AT+OTA=1
+                                    v
+                              OTA armed（停上报；等 start 帧）
+                                    | BEGIN(0x10)
+                                    v
+                              擦下载区（数秒；成功后 ACK）
+                                    | DATA(0x02) × N
+                                    v
+                              写固件B块（每块 ACK；末块后 commit）
+                                    | 写 UpdateParam + 复位
+                                    v
+                              Boot 拷贝 A←B（串口可能断开/无输出）
+                                    v
+                              新 App 启动（再 AT+INFO? 验 fw）</div>
+      <div class="table-wrap"><table>
+        <tr><th>阶段</th><th>Host → Device</th><th>Device → Host</th></tr>
+        <tr><td>进命令态</td><td>+++ 然后可选 AT\r\n / AT+SER=pwd\r\n</td><td>OK / OK.SER / ERR*</td></tr>
+        <tr><td>武装</td><td>AT+OTA=1\r\n</td><td>AT+FW=&lt;ver&gt;\r\n + OK\r\n</td></tr>
+        <tr><td>固件信息</td><td>1 帧 BEGIN：romsize + 整包 md5</td><td>ACK tag=0x10</td></tr>
+        <tr><td>固件正文</td><td>N 帧 DATA：每帧最多 256B 数据</td><td>每帧 ACK tag=0x02</td></tr>
+        <tr><td>收尾</td><td>（末块成功后设备自行复位）</td><td>可能无 ACK（已复位）；再等启动日志</td></tr>
+      </table></div>
+      <p>一句话：AT+OTA=1 之后先发固件信息帧（BEGIN），再按 256 字节/块发固件数据帧（DATA）；不是把 .bin 裸流直灌。</p>
+      <h3>6.2 物理与文件</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>串口</td><td>调试 USB → LPUART0，115200 8N1，无流控</td></tr>
+        <tr><td>DTR/RTS</td><td>建议保持低/关（避免误复位）</td></tr>
+        <tr><td>升级文件</td><td>仅 App 裸 bin（链接起点 0x2000 的镜像内容），不要带 Boot</td></tr>
+        <tr><td>大小上限</td><td>≤ 100×1024 字节（HL19_APP_MAX_SIZE）</td></tr>
+        <tr><td>发布路径</td><td>firmware/WW-D5-L_yyyyMMdd_app.bin 或 build/wwiot-sensor.bin</td></tr>
+        <tr><td>首次量产</td><td>须已 SWD 烧过含 Boot 的 *.hex</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>区域</th><th>地址</th><th>说明</th></tr>
+        <tr><td>固件 A（运行）</td><td>0x02000</td><td>Boot 拷贝目标</td></tr>
+        <tr><td>UpdateParam</td><td>0x1E000</td><td>24B：flag=0x5A5A + romsize + md5[16]</td></tr>
+        <tr><td>固件 B（下载）</td><td>0x20000</td><td>Host 写入目标</td></tr>
+      </table></div>
+      <h3>6.3 AT 文本阶段（武装）</h3>
+      <p>行结束：\r\n。</p>
+      <div class="code">Host:  +++
+Host:  AT\r\n
+Dev:   OK\r\n
+
+# 若设备有密码：
+Host:  AT+SER=&lt;pwd&gt;\r\n
+Dev:   OK\r\n
+
+Host:  AT+OTA=1\r\n
+Dev:   AT+FW=1.5.0\r\n
+Dev:   OK\r\n</div>
+      <p>此后不要再发文本 AT（除非失败重来），改为发二进制帧。武装后 ota_hl19_busy()=1，主循环停周期上报。</p>
+      <h3>6.4 二进制帧格式（Host → Device）</h3>
+      <p>所有多字节整数均为小端 LE。推荐 ver=2。</p>
+      <h4>6.4.1 外层封装（每帧相同）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>偏移</th><th>长度</th><th>字段</th><th>值 / 说明</th></tr>
+        <tr><td>0</td><td>5</td><td>magic</td><td>ASCII start（73 74 61 72 74）</td></tr>
+        <tr><td>5</td><td>1</td><td>ver</td><td>建议 0x02</td></tr>
+        <tr><td>6</td><td>2</td><td>inner_len</td><td>LE u16 = 整帧长度 - 5（即从 ver 起的字节数）</td></tr>
+        <tr><td>8</td><td>6</td><td>mark</td><td>ASCII %]CLQ[</td></tr>
+        <tr><td>14</td><td>1</td><td>type</td><td>固定 0x02</td></tr>
+        <tr><td>15</td><td>…</td><td>TLV</td><td>长度 = inner_len - 10</td></tr>
+      </table></div>
+      <p>约束（设备校验失败则丢弃、不回 ACK）：inner_len == len(frame) - 5；frame[8:14] == b"%]CLQ["；frame[14] == 0x02；整帧 ≥ 18 字节。</p>
+      <div class="code">tlv = &lt;见 BEGIN / DATA&gt;
+inner = [ver] + le16(1+2+6+1+len(tlv)) + b"%]CLQ[" + [0x02] + tlv
+# 即 inner_len = 10 + len(tlv)
+frame = b"start" + inner</div>
+      <h4>6.4.2 TLV 公共头</h4>
+      <p>TLV 区开头 2 字节为「后续载荷长度」LE u16（含 tag 及 tag 后全部内容）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>偏移（相对 TLV 起点）</th><th>长度</th><th>字段</th></tr>
+        <tr><td>0</td><td>2</td><td>payload_len = len(tag + tag_body)</td></tr>
+        <tr><td>2</td><td>1</td><td>tag</td></tr>
+        <tr><td>3</td><td>…</td><td>tag_body</td></tr>
+      </table></div>
+      <h4>6.4.3 BEGIN（固件信息，tag = 0x10）</h4>
+      <p>AT+OTA=1 之后，第一帧二进制必须是 BEGIN：romsize 为整包 App 固件字节数；md5 为对整个 app.bin 的 16 字节原始摘要。不要在 BEGIN 里带固件正文。</p>
+      <div class="code">import hashlib
+with open("WW-D5-L_yyyyMMdd_app.bin", "rb") as f:
+    firmware = f.read()
+romsize = len(firmware)          # 例: 50000
+assert 1 &lt;= romsize &lt;= 100 * 1024
+md5 = hashlib.md5(firmware).digest()  # 恰好 16 字节</div>
+      <div class="table-wrap"><table>
+        <tr><th>偏移（相对 tag）</th><th>长度</th><th>字段</th><th>值</th></tr>
+        <tr><td>0</td><td>1</td><td>tag</td><td>0x10</td></tr>
+        <tr><td>1</td><td>4</td><td>romsize</td><td>LE u32</td></tr>
+        <tr><td>5</td><td>16</td><td>md5</td><td>16 字节二进制</td></tr>
+      </table></div>
+      <div class="code">body = [0x10] + le32(romsize) + md5[0..15]
+tlv  = le16(21) + body     # payload_len = 21
+
+# 整帧布局（ver=2）：inner_len = 33，整帧 = 38 字节
+# 偏移 0  5  73 74 61 72 74        ASCII start
+# 偏移 5  1  02                    ver
+# 偏移 6  2  21 00                 inner_len=33（LE）
+# 偏移 8  6  25 5D 43 4C 51 5B     ASCII %]CLQ[
+# 偏移 14 1  02                    type
+# 偏移 15 2  15 00                 TLV payload_len=21（LE）
+# 偏移 17 1  10                    tag = BEGIN
+# 偏移 18 4  romsize LE            例 50000 → 50 C3 00 00
+# 偏移 22 16 md5 digest</div>
+      <div class="code">import struct, hashlib
+def le16(v): return struct.pack("&lt;H", v &amp; 0xFFFF)
+def le32(v): return struct.pack("&lt;I", v &amp; 0xFFFFFFFF)
+OTA_MARK = b"%]CLQ["
+ver = 2
+body = bytes([0x10]) + le32(romsize) + md5          # 21B
+tlv  = le16(len(body)) + body                       # 2+21
+inner_len = 1 + 2 + len(OTA_MARK) + 1 + len(tlv)    # = 33
+inner = bytes([ver]) + le16(inner_len) + OTA_MARK + bytes([0x02]) + tlv
+frame = b"start" + inner                            # 38B</div>
+      <p>发送与应答：Host 一次 write 发完 38 字节；设备擦除下载区（可能数秒～数十秒）后回 <span class="inline-code">%]CMY 10 01 \r\n</span>（9 字节，01=成功）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>步骤</th><th>要求</th></tr>
+        <tr><td>时机</td><td>必须在 AT+OTA=1 的 OK 之后、任何 DATA 之前</td></tr>
+        <tr><td>次数</td><td>整个升级过程只发 1 次 BEGIN（失败可整帧重发，最多建议 3 次）</td></tr>
+        <tr><td>超时</td><td>等 ACK 30～45 s（擦 Flash）</td></tr>
+        <tr><td>成功</td><td>收到 %]CMY + 0x10 + 0x01 + \r\n</td></tr>
+        <tr><td>失败</td><td>ok≠1 或超时 → 勿发 DATA；重新 AT+OTA=1 再 BEGIN</td></tr>
+      </table></div>
+      <h4>6.4.4 DATA（固件正文，tag = 0x02）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>长度</th><th>说明</th></tr>
+        <tr><td>tag</td><td>1</td><td>0x02</td></tr>
+        <tr><td>block</td><td>2</td><td>LE u16，从 1 起</td></tr>
+        <tr><td>block_dup</td><td>2</td><td>必须与 block 相同</td></tr>
+        <tr><td>data</td><td>N</td><td>本块固件字节</td></tr>
+      </table></div>
+      <div class="code">psize = 256
+block = 1
+offset = 0
+while offset &lt; romsize:
+    chunk = firmware[offset : offset + psize]   # 末块可 &lt; 256
+    body = [0x02] + le16(block) + le16(block) + chunk
+    tlv  = le16(len(body)) + body
+    frame = wrap_start(tlv)                     # 同外层封装
+    send(frame)
+    wait ACK tag=0x02 ok=1
+    offset += len(chunk)
+    block += 1</div>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>推荐每块</td><td>256 字节</td></tr>
+        <tr><td>块号</td><td>1, 2, 3, …</td></tr>
+        <tr><td>Flash 地址</td><td>0x20000 + (block-1)*256</td></tr>
+        <tr><td>末块</td><td>剩余不足 256 则发短包</td></tr>
+        <tr><td>写完条件</td><td>设备侧累计 written ≥ romsize → 写 UpdateParam → 自动复位</td></tr>
+      </table></div>
+      <p>约束：block ≥ 1，1 ≤ N ≤ 512；首块 N 锁定后续满包 psize，之后满包须同长，末包可短。满 256B 数据时整帧 278 字节。</p>
+      <h3>6.5 ACK 格式（Device → Host）</h3>
+      <p>设备处理完一帧后回定长 ASCII+二进制混排（无 start）：</p>
+      <div class="table-wrap"><table>
+        <tr><th>偏移</th><th>长度</th><th>字段</th><th>值</th></tr>
+        <tr><td>0</td><td>5</td><td>mark</td><td>ASCII %]CMY</td></tr>
+        <tr><td>5</td><td>1</td><td>tag</td><td>与请求 tag 相同（0x10 / 0x02）</td></tr>
+        <tr><td>6</td><td>1</td><td>ok</td><td>1 = 成功；其它 = 失败</td></tr>
+        <tr><td>7</td><td>2</td><td>行尾</td><td>\r\n（0x0D 0x0A）</td></tr>
+      </table></div>
+      <p>共 9 字节。失败时 ok 含义（DATA 路径）：1 成功；2 帧损坏 / 双序号不一致 / block 非法；3 地址越界；4 Flash 写失败；5 chunk 大于锁定的 psize。中间可能夹杂 UTF-8 日志，工具应流式扫描 ACK 标记。</p>
+      <h3>6.6 推荐超时与串口策略</h3>
+      <div class="table-wrap"><table>
+        <tr><th>步骤</th><th>建议</th></tr>
+        <tr><td>打开串口</td><td>dtr=False, rts=False；超时读短（如 50 ms）循环拼包</td></tr>
+        <tr><td>AT+OTA=1</td><td>等 OK，约 1 s</td></tr>
+        <tr><td>BEGIN</td><td>写完整帧后等 ACK，45 s；可重试 3 次</td></tr>
+        <tr><td>每块 DATA</td><td>ACK 2 s；失败同块重发；扇区间可 sleep(20~50ms)</td></tr>
+        <tr><td>全部发完</td><td>再等 1～2 s；RX 上看新 App 启动日志；COM 可能重枚举</td></tr>
+        <tr><td>校验</td><td>再开串口：+++ → AT+INFO? 看 固件（FW）=</td></tr>
+      </table></div>
+      <h3>6.7 以 50 KB 为例的完整交互</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>整包</td><td>romsize = 50000（LE hex：50 C3 00 00）</td></tr>
+        <tr><td>整包 MD5</td><td>对 50000 字节全文做一次 MD5，得到 16 字节</td></tr>
+        <tr><td>每块</td><td>256 字节（psize）</td></tr>
+        <tr><td>满块数</td><td>50000 // 256 = 195 块，共 49920 字节</td></tr>
+        <tr><td>末块</td><td>50000 - 49920 = 80 字节，block = 196</td></tr>
+        <tr><td>总 DATA 帧</td><td>196</td></tr>
+      </table></div>
+      <div class="code">Host →  +++
+Host →  AT\r\n
+Dev  ←  OK\r\n
+Host →  AT+OTA=1\r\n
+Dev  ←  AT+FW=1.5.0\r\n
+Dev  ←  OK\r\n
+
+Host →  [38B BEGIN 整帧]（romsize=50000, md5）
+Dev     记下 romsize、md5；written=0；擦下载区
+Dev  ←  25 5D 43 4D 59  10  01  0D 0A     tag=0x10 ok=1
+
+Host →  278B DATA blk=1        Dev 写入 0x20000；written=256
+Host →  278B DATA blk=2 … 195  Dev … written=49920
+Host →  102B DATA blk=196（80B）Dev written=50000 ≥ romsize
+Dev     写 UpdateParam（flag=0x5A5A + romsize + md5）→ 立即复位
+
+Host →  再开串口：+++ / AT+INFO?  看 固件（FW）=&lt;新版本&gt;</div>
+      <p>没有单独的 END 帧。发完 196 块即结束；Host 以「末块已发出 + 无持续 NACK」视为成功。第 1 块写 0x20000，第 196 块写 0x20000 + 195×256 = 0x2C300（80 字节）。</p>
+      <h3>6.8 参考工具与注意</h3>
+      <div class="code">pip install pyserial
+python tools/ota_upload.py -p COM18 -f firmware\WW-D5-L_yyyyMMdd_app.bin --ser ""</div>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>抢口</td><td>升级时只开一个串口工具</td></tr>
+        <tr><td>断电</td><td>BEGIN 擦除与写盘期间断电会变砖风险 → SWD 重烧 *.hex</td></tr>
+        <tr><td>密码</td><td>AT+OTA 不落盘；UserCfg 升级后一般保留</td></tr>
+        <tr><td>ALT tag</td><td>0x11/0x12 为兼容保留，新工具勿用</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>LoRa TLV 业务（非 JSON）</h2>
+      <p>帧头：<span class="inline-code">0x10 | DevAddr(4 BE) | FCtrl | Seq(2 BE) | … | CRC16</span></p>
+      <div class="table-wrap"><table>
+        <tr><th>场景</th><th>FCtrl 事件</th><th>主要 TLV</th></tr>
+        <tr><td>开机注册</td><td>0xA + TRIG（evt=10）</td><td>HB(dev=8) + CFG(TFREQ/TSF/UART) + POWER</td></tr>
+        <tr><td>心跳/周期</td><td>0</td><td>HB</td></tr>
+        <tr><td>Modbus 采集/透传</td><td>1（DETECT）</td><td>HB + SLAVE + MODBUS(0x24)</td></tr>
+        <tr><td>远程 AT 应答</td><td>2（KEY）</td><td>HB + AT(0x25 ASCII)</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s8"><h2><span class="num">8</span>配置存储</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>地址</td><td>UserCfg @ 0x1D000</td></tr>
+        <tr><td>落盘</td><td>PER / PWR / VER / LOG / ACK / BATT / LORA / MBUART / MBMODE / MBCMD / MBSCAN / SER</td></tr>
+        <tr><td>不落盘</td><td>AT、ATO、ATH、DATA?、INFO?、REPORT、ATR、OTA、MBRAW、SLEEP、AIRLISTEN</td></tr>
+        <tr><td>版本</td><td>APP_CFG_VERSION=17（升级后首次启动写默认）</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s9"><h2><span class="num">9</span>休眠与功耗</h2>
+      <p>目标静态电流约 15 µA（电池、无 USB、射频冷睡、空中听关）。</p>
+      <h3>9.1 软件已关断（DeepSleep 前）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>行为</th></tr>
+        <tr><td>SX1268</td><td>SetSleep + DeepSleep 期间 RF_NRST=0（防停在 RX≈4.2 mA）；RFRX=0</td></tr>
+        <tr><td>仪表供电 PC09</td><td>输出低</td></tr>
+        <tr><td>RS485 UART0</td><td>关时钟；PA9/PA10/DE 拉低</td></tr>
+        <tr><td>调试 LPUART0</td><td>关时钟；PB0 输出低、PB11 下拉（不改模拟，以免醒后串口死）</td></tr>
+        <tr><td>ADC/BGR</td><td>关闭</td></tr>
+        <tr><td>未用 GPIO</td><td>模拟输入（保留 SWD PA13/PA14）</td></tr>
+        <tr><td>唤醒源</td><td>RTC、PB03 按键；霍尔经 RESETB 硬件复位开机</td></tr>
+      </table></div>
+      <h3>9.2 测电流步骤</h3>
+      <p><strong>对照 A（MCU 仍醒，只关外设）</strong>——判断 6 mA 是否来自 LoRa/串口/485/外供：</p>
+      <div class="code">AT+AIRLISTEN=0
+AT+BUSOFF</div>
+      <p>看到 <span class="inline-code">step4 … measure NOW</span> 与 OK 后立刻拔 USB/J-Link，读 VBAT：</p>
+      <div class="table-wrap"><table>
+        <tr><th>读数</th><th>含义</th></tr>
+        <tr><td>明显下降（如降到 1～3 mA）</td><td>先前主要是 LoRa/串口等；再复位后用 AT+SLEEP=20 测深睡</td></tr>
+        <tr><td>几乎不变仍 ≈6 mA</td><td>电流不在这四路上：MCU 未睡、CH340 常挂 3V3、或其它硬件</td></tr>
+      </table></div>
+      <p><strong>对照 B（DeepSleep）</strong>：</p>
+      <div class="code">AT+AIRLISTEN=0
+AT+PER=0,0
+AT+SLEEP=20</div>
+      <p>AT+SLEEP 会先 BUSOFF（NRST=0 等），再等 3 s 拔线，然后进深睡。醒后串口恢复，打印 <span class="inline-code">WOKE slept=…</span>（应接近 20000）。</p>
+      <h3>9.3 仍是数 mA 时怎么看</h3>
+      <div class="table-wrap"><table>
+        <tr><th>读数</th><th>常见原因</th></tr>
+        <tr><td>4～8 mA 且插着 USB</td><td>CH340 工作电流；必须拔 Type-C 再测</td></tr>
+        <tr><td>~1～2 mA 且已拔 USB</td><td>MAX3485 接在常电 3V3-MCU 上，接收机无法关（DE/#RE 短接）。硬件下限，软件关不掉</td></tr>
+        <tr><td>~4～6 mA 且已拔 USB、无空中听</td><td>旧固件常见：SX1268 停在 RX（≈4.2 mA）+ MAX3485。新固件 DeepSleep 拉低 NRST</td></tr>
+        <tr><td>空中听=1</td><td>每秒 RX 900ms，平均数 mA～十几 mA，正常</td></tr>
+        <tr><td>插着 J-Link</td><td>SWD 也会加电流</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s10"><h2><span class="num">10</span>寄存器配置一览</h2>
+      <p>适用于 WW75L 等压力/液位类终端的空口配置。每寄存器 2 字节，大端；u32 / i32 高字在前地址、低字在后地址。广播写标记：✓ 允许 / ✗ 禁止 / △ 慎用 / — 不适用。</p>
+      <h3>10.1 地址约定与分区</h3>
+      <div class="table-wrap"><table>
+        <tr><th>区段</th><th>范围</th><th>大类</th></tr>
+        <tr><td>A</td><td>0x0001～0x001F</td><td>传感器</td></tr>
+        <tr><td>E</td><td>0x00F0</td><td>动作 CTRL</td></tr>
+        <tr><td>B</td><td>0x0100～0x0112</td><td>LoRa</td></tr>
+        <tr><td>D</td><td>0x0300～0x0307</td><td>只读 INFO</td></tr>
+      </table></div>
+      <p>设备地址：帧头 DevAddr 不含 F 广播位（编号区为设备 ID）；广播使用帧头 <span class="inline-code">0xFFFFFFFF</span>，不占用配置寄存器。</p>
+      <h3>10.2 传感器配置（逐寄存器）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址</th><th>名称</th><th>类型</th><th>说明</th><th>默认</th><th>AT</th><th>读写</th><th>广播写</th></tr>
+        <tr><td>0x0001</td><td>PER.detect_s_hi</td><td>u16</td><td>检测周期（秒）高 16 位</td><td>0x0000</td><td>AT+PER 第1段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0002</td><td>PER.detect_s_lo</td><td>u16</td><td>检测周期（秒）低 16 位</td><td>0x003C（60）</td><td>同上</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0003</td><td>PER.report_s_hi</td><td>u16</td><td>上报周期（秒）高 16 位</td><td>0x0000</td><td>AT+PER 第2段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0004</td><td>PER.report_s_lo</td><td>u16</td><td>上报周期（秒）低 16 位</td><td>0x0258（600）</td><td>同上</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0005</td><td>VAR.t_centi</td><td>i16</td><td>温度变化量，0.01℃</td><td>0</td><td>AT+VAR 第1段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0006</td><td>VAR.p_centi</td><td>i16</td><td>压力变化量，0.01×UNIT</td><td>1</td><td>AT+VAR 第2段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0007</td><td>UNIT</td><td>u16</td><td>0Pa/1kPa/2MPa/3bar/4cm/5m</td><td>2</td><td>AT+UNIT</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0008</td><td>RAN.lo_ckpa_hi</td><td>i16</td><td>量程下限高 16 位（0.01 kPa）</td><td>0</td><td>AT+RAN 低</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0009</td><td>RAN.lo_ckpa_lo</td><td>u16</td><td>量程下限低 16 位</td><td>0</td><td>同上</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000A</td><td>RAN.hi_ckpa_hi</td><td>i16</td><td>量程上限高 16 位（0.01 kPa）</td><td>0x0002</td><td>AT+RAN 高</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000B</td><td>RAN.hi_ckpa_lo</td><td>u16</td><td>量程上限低 16 位</td><td>0x7100（160000）</td><td>同上</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000C</td><td>THRE.hi_centi</td><td>i16</td><td>压力上限，0.01×UNIT</td><td>160</td><td>AT+THRE 高</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000D</td><td>THRE.lo_centi</td><td>i16</td><td>压力下限，0.01×UNIT</td><td>0</td><td>AT+THRE 低</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000E</td><td>THRE.en</td><td>u16</td><td>0=OFF，1=ON</td><td>1</td><td>AT+THRE</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x000F</td><td>LOG</td><td>u16</td><td>调试日志 0/1</td><td>0</td><td>AT+LOG</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0010</td><td>ZERO.val_hi</td><td>i16</td><td>零点偏移高 16 位（0.01 kPa）</td><td>0</td><td>AT+ZERO</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x0011</td><td>ZERO.val_lo</td><td>u16</td><td>零点偏移低 16 位</td><td>0</td><td>同上</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x0012</td><td>RST.period_h</td><td>u16</td><td>定时重启小时；0=关</td><td>24</td><td>AT+RST 第1段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0013</td><td>RST.net_fail_n</td><td>u16</td><td>网络失败次数；0=关</td><td>10</td><td>AT+RST 第2段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0014</td><td>RST.sensor_fail_n</td><td>u16</td><td>传感器失败次数；0=关</td><td>10</td><td>AT+RST 第3段</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0015</td><td>ACK.en</td><td>u16</td><td>上报是否要求客户 ACK：0=关，1=开</td><td>0</td><td>AT+ACK</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0016</td><td>BATT.lo_dv</td><td>u16</td><td>电量 0% 端点，0.1V</td><td>28（2.8V）</td><td>AT+BATT</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0017</td><td>BATT.hi_dv</td><td>u16</td><td>电量 100% 端点，0.1V</td><td>42（4.2V）</td><td>AT+BATT</td><td>R/W</td><td>✓</td></tr>
+        <tr><td>0x0018～0x001F</td><td>（保留）</td><td>—</td><td>保留</td><td>0</td><td>—</td><td>—</td><td>—</td></tr>
+      </table></div>
+      <p><strong>ACK（0x0015）行为：</strong>值为 0 时上报后不等待客户应答（默认）；值为 1 时上行置 FCtrl.ACK（bit5=0x20），发完后开 RX 等客户应答，超时则重发同一 Seq，最多重试 3 次（含首次共最多 4 次发送），仍失败则记一次网络失败（计入 RST.net_fail_n）。</p>
+      <p><strong>ZERO（0x0010～0x0011 组成 i32）写语义：</strong>写入 0 表示清除零点（AT+ZERO=0）；写入 1 表示采当前为空压零点（AT+ZERO）；其它值表示直接写入偏移（单位 0.01 kPa）。</p>
+      <h3>10.3 动作 CTRL</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址</th><th>名称</th><th>类型</th><th>说明</th><th>默认</th></tr>
+        <tr><td>0x00F0</td><td>CTRL.act</td><td>u16</td><td>写动作码</td><td>0</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>写入值</th><th>动作</th><th>对应 AT</th><th>广播写</th></tr>
+        <tr><td>0x0001</td><td>立即上报</td><td>AT+REPORT</td><td>△</td></tr>
+        <tr><td>0x0002</td><td>软重启</td><td>ATR</td><td>✗</td></tr>
+        <tr><td>0x0010</td><td>执行空压清零</td><td>AT+ZERO</td><td>✗</td></tr>
+        <tr><td>0x0011</td><td>清除零点</td><td>AT+ZERO=0</td><td>✗</td></tr>
+      </table></div>
+      <h3>10.4 LoRa 配置（逐寄存器）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址</th><th>名称</th><th>类型</th><th>说明</th><th>默认</th><th>读写</th><th>广播写</th></tr>
+        <tr><td>0x0100</td><td>LORA.net_id</td><td>u16</td><td>NetID / SyncWord</td><td>0x0012</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x0101</td><td>LORA.tx_sf</td><td>u16</td><td>发射扩频因子 7～12</td><td>12</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0102</td><td>LORA.rx_sf</td><td>u16</td><td>接收扩频因子 7～12</td><td>9</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0103</td><td>LORA.tx_freq_base_hi</td><td>u16</td><td>TX 基频 Hz 高 16 位</td><td>0x1C9F</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0104</td><td>LORA.tx_freq_base_lo</td><td>u16</td><td>TX 基频 Hz 低 16 位</td><td>0xDE60（480300000）</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0105</td><td>LORA.tx_freq_step_hi</td><td>u16</td><td>TX 步进 Hz 高 16 位</td><td>0x0003</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0106</td><td>LORA.tx_freq_step_lo</td><td>u16</td><td>TX 步进 Hz 低 16 位</td><td>0x0D40（200000）</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0107</td><td>LORA.tx_channel_n</td><td>u16</td><td>TX 信道数</td><td>8</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0108</td><td>LORA.tx_hop_en</td><td>u16</td><td>TX 跳频使能 0/1</td><td>1</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0109</td><td>LORA.rx_freq_hi</td><td>u16</td><td>RX 频率 Hz 高 16 位</td><td>0x1E30</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x010A</td><td>LORA.rx_freq_lo</td><td>u16</td><td>RX 频率 Hz 低 16 位</td><td>0xA1A0（506500000）</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x010B</td><td>LORA.iq_tx_inv</td><td>u16</td><td>TX IQ 倒置 0/1</td><td>0</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x010C</td><td>LORA.iq_rx_inv</td><td>u16</td><td>RX IQ 倒置 0/1</td><td>1</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x010D</td><td>LORA.preamble</td><td>u16</td><td>前导码长度</td><td>10</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x010E</td><td>LORA.cr</td><td>u16</td><td>编码率 1=4/5 … 4=4/8</td><td>1</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x010F</td><td>LORA.tx_power_dbm</td><td>i16</td><td>TX 功率 dBm</td><td>22</td><td>R/W</td><td>✗</td></tr>
+        <tr><td>0x0110</td><td>LORA.bw_hi</td><td>u16</td><td>带宽 Hz 高 16 位</td><td>0x0001</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0111</td><td>LORA.bw_lo</td><td>u16</td><td>带宽 Hz 低 16 位</td><td>0xE848（125000）</td><td>R/W</td><td>△</td></tr>
+        <tr><td>0x0112</td><td>LORA.rx_poll_ms</td><td>u16</td><td>RX 轮询时长 ms</td><td>200</td><td>R/W</td><td>✓</td></tr>
+      </table></div>
+      <h3>10.5 只读 INFO</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址</th><th>名称</th><th>类型</th><th>说明</th><th>读写</th></tr>
+        <tr><td>0x0300</td><td>INFO.fw_hi</td><td>u16</td><td>固件版本编码高 16 位</td><td>R</td></tr>
+        <tr><td>0x0301</td><td>INFO.fw_lo</td><td>u16</td><td>固件版本编码低 16 位</td><td>R</td></tr>
+        <tr><td>0x0302</td><td>INFO.bat_bars</td><td>u16</td><td>电池格数 0～4</td><td>R</td></tr>
+        <tr><td>0x0303</td><td>INFO.lora_ready</td><td>u16</td><td>LoRa ready 0/1</td><td>R</td></tr>
+        <tr><td>0x0304</td><td>INFO.press_ckpa_hi</td><td>i16</td><td>最近压力高 16 位（0.01 kPa）</td><td>R</td></tr>
+        <tr><td>0x0305</td><td>INFO.press_ckpa_lo</td><td>u16</td><td>最近压力低 16 位</td><td>R</td></tr>
+        <tr><td>0x0306</td><td>INFO.temp_centi</td><td>i16</td><td>最近温度 0.01℃</td><td>R</td></tr>
+        <tr><td>0x0307</td><td>INFO.reserved</td><td>u16</td><td>保留</td><td>R</td></tr>
+      </table></div>
+      <h3>10.6 AT 对应的连续写范围</h3>
+      <div class="table-wrap"><table>
+        <tr><th>AT</th><th>起始地址</th><th>结束地址</th><th>寄存器列表</th></tr>
+        <tr><td>AT+PER</td><td>0x0001</td><td>0x0004</td><td>0x0001,0x0002,0x0003,0x0004</td></tr>
+        <tr><td>AT+VAR</td><td>0x0005</td><td>0x0006</td><td>0x0005,0x0006</td></tr>
+        <tr><td>AT+UNIT</td><td>0x0007</td><td>0x0007</td><td>0x0007</td></tr>
+        <tr><td>AT+RAN</td><td>0x0008</td><td>0x000B</td><td>0x0008,0x0009,0x000A,0x000B</td></tr>
+        <tr><td>AT+THRE</td><td>0x000C</td><td>0x000E</td><td>0x000C,0x000D,0x000E</td></tr>
+        <tr><td>AT+LOG</td><td>0x000F</td><td>0x000F</td><td>0x000F</td></tr>
+        <tr><td>AT+ZERO</td><td>0x0010</td><td>0x0011</td><td>0x0010,0x0011</td></tr>
+        <tr><td>AT+RST</td><td>0x0012</td><td>0x0014</td><td>0x0012,0x0013,0x0014</td></tr>
+        <tr><td>AT+ACK</td><td>0x0015</td><td>0x0015</td><td>0x0015</td></tr>
+        <tr><td>AT+BATT</td><td>0x0016</td><td>0x0017</td><td>0x0016,0x0017</td></tr>
+        <tr><td>AT+REPORT</td><td>0x00F0</td><td>0x00F0</td><td>写 0x0001</td></tr>
+      </table></div>
+      <h3>10.7 分期开放</h3>
+      <div class="table-wrap"><table>
+        <tr><th>阶段</th><th>开放地址</th></tr>
+        <tr><td>P0</td><td>0x0001～0x0015，0x00F0</td></tr>
+        <tr><td>P1</td><td>0x0100～0x0112 LoRa 写入 UserCfg</td></tr>
+        <tr><td>P2</td><td>0x0300～0x0307 INFO 只读</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s11"><h2><span class="num">11</span>LoRa 下发帧与 Demo</h2>
+      <p>下发不使用 TLV。空口载荷即为 Modbus 风格写/读帧 + 系统 CRC16-XMODEM（tlv_cal_crc16 / cal_crc16，不是 Modbus CRC）。</p>
+      <h3>11.1 帧格式</h3>
+      <div class="code">写多个保持寄存器（FC=0x10）:
+DevAddr(4 BE) | 0x10 | StartReg(2 BE) | RegN(2 BE) | ByteCount(1) | Data(2×RegN BE) | CRC16(2 BE)
+
+读保持寄存器（FC=0x03）:
+DevAddr(4) | 0x03 | StartReg(2) | RegN(2) | CRC16(2)
+
+应答（点对点）:
+写应答: DevAddr | 0x10 | StartReg | RegN | CRC16
+读应答: DevAddr | 0x03 | ByteCount | Data… | CRC16</div>
+      <p>DevAddr 为设备编号；广播使用 FF FF FF FF（编号不含 F 广播位）。ByteCount 必须 = 2 × RegN。CRC16 覆盖 DevAddr～Data 末，大端附加。Demo 默认设备编号 12 34 56 78。</p>
+      <h3>11.2 传感器下发 Demo</h3>
+      <div class="code">PER — AT+PER=60,600
+12 34 56 78 | 10 | 00 01 | 00 04 | 08 | 00 00 00 3C 00 00 02 58 | A9 6E
+广播同参:
+FF FF FF FF | 10 | 00 01 | 00 04 | 08 | 00 00 00 3C 00 00 02 58 | 54 B3
+写应答:
+12 34 56 78 | 10 | 00 01 | 00 04 | AC AA
+
+VAR — AT+VAR=0,1
+12 34 56 78 | 10 | 00 05 | 00 02 | 04 | 00 00 00 01 | 38 39
+
+UNIT — AT+UNIT=2（MPa）
+12 34 56 78 | 10 | 00 07 | 00 01 | 02 | 00 02 | 45 CE
+
+RAN — 下限 0、上限 1600.00 kPa（=160000）
+12 34 56 78 | 10 | 00 08 | 00 04 | 08 | 00 00 00 00 00 02 71 00 | DE E1
+
+THRE — 上限 1.60、下限 0.00、使能 ON
+12 34 56 78 | 10 | 00 0C | 00 03 | 06 | 00 A0 00 00 00 01 | 24 0D
+关阈值（AT+THRE=OFF，写 0x000E=0）:
+12 34 56 78 | 10 | 00 0E | 00 01 | 02 | 00 00 | 2D 6E
+
+LOG — AT+LOG=1
+12 34 56 78 | 10 | 00 0F | 00 01 | 02 | 00 01 | 78 EF
+
+ZERO — 采空压零点（点对点；禁广播）
+写 i32=1:  12 34 56 78 | 10 | 00 10 | 00 02 | 04 | 00 00 00 01 | 4D 33
+清零点 i32=0: 12 34 56 78 | 10 | 00 10 | 00 02 | 04 | 00 00 00 00 | 5D 12
+
+RST — AT+RST=24,10,10
+12 34 56 78 | 10 | 00 12 | 00 03 | 06 | 00 18 00 0A 00 0A | D3 D6
+
+ACK — AT+ACK=1（要求客户应答；最多重试 3 次）
+开: 12 34 56 78 | 10 | 00 15 | 00 01 | 02 | 00 01 | E4 69
+关: 12 34 56 78 | 10 | 00 15 | 00 01 | 02 | 00 00 | F4 48
+广播开 ACK:
+FF FF FF FF | 10 | 00 15 | 00 01 | 02 | 00 01 | 09 04
+
+读回 — 读 UNIT（FC=0x03）
+请求: 12 34 56 78 | 03 | 00 07 | 00 01 | A4 27
+应答: 12 34 56 78 | 03 | 02 | 00 02 | 1D 79</div>
+      <h3>11.3 动作 CTRL Demo</h3>
+      <p>动作统一走 FC=0x10 写 0x00F0（无独立动作帧）。</p>
+      <div class="code">立即上报:   12 34 56 78 | 10 | 00 F0 | 00 01 | 02 | 00 01 | 2C 50
+清零执行:   12 34 56 78 | 10 | 00 F0 | 00 01 | 02 | 00 10 | 2E 40
+清零点:     12 34 56 78 | 10 | 00 F0 | 00 01 | 02 | 00 11 | 3E 61
+软重启:     12 34 56 78 | 10 | 00 F0 | 00 01 | 02 | 00 02 | 1C 33   （禁广播）</div>
+      <h3>11.4 LoRa 配置 Demo</h3>
+      <p>建议按功能块分次写。</p>
+      <div class="code">NetID — 0x12
+12 34 56 78 | 10 | 01 00 | 00 01 | 02 | 00 12 | 27 DF
+
+TX SF + RX SF — 12 / 9
+12 34 56 78 | 10 | 01 01 | 00 02 | 04 | 00 0C 00 09 | 28 1E
+
+频点块 — TX 基频/步进/信道/跳频 + RX 频点（0x0103～0x010A，8 寄存器）
+TX 基频 480300000 → 1C 9F DE 60
+TX 步进 200000    → 00 03 0D 40
+信道数 8          → 00 08
+跳频 1            → 00 01
+RX 频点 506500000 → 1E 30 A1 A0
+12 34 56 78 | 10 | 01 03 | 00 08 | 10
+  | 1C 9F DE 60 00 03 0D 40 00 08 00 01 1E 30 A1 A0 | 1D CE
+
+IQ — TX=0 / RX=1（禁广播）
+12 34 56 78 | 10 | 01 0B | 00 02 | 04 | 00 00 00 01 | 4D 0B
+
+前导 / CR / 功率 — 10 / 1 / 22 dBm
+12 34 56 78 | 10 | 01 0D | 00 03 | 06 | 00 0A 00 01 00 16 | AA 2D
+
+带宽 + RX 轮询 — 125000 Hz / 200 ms
+12 34 56 78 | 10 | 01 10 | 00 03 | 06 | 00 01 E8 48 00 C8 | F2 D9
+
+读回 — 读 NetID + SF（3 寄存器）
+请求: 12 34 56 78 | 03 | 01 00 | 00 03 | 77 41
+应答例: 12 34 56 78 | 03 | 06 | 00 12 00 0C 00 09 | &lt;CRC&gt;</div>
+      <h3>11.5 INFO 读 Demo（仅读）</h3>
+      <div class="code">读全部 INFO（0x0300～0x0307，8 寄存器）
+请求: 12 34 56 78 | 03 | 03 00 | 00 08 | 2B 42
+
+应答示例（数值示意，CRC 随数据重算）:
+12 34 56 78 | 03 | 10
+  | 00 01 00 00     fw
+  | 00 03           bat_bars=3
+  | 00 01           lora_ready=1
+  | 00 00 27 10     press=10000 → 100.00 kPa
+  | 09 C4           temp=2500 → 25.00℃
+  | 00 00           reserved
+  | &lt;CRC&gt;
+
+只读电池与 LoRa 状态
+请求: 12 34 56 78 | 03 | 03 02 | 00 02 | E4 68
+应答例: 12 34 56 78 | 03 | 04 | 00 03 00 01 | &lt;CRC&gt;</div>
+      <div class="note">技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、固件版本、指令或帧内容及回响结果。</div>
+    </section>
+
+    <section class="section" id="s12"><h2><span class="num">12</span>WW75L 产品说明（消防压力）</h2>
+      <p>产品型号 <strong>WW75L</strong>；产品版本 200；固件版本见 AT+INFO? 的 fw（当前约 1.2.6）。定位：电池供电消防压力传感器，经 LoRa 私有网上报温度 / 压力 / 电量。</p>
+      <h3>12.1 产品概述</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>用途</td><td>管网 / 消防压力监测：周期检测、变化上报、阈值告警、心跳保活</td></tr>
+        <tr><td>传感</td><td>BPM-TTS 温压芯体（I2C），压力默认显示 MPa</td></tr>
+        <tr><td>无线</td><td>SX1268 LoRa 私有网（非 LoRaWAN、非 4G）</td></tr>
+        <tr><td>人机</td><td>段码 LCD + 霍尔按键（磁铁）+ 双色状态灯</td></tr>
+        <tr><td>配置</td><td>USB/调试串口 AT 命令；或网关 LoRa 下行写寄存器</td></tr>
+        <tr><td>供电</td><td>电池；休眠期目标低功耗（拔掉 USB 测电流）</td></tr>
+      </table></div>
+      <div class="code">WW75L：MCU HC32L196 + SX1268 LoRa
+  ├─ BPM-TTS（温/压）
+  ├─ 段码 LCD
+  ├─ 霍尔键 / 状态灯
+  └─ 调试 UART（AT，可接 USB）
+        │ LoRa 私有网
+        ▼
+   网关 / 平台</div>
+      <h3>12.2 运行逻辑</h3>
+      <div class="table-wrap"><table>
+        <tr><th>状态</th><th>说明</th></tr>
+        <tr><td>OFF</td><td>软关机：不采样、不上报；等长按开机</td></tr>
+        <tr><td>AT 窗</td><td>上电约 30s 独占调试口，便于产测/配置（此间射频冷睡，不连续收）</td></tr>
+        <tr><td>ACTIVE</td><td>采样、判据、LoRa 发包；发包后约 5s 听下行</td></tr>
+        <tr><td>SLEEP</td><td>射频冷睡 + MCU 低功耗；等检测/上报周期或按键唤醒</td></tr>
+      </table></div>
+      <div class="code">上电 / 长按开机
+    → AT 配置窗（约 30s，可提前结束）
+    → 首包注册（事件 10）
+    → SLEEP
+         ├─ 检测周期到 → 采样 → 变化/阈值？ → 有则上报 → SLEEP
+         ├─ 上报周期到 → 心跳上报（事件 0）→ SLEEP
+         ├─ 短按 / AT+REPORT → 立即上报（事件 2）→ SLEEP
+         └─ 长按 5s → OFF</div>
+      <p>插着 USB（PC10 检测到 VBUS）时禁止深度休眠，便于 AT 跟手；正式测待机电流请拔掉 USB，仅用电池供电。</p>
+      <div class="table-wrap"><table>
+        <tr><th>周期</th><th>说明</th></tr>
+        <tr><td>检测周期（PER 第一段，默认 60s）</td><td>到点唤醒 → 读温压 → 与上次成功上报基准比较：压力变化 ≥ VAR 则上报事件 1；阈值已开且越出 THRE 则上报事件 3（优先级高于变化）；均不满足则不上报直接回睡</td></tr>
+        <tr><td>上报周期（PER 第二段，默认 600s）</td><td>到点唤醒 → 采样 → 上报事件 0（心跳），无论压力是否变化</td></tr>
+        <tr><td>立即上报</td><td>霍尔键短按，或串口 AT+REPORT，上报事件 2</td></tr>
+      </table></div>
+      <p>发包后：组 TLV 帧经 LoRa 发出；若 AT+ACK=1 则等客户应答，超时重发同一序号，最多再试 3 次；发包后默认再听下行约 5s（Modbus 风格配置帧）；监听结束射频冷睡进 SLEEP。</p>
+      <div class="table-wrap"><table>
+        <tr><th>关机与重启</th><th>说明</th></tr>
+        <tr><td>长按 ≥5s</td><td>软关机（红灯约 5s）；再长按开机</td></tr>
+        <tr><td>AT+RST=h,net,sen</td><td>定时小时 / 连续网络失败次数 / 传感器失败次数达限则软重启（0=该项关闭）</td></tr>
+        <tr><td>ATR</td><td>立即软重启</td></tr>
+      </table></div>
+      <h4>事件码一览（FCtrl 低 4 位）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>码</th><th>名称</th><th>触发</th></tr>
+        <tr><td>10 / 0xA</td><td>注册</td><td>上电后首包</td></tr>
+        <tr><td>0</td><td>心跳</td><td>上报周期到</td></tr>
+        <tr><td>1</td><td>变化</td><td>压力变化 ≥ VAR</td></tr>
+        <tr><td>2</td><td>按键</td><td>短按 / AT+REPORT</td></tr>
+        <tr><td>3</td><td>阈值</td><td>压力越出 THRE</td></tr>
+      </table></div>
+      <h3>12.3 产品使用</h3>
+      <ol>
+        <li>确认电池电压在可用范围内（默认按 2.8V～4.2V 映射电量 0～100，可用 AT+BATT 改）。</li>
+        <li>压力接口按现场管路安装；芯体量程与 AT+RAN / AT+UNIT 一致。</li>
+        <li>空压或现场零点：安装后可做一次 AT+ZERO。</li>
+        <li>LoRa 天线按产品要求装配；网关侧需与设备同 NetID / 频点 / SF / IQ 等参数一致（私有网，非公网 SyncWord）。</li>
+      </ol>
+      <div class="table-wrap"><table>
+        <tr><th>霍尔按键（磁铁靠近）</th><th>功能</th></tr>
+        <tr><td>短按</td><td>立即采样并上报（事件 2）</td></tr>
+        <tr><td>长按 ≥5s</td><td>开关机切换</td></tr>
+      </table></div>
+      <p>液晶显示压力（按当前 UNIT）及状态图标（电量格、LoRa 等）；休眠期可保持显示，软关机灭屏。调试串口为 Type-C / LPUART0，115200 8N1，行结束 \r\n 或 \n。</p>
+      <div class="code">常用自检：
+AT
+AT+VER?
+AT+INFO?
+AT+DATA?
+AT+REPORT</div>
+      <div class="table-wrap"><table>
+        <tr><th>阶段</th><th>电流量级（约）</th></tr>
+        <tr><td>发包 / 听下行数秒</td><td>数十 mA 级</td></tr>
+        <tr><td>休眠（电池、无 USB、射频已睡）</td><td>目标 µA 级</td></tr>
+        <tr><td>插着 USB 调试</td><td>禁止深睡，多为 mA 级（正常）</td></tr>
+      </table></div>
+      <h3>12.4 产品配置</h3>
+      <p>配置有两条路径，写入成功均落盘 UserCfg（掉电保持）：串口 AT（产测、现场调试）；LoRa 下行（网关写保持寄存器）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>步骤</th><th>操作</th></tr>
+        <tr><td>进命令态</td><td>默认无密码：直接 AT → OK；已 ATO 则发 +++</td></tr>
+        <tr><td>有密码</td><td>+++ → OK.SER → AT+SER=&lt;密码&gt;</td></tr>
+        <tr><td>退数据模式</td><td>ATO</td></tr>
+        <tr><td>失败应答</td><td>一律 ERRn（不是 ERROR）</td></tr>
+      </table></div>
+      <h4>出厂默认（摘要）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>配置</th><th>默认</th><th>说明</th></tr>
+        <tr><td>型号 / 产品版本</td><td>WW75L / 200</td><td>AT+VER?</td></tr>
+        <tr><td>压力单位</td><td>2 = MPa</td><td>AT+UNIT</td></tr>
+        <tr><td>量程</td><td>0,1.6（MPa）</td><td>AT+RAN；内部存 kPa</td></tr>
+        <tr><td>检测 / 上报</td><td>60,600 秒</td><td>AT+PER</td></tr>
+        <tr><td>变化量</td><td>0,1</td><td>压变化 0.01 MPa</td></tr>
+        <tr><td>阈值</td><td>高 160 / 低 0（0.01 MPa），默认使能</td><td>AT+THRE；OFF 关闭</td></tr>
+        <tr><td>电量端点</td><td>28,42（2.8V～4.2V）</td><td>AT+BATT → 上报 0～100</td></tr>
+        <tr><td>客户 ACK</td><td>0 关</td><td>AT+ACK</td></tr>
+        <tr><td>调试日志</td><td>0 关</td><td>AT+LOG</td></tr>
+        <tr><td>AT 密码</td><td>空</td><td>AT+SER</td></tr>
+        <tr><td>重启策略</td><td>24,10,10</td><td>AT+RST</td></tr>
+      </table></div>
+      <h4>业务配置命令</h4>
+      <div class="table-wrap"><table>
+        <tr><th>命令</th><th>示例</th><th>含义</th></tr>
+        <tr><td>AT+PER</td><td>AT+PER=60,600</td><td>检测秒,上报秒</td></tr>
+        <tr><td>AT+UNIT</td><td>AT+UNIT=2</td><td>0Pa / 1kPa / 2MPa / 3bar / 4cm / 5m</td></tr>
+        <tr><td>AT+RAN</td><td>AT+RAN=0,1.6</td><td>量程（数值单位=当前 UNIT；MPa 勿写 0,1600）</td></tr>
+        <tr><td>AT+VAR</td><td>AT+VAR=0,1</td><td>温变化,压变化（0.01×当前量）</td></tr>
+        <tr><td>AT+THRE</td><td>AT+THRE=160,0 / OFF</td><td>压力阈值高低限；关闭</td></tr>
+        <tr><td>AT+ZERO</td><td>AT+ZERO / =0</td><td>空压清零 / 清除零点</td></tr>
+        <tr><td>AT+BATT</td><td>AT+BATT=28,42</td><td>电量 0% / 100% 电压端点（0.1V）</td></tr>
+        <tr><td>AT+ACK</td><td>AT+ACK=1</td><td>上报需客户应答，最多重试 3 次</td></tr>
+        <tr><td>AT+RST</td><td>AT+RST=24,10,10</td><td>定时重启小时,网失败次,传感器失败次</td></tr>
+        <tr><td>AT+LOG</td><td>AT+LOG=1</td><td>调试日志</td></tr>
+        <tr><td>AT+REPORT</td><td>AT+REPORT</td><td>立即上报（不改 Flash）</td></tr>
+        <tr><td>ATR</td><td>ATR</td><td>软重启</td></tr>
+      </table></div>
+      <p>查询统一：<span class="inline-code">AT+KEY?</span> → 回显 <span class="inline-code">AT+KEY=...</span> 再 OK。</p>
+      <div class="table-wrap"><table>
+        <tr><th>空压清零（ZERO）</th><th>命令</th></tr>
+        <tr><td>当前零点查询</td><td>AT+ZERO?</td></tr>
+        <tr><td>以当前压力为新零点</td><td>AT+ZERO 或 AT+ZERO=1</td></tr>
+        <tr><td>清除零点</td><td>AT+ZERO=0</td></tr>
+      </table></div>
+      <p>电量映射：<span class="inline-code">AT+BATT=28,42</span> 表示 2.8V→0，4.2V→100；当前电压在 [lo,hi] 内线性换算为整数 0～100，写入上行 HB 第 1 字节。</p>
+      <h4>LoRa 射频（摘要）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>典型默认</th></tr>
+        <tr><td>网络</td><td>私有网 NetID 0x12（SyncWord 由 NetID 推导）</td></tr>
+        <tr><td>上行</td><td>约 480.3 MHz 起、200 kHz 步进、8 信道随机；SF12；约 22 dBm</td></tr>
+        <tr><td>下行听窗</td><td>约 506.5 MHz / SF9；发包后听约 5s</td></tr>
+        <tr><td>IQ</td><td>TX 不反 / RX 反（与私有网约定一致）</td></tr>
+      </table></div>
+      <h3>12.5 上行数据格式（摘要）</h3>
+      <div class="code">Ver(0x10) | DevAddr(4 BE) | FCtrl(1) | Seq(2 BE)
+  HB    0x00 | bat_pct(0~100) | dev_type(压力=7)
+  TEMP  0x04 | int16 BE（0.01 ℃）
+  PRESS 0x07 | int32 BE（0.01 kPa）
+CRC16-XMODEM (2 BE)</div>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>说明</th></tr>
+        <tr><td>FCtrl[3:0]</td><td>事件码</td></tr>
+        <tr><td>FCtrl bit5</td><td>ACK=1 时置位，请求客户应答</td></tr>
+        <tr><td>bat_pct</td><td>按 AT+BATT 端点映射的 0～100</td></tr>
+        <tr><td>PRESS</td><td>内部始终按 0.01 kPa；显示单位由 UNIT 决定</td></tr>
+      </table></div>
+      <h3>12.6 推荐现场配置流程</h3>
+      <div class="code">1. 接串口，115200，上电 30s AT 窗内：
+     AT
+     AT+VER?
+     AT+UNIT=2
+     AT+RAN=0,1.6
+     AT+PER=60,600
+     AT+THRE=160,0          # 按现场告警限修改
+     AT+BATT=28,42          # 按电池化学体系修改
+     AT+ZERO                # 空压或现场零点
+2. AT+DATA? / AT+REPORT 确认采样与发包
+3. 拔掉 USB，装机上线；网关侧核对 NetID/频点/SF
+4. 需要远程改参：走 LoRa 写寄存器</div>
+    </section>
+
+    <section class="section" id="s13"><h2><span class="num">13</span>WW105C 产品说明（4G 温湿度）</h2>
+      <p>型号 WW105C；产品版本 200（固件内置，开机覆盖 Flash）；固件号见 AT+INFO? 的 fw，与产品版本独立。</p>
+      <h3>13.1 产品定位</h3>
+      <p>电池供电温湿度终端（MCU HC32L196 + ML307R 4G + CH9141 BLE + 段码 LCD + SHT40）：</p>
+      <ul>
+        <li>短时唤醒采样 / 上报，其余时间关 4G、MCU Sleep</li>
+        <li>霍尔磁开关（PF05）短触立即上报、长按开关机</li>
+        <li>开机 BLE 配置窗；调试口与 BLE 共 UART</li>
+        <li>本地 AT 与 4G 远程 JSON 配置同源格式</li>
+      </ul>
+      <h3>13.2 运行逻辑</h3>
+      <div class="table-wrap"><table>
+        <tr><th>状态</th><th>说明</th></tr>
+        <tr><td>OFF</td><td>软关机：不采样不上报；LCD/背光关；红灯亮 5s 后灭</td></tr>
+        <tr><td>BLE_WIN</td><td>开机后 BLE 等待连接，最长 20s</td></tr>
+        <tr><td>ACTIVE</td><td>采样 / 判据 / 开 4G 上报</td></tr>
+        <tr><td>SLEEP</td><td>4G 断电；LCD 保持显示；等检测/上报周期或霍尔</td></tr>
+      </table></div>
+      <div class="code">上电/长按开机 → BLE_WIN(20s)
+    ├─ 已连接 → 保持 BLE，绿灯常亮
+    └─ 未连接 → 关 BLE
+         → ACTIVE：注册 evt=10 → SLEEP
+SLEEP ──检测周期──→ 采样判据（可能 evt=1/3，或不上报）
+SLEEP ──上报周期──→ evt=0 心跳
+SLEEP ──霍尔短触 / AT+REPORT──→ evt=2
+SLEEP/ACTIVE ──霍尔长按≥5s──→ OFF
+OFF ──松手后再长按≥5s──→ BLE_WIN</div>
+      <p>开机流程：初始化 GPIO / 日志 / UserCfg / 霍尔 / BLE / LCD / 电池 ADC（此时 4G 关）→ 软开机进入 BLE 窗 20s（绿灯闪）→ 窗内可处理 AT、霍尔 → 窗结束按是否已连接决定是否保持 BLE → 采温湿度 → 开 4G → 发注册包 evt=10 → 关 4G → 进入检测/上报休眠循环。冷复位默认开机（便于产测）。</p>
+      <h4>霍尔键（PF05）</h4>
+      <p>硬件：无磁=高，靠近=低；SysTick 1ms 采样；GPIO 双边沿中断仅用于唤醒 Sleep。</p>
+      <div class="table-wrap"><table>
+        <tr><th>手势</th><th>条件</th><th>动作</th></tr>
+        <tr><td>短触</td><td>靠近稳定 ≥ 30ms（靠近即触发，不必等离开）</td><td>立即绿闪 + 请求上报 evt=2</td></tr>
+        <tr><td>长按</td><td>靠近保持 ≥ 5s</td><td>软开关机（覆盖未处理的短触）</td></tr>
+      </table></div>
+      <p>感应到短触后绿灯持续闪烁，直到本次上报结束（成功熄灭回空闲 / 失败红闪 3 次）。关机后须先离开磁铁，再长按 5s 才能开机（防粘键）。</p>
+      <h4>检测周期与上报周期</h4>
+      <p>配置：<span class="inline-code">AT+PER=&lt;检测秒&gt;,&lt;上报秒&gt;</span> → detect_ms / report_ms。</p>
+      <div class="table-wrap"><table>
+        <tr><th>触发</th><th>行为</th></tr>
+        <tr><td>检测到期</td><td>读 SHT40；先判阈值 → 再判变化量；均未命中则不开 4G</td></tr>
+        <tr><td>上报到期</td><td>开 4G，发心跳 evt=0</td></tr>
+        <tr><td>霍尔 / AT+REPORT</td><td>开 4G，发 evt=2</td></tr>
+      </table></div>
+      <p>判据（相对上次成功上报的温湿度基准）：阈值使能且温度越限 → evt=3（优先）；否则 |ΔT|≥VAR温 或 |ΔRH|≥VAR湿 → evt=1；否则不上报，仅推进检测计时。周期锚点在开始上报前刷新计时，使服务器侧收到间隔更规律。</p>
+      <p>上报与 4G：关 4G 稳压后采电池刷 LCD 电量 → 绿灯闪 → 冷启动 4G / 驻网 → 若仍需注册则强制 evt=10 → TCP/MQTT 发送 JSON → TCP 成功后听 5s（远程配置）→ 切断 4G 电源 → 灯效结束回 SLEEP。</p>
+      <p>软关机：BLE 休眠、清屏关 LCD、红灯 5s；主循环不用 DeepSleep（20ms Sleep 轮询霍尔），避免无法再开机。</p>
+      <div class="table-wrap"><table>
+        <tr><th>状态</th><th>灯效（DS2）</th></tr>
+        <tr><td>等 BLE</td><td>绿灯闪（约 400ms 周期）</td></tr>
+        <tr><td>BLE 已连</td><td>绿灯常亮</td></tr>
+        <tr><td>上报中（含霍尔感应起）</td><td>绿灯闪直至发完</td></tr>
+        <tr><td>发送失败</td><td>红灯闪 3 次</td></tr>
+        <tr><td>关机</td><td>红灯亮 5s 后灭</td></tr>
+      </table></div>
+      <p>LCD：休眠保持显示；软关机灭屏；上报前后刷新温湿度/电量，温湿度约 3s 交替。设备号优先取 Secure 区 0x1B000 的 DeviceId，无效时回退编译默认值，出现在上报 JSON 的 no 字段。</p>
+      <h3>13.3 上报 JSON</h3>
+      <p><strong>注册包（仅 evt=10）</strong>字段：no, model, ver, iccid, imei, per_d, per_r, thre_hi, thre_lo, srv, host, port, ok, t, rh, evt, ts, tt（采样失败时可无 t/rh；ts=上电毫秒；tt=Unix 秒，未对时为 0）。</p>
+      <p><strong>数据包（evt=0/1/2/3）</strong>字段：no, seq, ok, t, rh, evt, csq, bat, bat_mv, ts（seq 仅数据包递增）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>evt</th><th>含义</th></tr>
+        <tr><td>10</td><td>注册</td></tr>
+        <tr><td>0</td><td>周期心跳</td></tr>
+        <tr><td>1</td><td>变化量</td></tr>
+        <tr><td>2</td><td>霍尔 / AT+REPORT</td></tr>
+        <tr><td>3</td><td>温度阈值</td></tr>
+      </table></div>
+      <h3>13.4 AT 使用说明</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>口</td><td>LPUART0：PB0 TX / PB11 RX（与 BLE 共脚）</td></tr>
+        <tr><td>波特率</td><td>115200 8N1</td></tr>
+        <tr><td>行结束</td><td>\r\n 或 \n</td></tr>
+        <tr><td>成功 / 失败</td><td>OK / ERRn</td></tr>
+        <tr><td>落盘</td><td>UserCfg @ Flash 0x1D000</td></tr>
+        <tr><td>上电默认</td><td>数据模式（不解析普通 AT；可收 HL19 二进制 OTA）</td></tr>
+      </table></div>
+      <div class="code">（静默）
++++
+→ OK          # 无密码或已自动解锁
+→ OK.SER      # 需先 AT+SER= 解锁
+
+AT+SER=wwiot.com
+→ OK
+
+ATO
+→ OK          # 回数据模式并上锁</div>
+      <div class="table-wrap"><table>
+        <tr><th>规则</th><th>说明</th></tr>
+        <tr><td>默认密码</td><td>wwiot.com（最长 9，过长截断）</td></tr>
+        <tr><td>空密码</td><td>at_ser 空则 +++ 自动解锁；AT+SER= 可清空</td></tr>
+        <tr><td>改密</td><td>解锁后 AT+SER=&lt;新密码&gt;</td></tr>
+        <tr><td>查密</td><td>不支持（AT+SER? → ERR2）</td></tr>
+        <tr><td>空闲退出</td><td>命令态 60s 无操作自动退出并上锁</td></tr>
+        <tr><td>未解锁</td><td>仅 AT / ATO / AT+SER=</td></tr>
+      </table></div>
+      <h4>错误码</h4>
+      <div class="table-wrap"><table>
+        <tr><th>码</th><th>含义</th><th>码</th><th>含义</th></tr>
+        <tr><td>ERR1</td><td>未解锁</td><td>ERR6</td><td>配置落盘失败</td></tr>
+        <tr><td>ERR2</td><td>密码错误 / 禁止查密</td><td>ERR7</td><td>OTA 失败</td></tr>
+        <tr><td>ERR3</td><td>未知命令</td><td>ERR8</td><td>查询/执行失败</td></tr>
+        <tr><td>ERR4</td><td>参数格式错误</td><td>ERR9</td><td>仍在数据模式（先 +++）</td></tr>
+        <tr><td>ERR5</td><td>参数取值非法</td><td></td><td></td></tr>
+      </table></div>
+      <h4>指令一览</h4>
+      <div class="table-wrap"><table>
+        <tr><th>指令</th><th>查询</th><th>写入</th><th>落盘</th><th>说明</th></tr>
+        <tr><td>+++ / ATO</td><td>—</td><td>—</td><td>—</td><td>进/出命令态</td></tr>
+        <tr><td>AT+SER=</td><td>—</td><td>✓</td><td>改密时</td><td>解锁 / 改密 / 清空</td></tr>
+        <tr><td>AT</td><td>—</td><td>—</td><td>—</td><td>连通测试</td></tr>
+        <tr><td>AT+VER? / =</td><td>✓</td><td>✓*</td><td>✓</td><td>产品型号,版本；*开机仍被固件覆盖为 WW105C,200</td></tr>
+        <tr><td>AT+LOG? / =</td><td>✓</td><td>✓</td><td>✓</td><td>0/1 调试日志</td></tr>
+        <tr><td>AT+DATA?</td><td>✓</td><td>—</td><td>—</td><td>即时采样 JSON</td></tr>
+        <tr><td>AT+INFO?</td><td>✓</td><td>—</td><td>—</td><td>状态 JSON（含 fw）</td></tr>
+        <tr><td>AT+4G?</td><td>✓</td><td>—</td><td>—</td><td>csq/iccid/imei/ip</td></tr>
+        <tr><td>AT+PER? / =</td><td>✓</td><td>✓</td><td>✓</td><td>检测秒,上报秒（1～86400）</td></tr>
+        <tr><td>AT+VAR? / =</td><td>✓</td><td>✓</td><td>✓</td><td>温/湿变化量（0.01 单位）</td></tr>
+        <tr><td>AT+THRE? / =</td><td>✓</td><td>✓</td><td>✓</td><td>温度上下限或 OFF</td></tr>
+        <tr><td>AT+SERVER? / =</td><td>✓</td><td>✓</td><td>✓</td><td>type,host,port</td></tr>
+        <tr><td>AT+MQTT? / =</td><td>✓</td><td>✓</td><td>✓</td><td>user,pass,cid,topic</td></tr>
+        <tr><td>AT+RST? / =</td><td>✓</td><td>✓</td><td>✓</td><td>小时,网络失败次,传感器失败次</td></tr>
+        <tr><td>AT+REPORT</td><td>—</td><td>执行</td><td>—</td><td>立即上报 evt=2</td></tr>
+        <tr><td>AT+OTA=1</td><td>—</td><td>执行</td><td>—</td><td>武装 OTA，回 AT+FW=</td></tr>
+        <tr><td>AT+OTADATA=</td><td>—</td><td>✓</td><td>下载区</td><td>十六进制分包升级</td></tr>
+      </table></div>
+      <p>多段参数一律用英文逗号 ,。</p>
+      <h4>常用示例与单位</h4>
+      <div class="code">AT+VER?
+→ AT+VER=WW105C,200
+→ OK
+
+AT+PER=610,610
+→ OK
+
+AT+VAR=50,200
+→ OK
+
+AT+THRE=8000,-2000
+→ OK
+
+AT+THRE=OFF
+→ OK
+
+AT+SERVER=TCP,81.71.164.182,20004
+→ OK
+
+AT+REPORT
+→ OK</div>
+      <div class="table-wrap"><table>
+        <tr><th>族</th><th>单位</th></tr>
+        <tr><td>PER</td><td>秒</td></tr>
+        <tr><td>VAR</td><td>0.01℃ / 0.01%RH（如 50=0.50℃）</td></tr>
+        <tr><td>THRE</td><td>0.01℃（如 8000=80.00℃）</td></tr>
+      </table></div>
+      <h4>出厂默认（无有效 UserCfg 时）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>默认</th></tr>
+        <tr><td>型号 / 产品版本</td><td>WW105C / 200（固件强制）</td></tr>
+        <tr><td>PER</td><td>10,10（秒；现场常改为 610,610 等）</td></tr>
+        <tr><td>VAR</td><td>50,200</td></tr>
+        <tr><td>THRE</td><td>8000,-2000（使能）</td></tr>
+        <tr><td>SERVER</td><td>TCP,81.71.164.182,20004</td></tr>
+        <tr><td>SER</td><td>wwiot.com</td></tr>
+        <tr><td>LOG</td><td>1</td></tr>
+        <tr><td>RST</td><td>24,10,10</td></tr>
+      </table></div>
+      <h3>13.5 远程配置（4G）</h3>
+      <p>设备 TCP 上报成功后保持连接监听 5s，平台可下发一包 JSON（建议 ≤512B）完成参数配置与对时。含配置字段 → 写入 RAM 并落盘 UserCfg；含 "tt":&lt;unix秒&gt; → 校准设备时间。</p>
+      <div class="note">该部分内容已独立为 <a href="4g-remote-config.html">4G 远程配置</a> 文档，包含完整 JSON 字段表、配置示例与生效规则，请参见该文档。</div>
+      <h3>13.6 实现注意</h3>
+      <ol>
+        <li>BLE 与 USB 调试共 UART：BLE 保持连接时，USB 串口可能被 CH9141 抢答。</li>
+        <li>每次上报冷启动 4G：驻网可达数十秒～2 分钟，周期勿过短。</li>
+        <li>霍尔在屏 FPC/PF05：靠近后串口应见 H-&gt;L / SHORT；raw pin 应从 1→0。</li>
+        <li>型号版本以固件宏为准；Flash / 远程改 ver 仅临时有效，重启恢复 WW105C,200。</li>
+      </ol>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · AT 指令配置（新版）</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

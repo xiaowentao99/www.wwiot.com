@@ -678,7 +678,8 @@
     "protocols": [
       "lora"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 68,
@@ -689,7 +690,8 @@
     "protocols": [
       "lorawan-hf"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 69,
@@ -700,7 +702,8 @@
     "protocols": [
       "lorawan-lf"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 70,
@@ -711,7 +714,8 @@
     "protocols": [
       "4g"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 157,
@@ -722,7 +726,8 @@
     "protocols": [
       "lora"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 158,
@@ -733,7 +738,8 @@
     "protocols": [
       "lorawan-hf"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 159,
@@ -744,7 +750,8 @@
     "protocols": [
       "lorawan-lf"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 160,
@@ -755,7 +762,8 @@
     "protocols": [
       "4g"
     ],
-    "power": "battery"
+    "power": "battery",
+    "manualUrl": "manuals/ww27.html"
   },
   {
     "id": 71,

@@ -289,6 +289,34 @@
       background: var(--color-primary-50);
     }
 
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-6);
+      border-radius: var(--radius-lg);
+      font-size: 0.9375rem;
+      font-weight: 600;
+      transition: all var(--transition-fast);
+      text-decoration: none;
+    }
+
+    .btn--primary {
+      background: var(--color-primary-500);
+      color: white;
+    }
+
+    .btn--primary:hover {
+      background: var(--color-primary-600);
+    }
+
     /* ========================================
        Hero Section
        ======================================== */
@@ -983,14 +1011,13 @@
         </div>
       </a>
       
-      <nav class="header__nav">
+            <nav class="header__nav">
         <a href="index.html" class="header__nav-item">首页</a>
-        <a href="https://iot.wwiot.com" target="_blank" class="header__nav-item">云平台</a>
+        <a href="https://iot.wwiot.com" target="_blank" class="header__nav-item">万维云平台</a>
         <a href="products.html" class="header__nav-item">产品中心</a>
+        <a href="manuals/index.html" class="header__nav-item">文档中心</a>
         <a href="solutions.html" class="header__nav-item active">解决方案</a>
-        <a href="#" class="header__nav-item">技术支持</a>
         <a href="about.html" class="header__nav-item">关于我们</a>
-        <a href="contact.html" class="header__nav-item">联系我们</a>
       </nav>
       
       <div class="header__actions">
@@ -1010,6 +1037,7 @@
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
         </button>
+        <a href="contact.html" class="btn btn--primary header__cta">联系我们</a>
 
         <button class="header__mobile-toggle" id="mobileToggle" aria-label="打开菜单" onclick="toggleMobileMenu()">
           <svg class="icon" viewBox="0 0 24 24">
@@ -1041,14 +1069,13 @@
         </svg>
       </button>
     </div>
-    <nav class="mobile-menu__nav">
+        <nav class="mobile-menu__nav">
       <a href="index.html" class="mobile-menu__item">首页</a>
-      <a href="https://iot.wwiot.com" target="_blank" class="mobile-menu__item">云平台</a>
+      <a href="https://iot.wwiot.com" target="_blank" class="mobile-menu__item">万维云平台</a>
       <a href="products.html" class="mobile-menu__item">产品中心</a>
+      <a href="manuals/index.html" class="mobile-menu__item">文档中心</a>
       <a href="solutions.html" class="mobile-menu__item active">解决方案</a>
-      <a href="#" class="mobile-menu__item">技术支持</a>
       <a href="about.html" class="mobile-menu__item">关于我们</a>
-      <a href="contact.html" class="mobile-menu__item">联系我们</a>
     </nav>
   </div>
 

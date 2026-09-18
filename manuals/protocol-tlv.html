@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>万维终端传感器协议（TLV-V1）- 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="万维终端传感器协议 TLV-V1，定义传感器与网关之间的数据交互格式、上行传感数据与下行控制指令。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>万维终端传感器协议（TLV-V1）</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">通信协议</span>
+      <h1>万维终端传感器协议（TLV-V1）</h1>
+      <p>定义终端软件与网关端的数据交互格式，规范上行传感数据与下行控制指令的编码规则。</p>
+      <div class="meta"><span>修订日期：2025.12</span><span class="version">V1.7.2</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">引言</a></li>
+      <li><a href="#s2">接口概述</a></li>
+      <li><a href="#s3">传感设备 TLV 格式</a></li>
+      <li><a href="#s4">传感器数据格式</a></li>
+      <li><a href="#s5">用户下行命令</a></li>
+      <li><a href="#s6">附录</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>引言</h2>
+      <h3>1.1 编写目的</h3>
+      <p>该文档对终端软件与网关端的数据交互进行明确详细的接口定义和数据格式规范，指导软件开发和后期的测试维护。</p>
+      <h3>1.2 参考资料</h3>
+      <p>传感器终端需求与设计相关文档，终端数据格式文档。</p>
+      <h3>1.3 修改记录</h3>
+      <div class="table-wrap"><table>
+        <tr><th>日期</th><th>版本</th><th>描述</th></tr>
+        <tr><td>2021-04-12</td><td>V1.4</td><td>4.5.7 新增温湿度支持 0.01 精度</td></tr>
+        <tr><td>2022-04-25</td><td>V1.5</td><td>删除新增的温度精度；删除旧格式 0x11，修改为通用倾角定义；重新编辑替换图片</td></tr>
+        <tr><td>2022-07-19</td><td>V1.6</td><td>增加通用 4~20mA 设备类型；补充下发配置参数定义</td></tr>
+        <tr><td>2023-11-01</td><td>V1.7</td><td>5.2.3 增加下发配置参数定义</td></tr>
+        <tr><td>2023-12-06</td><td>V1.7.1</td><td>5.2.4 新增设备和数据类型 0x12</td></tr>
+        <tr><td>2025-12-16</td><td>V1.7.2</td><td>4.5 修改并新增数据类型 0x40</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>接口概述</h2>
+      <h3>2.1 全局说明</h3>
+      <p>本协议为 LPWAN 采集方案制定，主要针对各类传感器数据采集应用定制。通信方式为 LoRa 无线通信；字节序为多字节统一大端模式（网络字节序）。</p>
+      <h3>2.2 基本约定</h3>
+      <p>数据传输全部采用二进制字节流方式，字节序为大端模式。</p>
+      <div class="table-wrap"><table>
+        <tr><th>类型</th><th>含义</th><th>类型</th><th>含义</th></tr>
+        <tr><td>uint8_t</td><td>无符号 1 字节整型</td><td>int32_t</td><td>有符号 4 字节整型</td></tr>
+        <tr><td>int8_t</td><td>有符号 1 字节整型</td><td>uint64_t</td><td>无符号 8 字节整型</td></tr>
+        <tr><td>uint16_t</td><td>无符号 2 字节整型</td><td>int64_t</td><td>有符号 8 字节整型</td></tr>
+        <tr><td>int16_t</td><td>有符号 2 字节整型</td><td>float32_t</td><td>4 字节浮点型</td></tr>
+        <tr><td>uint32_t</td><td>无符号 4 字节整型</td><td>float64_t</td><td>8 字节浮点型</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>传感设备 TLV 格式</h2>
+      <h3>3.1 整体报文格式</h3>
+      <p>适用于最新 GL6xx 网关方式采集数据，区别于之前 GW 系列网关，简化下行控制，使模组上下行风格保持一致。以下为网关实际收到的内容或下发内容格式。</p>
+      <div class="table-wrap"><table>
+        <tr><th>Message Preamble</th><th>Message Body</th><th>Message CRC</th></tr>
+        <tr><td>Header(1 Byte) + DevAddr(4 Bytes) + FCtrl(1 Byte) + SeqNo(2 Bytes)</td><td>N 个传感器数据（Data1…DataN）</td><td>CRC(2 Bytes) = Message Header + Message Body</td></tr>
+      </table></div>
+      <p>Message Body 采用类似 TLV（Type + Length + Value）风格。为节约带宽功耗，部分类型省略了长度（Length）字段。</p>
+      <div class="code">Header   DevAddr   FCtrl   SeqNo   Data1   ...   DataN   CRC
+1 字节   4 字节    1 字节  2 字节  数据1   ...   数据N   2 字节
+协议头   设备地址  控制字  包序号  TLV     ...   TLV     CRC16 = Header 至 DataN</div>
+      <h3>3.2 消息头部</h3>
+      <h4>协议头 Header</h4>
+      <div class="table-wrap"><table><tr><th>MType（3 bit）</th><th>Protocol Version（5 bit）</th></tr>
+        <tr><td>0xx TBD / 1xx TBD（预留用于扩展消息类型）</td><td>0x03：当前版本</td></tr></table></div>
+      <h4>设备地址 DevAddr</h4>
+      <p>4 Bytes，对应设备的 ADDR 值，可参考公司通用 AT 手册 <span class="inline-code">AT+ADDR?</span></p>
+      <h4>控制字 FCtrl</h4>
+      <div class="table-wrap"><table><tr><th>7~6 bits</th><th>5 bit</th><th>4 bit</th><th>3~0 bit</th></tr>
+        <tr><td>Reserve 保留位</td><td>ACKReq 请求下行</td><td>Trigger：0 正常（定时）/ 1 触发（变化）</td><td>Mark：1 开机</td></tr></table></div>
+      <h4>包序号 SeqNo</h4>
+      <p>2 Bytes，数据主动上报时序号自增。</p>
+      <h3>3.3 消息尾（CRC16）</h3>
+      <p>计算参考附录 CRC16 的计算方式，为本公司设备自定义的计算方式。</p>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>传感器数据格式（Message Body）</h2>
+      <h3>4.1 数据类型说明</h3>
+      <div class="table-wrap"><table>
+        <tr><th>类型范围</th><th>说明</th></tr>
+        <tr><td>0x00~0x0F 和 0xFF</td><td>格式 T+V，基础传感器类型，固定数据格式，省略长度字节</td></tr>
+        <tr><td>0x10~0x1F</td><td>格式 T+L+V，通用类型，保留长度以适配定制化需求</td></tr>
+        <tr><td>0x20~0x7F</td><td>格式 T+L+V，定制化项目需要，不同项目适配不同内容</td></tr>
+        <tr><td>0x80~未定义</td><td>格式 T+L+V，用户参数配置查询，不同项目适配不同内容</td></tr>
+      </table></div>
+      <h3>4.2 基础传感器类型列表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Length</th><th>Value</th><th>Value 描述</th></tr>
+        <tr><td>应答 0xFF</td><td>忽略</td><td>2 字节</td><td>第 1 字节对应下行指令；第 2 字节对应结果</td></tr>
+        <tr><td>设备信息 0x00</td><td>忽略</td><td>2 字节</td><td>设备信息包内容已知，故忽略长度字段节省字节</td></tr>
+        <tr><td>加速度 0x01</td><td>忽略</td><td>8 字节</td><td>1 字节事件类型 + XYZ 三轴值各 2 字节 + 1 字节保留字</td></tr>
+        <tr><td>地理坐标 0x02</td><td>忽略</td><td>8 字节</td><td>float32_t，前 4 字节经度，后 4 字节纬度</td></tr>
+        <tr><td>采样数据 0x03</td><td>忽略</td><td>2 字节</td><td>uint16_t，具体根据项目定制需求定义</td></tr>
+        <tr><td>温度 0x04</td><td>忽略</td><td>2 字节</td><td>int16_t，具体根据项目定制需求定义</td></tr>
+        <tr><td>湿度 0x05</td><td>忽略</td><td>1 字节</td><td>uint8_t，单位 1%RH，即 10 表示 10%RH</td></tr>
+        <tr><td>含量 0x06</td><td>忽略</td><td>1 字节</td><td>uint8_t，百分比</td></tr>
+        <tr><td>压/拉力 0x07</td><td>忽略</td><td>4 字节</td><td>int32_t（以防止需要标识负值）</td></tr>
+        <tr><td>传感值 0x08</td><td>忽略</td><td>4 字节</td><td>float32_t</td></tr>
+        <tr><td>开关量 0x09</td><td>忽略</td><td>1 字节</td><td>开关（阀门、灯控）状态</td></tr>
+      </table></div>
+      <h3>4.3 定制化类型列表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Length</th><th>Value 描述</th></tr>
+        <tr><td>通信参数 0x10</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>多轴倾角 0x11</td><td>N*4</td><td>每轴 4 字节 int32_t，分辨率 0.001°</td></tr>
+        <tr><td>多路温湿度 0x12</td><td>N*4</td><td>每组温度 2 字节、湿度 2 字节，分辨率 0.1</td></tr>
+        <tr><td>多路采样 0x13</td><td>N*2</td><td>N 组采样数据</td></tr>
+        <tr><td>多路温度 0x14</td><td>N*2</td><td>N 组温度数据</td></tr>
+        <tr><td>多路湿度 0x15</td><td>N</td><td>N 组湿度数据</td></tr>
+        <tr><td>多路压/拉力 0x17</td><td>N*4</td><td>N 组压/拉力数据</td></tr>
+        <tr><td>多路传感值 0x18</td><td>N*4</td><td>N 组传感数据</td></tr>
+        <tr><td>电流电压 0x1A</td><td>N</td><td>N=2 只包含电流；N=4 包含电流和电压</td></tr>
+        <tr><td>功率电能 0x1B</td><td>N</td><td>N=4 时只含有功功率</td></tr>
+        <tr><td>仪表地址 0x20</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>业务数据 0x21</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>阀门响应 0x22</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>Modbus 数据 0x24</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>用户命令数据 0x25</td><td>N</td><td>不同项目参考对应说明</td></tr>
+        <tr><td>混合气体 0x30</td><td>N</td><td>混合气体类传感器</td></tr>
+        <tr><td>传感数值 0x38</td><td>5</td><td>首字节为单位类型，后 4 字节为 float 型</td></tr>
+        <tr><td>存储记录 0x40</td><td>N</td><td>用于上报带存储记录功能的设备</td></tr>
+        <tr><td>公共配置 0x80</td><td>N</td><td>上报公共通信配置</td></tr>
+        <tr><td>用户参数 0x81</td><td>N</td><td>用户参数</td></tr>
+      </table></div>
+
+      <h3>4.4 基础传感器数据详细定义</h3>
+      <h4>4.4.1 通用应答（0xFF）</h4>
+      <div class="table-wrap"><table><tr><th>Type</th><th>Value</th><th>Value</th></tr>
+        <tr><td>0xFF</td><td>响应命令类型</td><td>响应结果</td></tr></table></div>
+      <h4>4.4.2 设备信息（0x00）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Version（3 bit）</th><th>Voltage Level（5 bit）</th><th>异常（1 bit）</th><th>devType（7 bit）</th></tr>
+        <tr><td>0x00</td><td>协议版本</td><td>0~31，默认按 3.0V~3.6V 分级</td><td>0 正常 / 1 异常</td><td>设备类型，见下表</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>devType</th><th>含义</th><th>devType</th><th>含义</th></tr>
+        <tr><td>0x00</td><td>RFU</td><td>0x16</td><td>红外温度</td></tr>
+        <tr><td>0x01</td><td>DTU</td><td>0x20</td><td>水浸</td></tr>
+        <tr><td>0x02</td><td>定位</td><td>0x21</td><td>门磁（开关）</td></tr>
+        <tr><td>0x03</td><td>4~20mA</td><td>0x22</td><td>红外感应</td></tr>
+        <tr><td>0x04</td><td>双路电机</td><td>0x23</td><td>烟感</td></tr>
+        <tr><td>0x07</td><td>压力</td><td>0x24</td><td>4 合 1</td></tr>
+        <tr><td>0x08</td><td>压力（带单位）</td><td>0x25</td><td>灯带（16 路）</td></tr>
+        <tr><td>0x09</td><td>控制器（功率）</td><td>0x34</td><td>CO2</td></tr>
+        <tr><td>0x0A</td><td>位移</td><td>0x36</td><td>O2</td></tr>
+        <tr><td>0x0B</td><td>测距</td><td>0x50</td><td>震动</td></tr>
+        <tr><td>0x0C</td><td>多路控制器</td><td>0x51</td><td>倾角</td></tr>
+        <tr><td>0x10</td><td>温湿度</td><td>0x52</td><td>震动倾角</td></tr>
+        <tr><td>0x11</td><td>温度</td><td>0x70</td><td>大气压</td></tr>
+        <tr><td>0x13</td><td>红外温度水浸</td><td>0x71</td><td>水位</td></tr>
+        <tr><td></td><td></td><td>0x72</td><td>拉力</td></tr>
+      </table></div>
+      <h4>4.4.3 加速度计（0x01）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Event（1 字节）</th><th>X/Y/Z 各 int16_t</th><th>Reserve（1 字节）</th></tr>
+        <tr><td>0x01</td><td>0x00 正常 / 0x01 震动 / 0x04 撞击</td><td>高位在前，低位在后</td><td>保留字段</td></tr>
+      </table></div>
+      <p>示例 <span class="inline-code">0050 FF20 0030</span>：X=0x0050=80，Y=0xFF20=-224，Z=0x0030=48。</p>
+      <h4>4.4.4 地理坐标（0x02）</h4>
+      <p>经度 float32_t + 纬度 float32_t。示例 <span class="inline-code">02 42 ED 61 A3 42 00 7E 6A</span>，经度 0x42ED61A3，纬度 0x42007E6A，对应 float 值 32.12345。</p>
+      <h4>4.4.5 采样数据（0x03）</h4>
+      <p>2 字节无符号整型，具体含义可根据项目而定。</p>
+      <h4>4.4.6 温度（0x04）</h4>
+      <p>2 字节有符号整型，零下为负值，默认单位 0.1 度，即 201 表示 20.1 度。示例 <span class="inline-code">04 FF 88</span> 表示 -120，即 -12 度。</p>
+      <h4>4.4.7 湿度（0x05）</h4>
+      <p>1 字节无符号整型，默认单位 1%，即 10 表示 10%。</p>
+      <h4>4.4.8 含量（0x06）</h4>
+      <p>1 字节无符号整型，具体含义根据项目而定。</p>
+      <h4>4.4.9 压/拉力值（0x07）</h4>
+      <p>4 字节有符号整型，默认单位 Pa，如果为拉力则单位为 N（牛）。</p>
+      <h4>4.4.10 传感值（0x08）</h4>
+      <p>4 字节 float32_t 型数据，具体含义可根据项目而定。</p>
+      <h4>4.4.11 通用开关量（0x09）</h4>
+      <p>多数情况下一个设备只有 1 路开关量，但满足最多 8 路开关量状态表示。一般单个 bit 位代表一路开关量。如果是阀门控制项目，Value 为阀门开（0x01）和关（0x00）；如果是水浸状态，Value 为有水（0x01）和无水（0x00）。</p>
+      <p>对于烟雾报警器，每个 bit 位定义如下：</p>
+      <div class="table-wrap"><table>
+        <tr><th>bit</th><th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+        <tr><td>含义</td><td>开机标记</td><td>激活标记</td><td>拆除标记</td><td>保留</td><td>测试标记</td><td>电量标记</td><td>故障标记</td><td>报警标记</td></tr>
+        <tr><td>0 / 1</td><td>正常 / 开机</td><td>正常 / 激活</td><td>正常 / 拆除</td><td>默认</td><td>正常 / 测试</td><td>正常 / 低电量</td><td>正常 / 故障</td><td>正常 / 报警</td></tr>
+      </table></div>
+
+      <h3>4.5 定制化类型详细定义</h3>
+      <h4>4.5.1 通信参数（0x10）</h4>
+      <p>读相关项目中通信配置的响应，一般用于旧版本 LoRa 终端设备。Value 按顺序列出：TFREQ 发送频点（uint32_t）、LCP 周期（uint16_t）、RPREM 接收前导长度（uint16_t）、LFT 周期（uint16_t）、TSF 发送扩频因子（uint8_t）。采用 Length 以便自适应无线查询配置。</p>
+      <h4>4.5.2 倾角（0x11）</h4>
+      <p>根据长度适配 N 轴倾角，N=1 上报 X 轴，N=2 上报 X 和 Y 轴，N=3 上报 X、Y、Z 轴。每轴 int32_t，单位 0.001°。</p>
+      <h4>4.5.3 多路温湿度（0x12）</h4>
+      <p>根据长度适配 N 路温湿度，数据分辨率 0.1。每路为 int16_t 温度 + uint16_t 湿度，Length = 4*N。</p>
+      <h4>4.5.4 多路采样值（0x13）</h4>
+      <p>根据长度适配 N 路采样值，uint16_t，Length = 2*N。如果 N 为 1 可直接使用类型 0x03。</p>
+      <h4>4.5.5 多路温度（0x14）</h4>
+      <p>N 路温度，int16_t，Length = 2*N。如果 N 为 1 可直接使用基础温度类型 0x04。</p>
+      <h4>4.5.6 多路湿度（0x15）</h4>
+      <p>N 路湿度，uint8_t，Length = N。如果 N 为 1 可直接使用基础湿度类型 0x05。</p>
+      <h4>4.5.7 电流电压（0x1A）</h4>
+      <p>根据长度进行扩展，只含电流时 Length 为 2；电流和电压则 Length 为 4。电流单位 mA，电压单位 0.1V。</p>
+      <h4>4.5.8 功率电能（0x1B）</h4>
+      <p>根据长度扩展，只含 P 时 Length 为 4。有功功率 P 单位 W。</p>
+      <h4>4.5.9 仪表地址（0x20）</h4>
+      <p>在万维传感器设备中，此类型用于上报从机地址，以便配套的网关进行 Modbus 协议转换。在其他定制化项目中，一般用于上报仪表地址。如流量计、水表等行业设备中，单个地址一般为 7 字节。在流量计和热表项目中，N 为 14，分别代表流量表地址和热表地址，参考 CJ/T188-2004 格式。</p>
+      <h4>4.5.10 业务数据（0x21）</h4>
+      <p>为上报外接传感器的原始数据而定义，便于用户获取数据长度及对应内容。在某些定制化项目中，传感器侧内容首字节增加一个字节用于区分业务报文：0x00 灯控设备、0x01 网关电能、0x02 热表、0x03 特殊气体、0x04 接地环流、0x05 测控仪表。</p>
+      <h4>4.5.11 Modbus 数据（0x24）</h4>
+      <p>为了区分 Modbus 与非 Modbus 业务，定义 0x24 数据类型，Value 为 Modbus 从机主动上报数据。</p>
+      <h4>4.5.12 用户命令数据（0x25）</h4>
+      <p>为支持用户命令（DT200/400 系列上支持的多条扩展命令）采集数据上行，接收端需要判断该数据为第几条命令所采集的，故在 Value 用户内容前增加 1 个字节，序号从 0 开始。</p>
+      <h4>4.5.13 混合气体类（0x30）</h4>
+      <p>Value 通常为 5 字节：首字节为气体类型，0x01 CH4、0x02 CO、0x03 H2S、0x04 CO2、0x05 NH3，后 4 字节为 int32_t，分辨率统一为 0.01。</p>
+      <h4>4.5.14 带单位的传感器值（0x38）</h4>
+      <p>Value 通常为 5 字节：首字节为单位类型，后 4 字节为 float32_t。单位类型：0 帕 Pa、1 百帕 hPa、2 千帕 kPa、3 兆帕 MPa（默认）、4 PSI、5 PSF、6 kg/cm²、7 mH2O、8 mmH2O、9 bar、10 mbar、11 mmHg、12 inHg、13 标准大气压 atm。</p>
+      <h4>4.5.15 存储记录（0x40）</h4>
+      <p>为支持带存储记录功能设备上报而增加此类型。Value 一般 12 字节：RecordID（uint32_t，记录序号）、YYMMDDhhmmss（6 字节，年月日时分秒，均为十六进制）、Status（2 字节状态信息）。例如 <span class="inline-code">1808100F0003</span> 即 2024-08-16 15:00:03。</p>
+      <h4>4.5.16 公用配置（0x80）</h4>
+      <p>在 4G 终端中一般用于传输 4G 通信参数：服务器地址,端口号,通信方式；MQTT 模式下附加 用户名,密码,clientID,Topic。</p>
+      <h4>4.5.17 用户参数（0x81）</h4>
+      <p>读取用户参数，如周期、校准值、变化量设置。Value 按顺序列出：上报周期（uint16_t）、检测周期（uint16_t）、校准值（int32_t）、变量 1~3（uint8_t）。采用 Length 以便自适应无线查询配置。如 Length 是 4，则只含上报和检测周期；如 Length 是 8，则含上报周期、检测周期和校准值。</p>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>用户下行命令</h2>
+      <p>下行由外部或平台发送至网关，通过网关执行下发。整体下发给终端的数据报文格式与终端上报的数据格式一致。</p>
+      <h3>5.1 数据下行类型列表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Value</th><th>Value 说明</th></tr>
+        <tr><td>ACK (0xFF)</td><td>2 Bytes</td><td>第 1 字节备用；第 2 字节 0 为失败，1 为成功</td></tr>
+        <tr><td>PWR (0x00)</td><td>1 Byte</td><td>0 和 1 功能待定，2 为重启</td></tr>
+        <tr><td>Read (0x01)</td><td>1 Byte</td><td>以 Value 内容区分不同请求，如 Value == 0x21 则读业务数据</td></tr>
+        <tr><td>Write (0x02)</td><td>1 + N Bytes</td><td>首字节用于判断写内容的类型，0x00 + YYMMDDhhmmss 年月日时分秒</td></tr>
+        <tr><td>Acquire (0x21)</td><td>1 + N Bytes</td><td>首字节为下行的 N 字节数据长度，N 字节内容为下行的用户命令</td></tr>
+        <tr><td>Switch (0x22)</td><td>1 Byte</td><td>开关控制</td></tr>
+        <tr><td>Multiway (0x23)</td><td>2 Bytes</td><td>第 1 字节为开关掩码，第 2 字节为开关动作</td></tr>
+      </table></div>
+      <h3>5.2 数据下行详细格式</h3>
+      <h4>5.2.1 通用应答（0xFF）</h4>
+      <p>Type 0xFF，第 1 字节备用，第 2 字节为响应结果，0 为失败，1 为成功。</p>
+      <h4>5.2.2 读指令（0x01）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Value</th><th>说明</th></tr>
+        <tr><td>0x01</td><td>0x10</td><td>读配置（Legacy），对应返回参数参考 0x10 上报格式</td></tr>
+        <tr><td>0x01</td><td>0x20</td><td>读仪表地址，对应返回参考 0x20 上报格式</td></tr>
+        <tr><td>0x01</td><td>0x21</td><td>读仪表数据，不同项目参考对应说明</td></tr>
+        <tr><td>0x01</td><td>0x81</td><td>读用户配置，返回请参考上行</td></tr>
+      </table></div>
+      <h4>5.2.3 写指令（0x02）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>Value</th><th>Value 数据</th><th>说明</th></tr>
+        <tr><td>0x02</td><td>0x00 修改时间</td><td>6 个 uint8_t</td><td>依次年月日时分秒，年为年份 -2000</td></tr>
+        <tr><td>0x02</td><td>0x01 修改单播地址</td><td>uint32_t</td><td>单播地址，对应设备的 addr</td></tr>
+        <tr><td>0x02</td><td>0x02 修改组播地址</td><td>uint32_t</td><td>组播地址，对应设备的 maddr</td></tr>
+        <tr><td>0x02</td><td>0x03 修改发送频点</td><td>uint32_t</td><td>单位 Hz，即 TFREQ 值</td></tr>
+        <tr><td>0x02</td><td>0x04 修改发送扩频</td><td>uint8_t</td><td>5~12，即 TSF 值</td></tr>
+        <tr><td>0x02</td><td>0x05 修改接收前导</td><td>uint16_t</td><td>即 RPREM 值</td></tr>
+        <tr><td>0x02</td><td>0x06 修改串口参数</td><td>uint8_t</td><td>波特率及校验位</td></tr>
+        <tr><td>0x02</td><td>0x07 修改通信协议</td><td>uint8_t</td><td>即 SIP 的值，低 4 bits 为通信协议 0~3</td></tr>
+        <tr><td>0x02</td><td>0x08 修改数据格式</td><td>uint8_t</td><td>一般用于 DTU，0x00~0x7F 内置类型，定制化 0x80~0xFF</td></tr>
+        <tr><td>0x02</td><td>0x09~0x0F</td><td>预留</td><td>预留</td></tr>
+        <tr><td>0x02</td><td>0x10 修改通信参数</td><td>旧指令（Legacy）</td><td>顺序填写依次为 TFREQ、LCP、RPREM、LFT、TSF</td></tr>
+        <tr><td>0x02</td><td>0x11 修改上报周期</td><td>uint16_t</td><td>即 LFT 值，单位秒</td></tr>
+        <tr><td>0x02</td><td>0x12 修改检测周期</td><td>uint16_t</td><td>即 LCP 值，单位秒</td></tr>
+        <tr><td>0x02</td><td>0x13 校准值</td><td>int32_t</td><td>有符号整型校准值</td></tr>
+        <tr><td>0x02</td><td>0x14~0x17 变量 1~4</td><td>uint8_t</td><td>无符号整型</td></tr>
+        <tr><td>0x02</td><td>0x20 修改从机地址</td><td>uint8_t</td><td>用于 Modbus 地址映射</td></tr>
+        <tr><td>0x02</td><td>0x30 Cat1 配置</td><td>长度 + 字符串</td><td>服务器地址、端口、通信类型，使用英文逗号分割；通信类型 0 udp / 1 tcp / 2 mqtt</td></tr>
+        <tr><td>0x02</td><td>0x31 MQTT 参数</td><td>长度 + 字符串</td><td>用户名、密码、ClientID 和 Topic 前缀，使用英文逗号分割</td></tr>
+        <tr><td>0x02</td><td>0x40 修改 AppKey</td><td>16 bytes</td><td>AES 秘钥</td></tr>
+        <tr><td>0x02</td><td>0x41 修改 AppEUI</td><td>8 bytes</td><td>应用标识</td></tr>
+        <tr><td>0x02</td><td>0x50~0x5F Custom</td><td>预留</td><td>预留</td></tr>
+      </table></div>
+      <h4>5.2.4 下行用户命令（0x21）</h4>
+      <p>Type 0x21，Length 为 N，Value 为 N 字节用户设备指令。终端侧需开启数据报文 TLV 格式（以识别设备 DevAddr），否则将直接转发下行的整个数据包到用户设备上。</p>
+      <h4>5.2.5 开关控制（0x22）</h4>
+      <p>Value 的 bit 位由低到高表示开关状态，<span class="inline-code">xxxx xxx0</span> 为关，<span class="inline-code">xxxx xxx1</span> 为开。如只控制 1 路开关，则 Value=0x01 表示开，Value=0x00 表示关。</p>
+      <h4>5.2.6 多路控制（0x23）</h4>
+      <p>最多支持 8 路开关控制。第 1 字节为开关掩码，bit 为 1 则有效；第 2 字节为开关动作，bit 为 1 则开，为 0 则关。例如 <span class="inline-code">23 0F FC</span> 表示 8 路开关只有 bit3~0 的 4 路有效，且 bit3~2 为开、bit1~0 为关。</p>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>附录</h2>
+      <h3>6.1 T188 格式对照表</h3>
+      <p>节选自（CJ/T 188-2004 标准协议文档）的报文整体格式。</p>
+      <div class="table-wrap"><table>
+        <tr><th>名称</th><th>代码</th></tr>
+        <tr><td>帧起始符</td><td>68H</td></tr>
+        <tr><td>仪表类型</td><td>T</td></tr>
+        <tr><td>地址域</td><td>A0~A7</td></tr>
+        <tr><td>控制码</td><td>C</td></tr>
+        <tr><td>数据长度</td><td>L</td></tr>
+        <tr><td>数据域</td><td>DATA</td></tr>
+        <tr><td>校验码</td><td>CS</td></tr>
+        <tr><td>结束符</td><td>16H</td></tr>
+      </table></div>
+      <h4>6.1.1 读指令格式</h4>
+      <p>读操作时，主站发送的序号 SER，在每次通讯前，按模 256 加 1 运算后产生。</p>
+      <div class="table-wrap"><table>
+        <tr><th>帧起始</th><th>仪表类型</th><th>地址域</th><th>控制码</th><th>数据长度</th><th>数据标识</th><th>序列号</th><th>校验和</th><th>结束符</th></tr>
+        <tr><td>68H</td><td>T</td><td>A0~A6</td><td>CTR_0</td><td>03H</td><td>DI0~DI1</td><td>SER</td><td>CS</td><td>16H</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>功能</th><th>控制码 CTR_0</th><th>正常应答 CTR_1</th><th>异常应答 CTR_2</th><th>备注</th></tr>
+        <tr><td>读数据</td><td>01H</td><td>81H</td><td>C1H</td><td>加密传输</td></tr>
+        <tr><td>读秘钥版本</td><td>09H</td><td>89H</td><td>C9H</td><td>明码传输</td></tr>
+        <tr><td>读地址</td><td>03H</td><td>89H</td><td>C3H</td><td>单机通信，明码传输</td></tr>
+      </table></div>
+      <h4>6.1.2 常用仪表类型</h4>
+      <div class="table-wrap"><table>
+        <tr><th>仪表类型</th><th>代码(T)</th><th>仪表</th></tr>
+        <tr><td>10H ~ 19H 水表</td><td>10H / 11H / 12H / 13H</td><td>冷水水表 / 生活热水水表 / 直饮水水表 / 中水水表</td></tr>
+        <tr><td>20H ~ 29H 热量表</td><td>20H / 21H</td><td>热量表（计热量）/ 热量表（计冷量）</td></tr>
+        <tr><td>30H ~ 39H 燃气表</td><td>30H</td><td>燃气表</td></tr>
+        <tr><td>40H ~ 49H 其他仪表</td><td>40H</td><td>如电度表</td></tr>
+      </table></div>
+      <h4>6.1.3 常用数据标识</h4>
+      <div class="table-wrap"><table>
+        <tr><th>序号</th><th>数据报文名称</th><th>数据标识</th><th>长度</th><th>备注</th></tr>
+        <tr><td>1</td><td>读地址</td><td>810AH</td><td>03H</td><td>本命令只能在单机操作</td></tr>
+        <tr><td>2</td><td>读计量数据</td><td>901FH</td><td>16H</td><td>适用于 T=10H~19H 和 T=30H~49H</td></tr>
+        <tr><td>3</td><td>读计量数据</td><td>901FH</td><td>2EH</td><td>适用于 T=20H~29H</td></tr>
+      </table></div>
+      <h3>6.2 CRC16 代码</h3>
+      <p>本文档使用的 CRC 校验算法如下。</p>
+      <h4>C 语言版本</h4>
+      <div class="code">static uint16_t get_crc16(uint16_t inData, uint16_t outData) {
+  outData = (outData >> 8) | (outData << 8);
+  outData ^= inData;
+  outData ^= (outData &amp; 0xff) >> 4;
+  outData ^= outData &lt;&lt; 12;
+  outData ^= (outData &amp; 0xff) &lt;&lt; 5;
+  return outData;
+}
+
+static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
+  uint32_t i = 0;
+  uint16_t crc16 = 0xFFFF;
+  for (i = 0; i &lt; len; i++) {
+    crc16 = get_crc16(*(pData++), crc16);
+  }
+  return crc16;
+}</div>
+      <h4>Java 语言版本</h4>
+      <div class="code">public static int calcRJCRC16(byte[] bytes) {
+    int crc = 0xffff;
+    for (byte seed : bytes) {
+        crc = (crc &gt;&gt;&gt; 8) | (crc &lt;&lt; 8);
+        crc ^= seed &amp; 0xff;
+        crc ^= (crc &amp; 0xff) &gt;&gt; 4;
+        crc ^= crc &lt;&lt; 12;
+        crc ^= (crc &amp; 0xff) &lt;&lt; 5;
+        crc = crc &amp; 0xffff;
+    }
+    return crc;
+}</div>
+      <div class="note">技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、设备编号、协议版本及报文样例。</div>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · 万维终端传感器协议（TLV-V1）</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

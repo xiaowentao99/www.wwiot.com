@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4G 远程配置 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="4G 终端远程配置说明，介绍上报后下发窗口、JSON 字段、配置示例与生效规则。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>4G 远程配置</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">远程配置</span>
+      <h1>4G 远程配置</h1>
+      <p>通过 4G 网络下发 JSON 完成终端参数配置与对时，与本地 AT 使用同一套 KEY。</p>
+      <div class="meta"><span>适用产品：WW105C 等 4G 终端</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">配置时机与通道</a></li>
+      <li><a href="#s2">JSON 字段表</a></li>
+      <li><a href="#s3">配置示例</a></li>
+      <li><a href="#s4">生效规则与注意事项</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>配置时机与通道</h2>
+      <p>设备每次上报完成后保持连接监听下行：</p>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>监听窗口</td><td>TCP 上报成功后保持连接监听 5s（部分产品约 3s，以实际型号说明为准）</td></tr>
+        <tr><td>下发内容</td><td>一包 JSON，建议 ≤ 512B（设备接收缓冲 1KB）</td></tr>
+        <tr><td>编码</td><td>UTF-8，建议单行</td></tr>
+        <tr><td>键名</td><td>不区分大小写（推荐小写）</td></tr>
+        <tr><td>配置类 value</td><td>字符串，格式与本地 <span class="inline-code">AT+KEY=</span> 右侧相同；也可用 <span class="inline-code">"?"</span> 查询</td></tr>
+      </table></div>
+      <div class="note">设备不是常驻监听端口，仅在上报后的短窗口内可接收下行控制。若需更快响应，可缩短上报周期，或触发一次强制上报。</div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>JSON 字段表</h2>
+      <div class="table-wrap"><table>
+        <tr><th>JSON key</th><th>对应 AT</th><th>value 示例</th><th>说明</th></tr>
+        <tr><td>per</td><td>AT+PER=</td><td>"60,300"</td><td>检测秒,上报秒</td></tr>
+        <tr><td>var</td><td>AT+VAR=</td><td>"100,500"</td><td>温/湿变化量（0.01 单位）</td></tr>
+        <tr><td>thre</td><td>AT+THRE=</td><td>"6000,0" 或 "OFF"</td><td>阈值或关闭</td></tr>
+        <tr><td>server</td><td>AT+SERVER=</td><td>"TCP,81.71.164.182,20004"</td><td>类型,主机,端口</td></tr>
+        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"u,p,cid,topic/sub"</td><td>MQTT 四段（用户名,密码,ClientId,Topic）</td></tr>
+        <tr><td>ver</td><td>AT+VER=</td><td>"WW105C,200"</td><td>须为字符串；下次开机仍被固件覆盖</td></tr>
+        <tr><td>log</td><td>AT+LOG=</td><td>"1" 或 1</td><td>调试日志 0/1</td></tr>
+        <tr><td>rst</td><td>AT+RST=</td><td>"24,10,10"</td><td>复位策略：小时,网络失败次,传感器失败次</td></tr>
+        <tr><td>tt</td><td>—</td><td>1719300000</td><td>Unix 秒对时</td></tr>
+      </table></div>
+      <p>不同型号支持的字段以其产品说明为准；部分压力类遗留键（var / unit / ran / thre）在非压力机型上可忽略。</p>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>配置示例</h2>
+      <h3>3.1 修改上报周期</h3>
+      <div class="code">{"per":"610,610"}</div>
+      <h3>3.2 修改阈值并关闭</h3>
+      <div class="code">{"thre":"6000,0"}
+{"thre":"OFF"}</div>
+      <h3>3.3 修改服务器</h3>
+      <div class="code">{"server":"TCP,81.71.164.182,20004"}</div>
+      <h3>3.4 对时并开启日志</h3>
+      <div class="code">{"tt":1719300000,"log":1}</div>
+      <h3>3.5 组合下发</h3>
+      <div class="code">{"tt":1719300000,"per":"610,610","thre":"OFF","log":1}</div>
+      <p>只带需要修改的字段即可，无需下发全部配置。</p>
+      <h3>3.6 查询当前配置</h3>
+      <div class="code">下发: {"per":"?"}
+设备应答: {"per":"60,600"}</div>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>生效规则与注意事项</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>落盘</td><td>含配置字段 → 写入 RAM 并落盘 UserCfg，掉电保持</td></tr>
+        <tr><td>对时</td><td>含 "tt":&lt;unix秒&gt; → 校准设备时间</td></tr>
+        <tr><td>网络重初始化</td><td>修改 server / mqtt 后设备会标记网络重初始化，下次上线再发注册包</td></tr>
+        <tr><td>型号覆盖</td><td>Flash 或远程修改 ver 仅临时有效，重启恢复固件内置型号</td></tr>
+        <tr><td>驻网时间</td><td>每次上报冷启动 4G，驻网可达数十秒～2 分钟，上报周期不宜过短</td></tr>
+        <tr><td>调试口共用</td><td>部分产品 BLE 与 USB 调试共 UART，BLE 保持连接时可能抢占串口应答</td></tr>
+      </table></div>
+      <div class="note">技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、设备编号、固件版本及下发报文样例。</div>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · 4G 远程配置</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

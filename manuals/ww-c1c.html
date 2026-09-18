@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-C1C LoRa 控制器 - 产品说明书 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-C1C LoRa 控制器产品说明书，涵盖 4 路 DI、2 路继电器控制、GPS、4G 远程配置与 MQTT 上报。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#2563eb;--primary-dark:#1d4ed8;--text:#1e293b;--muted:#475569;--page:#f8fafc;--card:#fff;--border:#e2e8f0;--soft:#eff6ff}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--text);font:15.5px/1.85 Inter,"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Microsoft YaHei",sans-serif}.container{max-width:1000px;margin:0 auto;padding:0 24px}.topbar{padding:16px 0;background:#fff;border-bottom:1px solid var(--border)}.breadcrumb{color:var(--muted);font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.breadcrumb a{color:var(--primary);text-decoration:none}.download{margin-left:auto;background:var(--primary);color:#fff!important;padding:6px 14px;border-radius:6px;font-size:13px}.hero{margin:26px auto 18px;padding:38px 40px;background:linear-gradient(135deg,#eff6ff,#fff);border:1px solid #dbeafe;border-radius:16px}.badge{display:inline-block;padding:4px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-size:13px;font-weight:600}.hero h1{margin:12px 0 6px;font-size:33px;line-height:1.35;color:#172554}.hero p{margin:0;color:var(--muted)}.meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;color:var(--muted);font-size:14px}.version{padding:1px 8px;background:#dbeafe;color:#1d4ed8;border-radius:4px}.company,.toc,.section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px 28px;margin:18px 0}.company{color:var(--muted);font-size:14px}.toc h2,.section h2{margin-top:0}.toc ol{columns:2;margin:0;padding-left:22px}.toc a{color:var(--primary);text-decoration:none}.section h2{font-size:23px;color:#1e3a8a;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:20px}.section h3{font-size:17px;margin:24px 0 10px;color:#334155}.section h4{font-size:15px;margin:18px 0 8px;color:#475569}.num{display:inline-flex;width:29px;height:29px;border-radius:50%;background:var(--primary);color:#fff;align-items:center;justify-content:center;font-size:15px;margin-right:8px}.table-wrap{overflow-x:auto;margin:14px 0}table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.65}th,td{border:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top}th{background:#eff6ff;color:#1e3a8a}tr:nth-child(even) td{background:#f8fafc}.code{padding:15px;background:#0f172a;color:#e2e8f0;border-radius:8px;overflow:auto;font:12.5px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;margin:14px 0}.note{padding:14px 16px;background:#fffbeb;border-left:4px solid #f59e0b;color:#78350f;margin:14px 0;border-radius:5px;font-size:14px}.inline-code{background:#f1f5f9;padding:1px 6px;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#be123c}footer{text-align:center;color:#64748b;padding:26px 0 46px;font-size:13px}@media(max-width:700px){.container{padding:0 14px}.hero{padding:26px 20px}.hero h1{font-size:26px}.company,.toc,.section{padding:20px 18px}.toc ol{columns:1}}@media print{.topbar,.download{display:none}body{background:#fff}.hero,.company,.toc,.section{border:0;padding:0;margin:0 0 18px}.section{page-break-inside:avoid}}
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>WW-C1C LoRa 控制器说明书</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">产品说明书</span>
+      <h1>WW-C1C LoRa 控制器</h1>
+      <p>4 路 DI 采集、2 路继电器控制、VIN/加速度/GPS 监测，支持 4G 远程配置与 MQTT 上报。</p>
+      <div class="meta"><span>型号：WW-C1C</span><span class="version">固件 1.2.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">产品能力概览</a></li>
+      <li><a href="#s2">上行报文</a></li>
+      <li><a href="#s3">下行通道</a></li>
+      <li><a href="#s4">远程配置（参数类）</a></li>
+      <li><a href="#s5">远程控制：2 路继电器</a></li>
+      <li><a href="#s6">平台实现要点</a></li>
+      <li><a href="#s7">本地 AT 指令摘要</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>产品能力概览</h2>
+      <div class="table-wrap"><table>
+        <tr><th>能力</th><th>说明</th></tr>
+        <tr><td>4 路 DI</td><td>霍尔/干接点，上报字段 di 位图</td></tr>
+        <tr><td>2 路继电器 K1/K2</td><td>本地 AT+RLY 或 4G 下行 JSON 控制</td></tr>
+        <tr><td>VIN ADC</td><td>外电采样 vin；运动态可报脉冲 adc_max / adc_s</td></tr>
+        <tr><td>加速度</td><td>判运动/静止 moving</td></tr>
+        <tr><td>GPS</td><td>lat / lon / gps_*（未定位为 0）</td></tr>
+        <tr><td>4G 长连接</td><td>常在线；每次上报后约 3s 听下行</td></tr>
+      </table></div>
+      <div class="note">出厂默认上报服务器为 MQTT <span class="inline-code">mqtt.data.wwiot.com:1883</span>。</div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>上行报文</h2>
+      <p>报文为单行 JSON + \n。用字段 evt 区分类型（无 reason 字段）。</p>
+      <div class="table-wrap"><table>
+        <tr><th>evt</th><th>名称</th><th>何时发送</th></tr>
+        <tr><td>10</td><td>REG 注册</td><td>开机联网成功后；断网恢复需重新注册时</td></tr>
+        <tr><td>0</td><td>PER 周期</td><td>运动：按 per_d；静止：按 per_r；仅发状态包</td></tr>
+        <tr><td>1</td><td>IO</td><td>DI 变化并稳定 3s（上报冻结采样，避免磁铁离开后变成 0）</td></tr>
+        <tr><td>2</td><td>FORCE</td><td>AT+REPORT / 按键强制</td></tr>
+        <tr><td>3</td><td>ADC</td><td>运动中 VIN 有值→无值，带峰值/时长</td></tr>
+        <tr><td>4</td><td>GPS</td><td>运动中 GPS 良好时的分钟周期</td></tr>
+      </table></div>
+      <h3>2.1 注册包（evt=10）</h3>
+      <div class="code">{
+  "no":"00000005","seq":1,
+  "model":"WWC1C","ver":"200","fw":"1.2.0",
+  "iccid":"8986...","imei":"8668...",
+  "per_d":60,"per_r":600,
+  "srv":"UDP","host":"47.101.152.184","port":20000,
+  "csq":11,"bat":4,"bat_mv":8910,
+  "ok":1,"di":15,"rly":0,"vin":9.83,
+  "adc_max":0,"adc_s":0,"moving":0,
+  "lat":0.0000000,"lon":0.0000000,
+  "gps_fix":0,"sats":0,"hdop":0.0,"gps_good":0,
+  "evt":10,"ts":21817,"tt":0
+}</div>
+      <h3>2.2 业务包分类</h3>
+      <p>业务数据不再混装，分为 3 类：</p>
+      <div class="table-wrap"><table>
+        <tr><th>类别</th><th>evt</th><th>字段</th></tr>
+        <tr><td>状态包</td><td>0 / 1 / 2</td><td>di / rly / moving / vin</td></tr>
+        <tr><td>ADC 包</td><td>3</td><td>adc_max / adc_s</td></tr>
+        <tr><td>GPS 包</td><td>4</td><td>lat / lon / gps_fix / sats / hdop / gps_good</td></tr>
+      </table></div>
+      <p>所有业务包固定公共头：no、seq、evt、ts、csq。</p>
+      <h3>2.3 状态包（evt=0/1/2）</h3>
+      <div class="code">{
+  "no":"00000005","seq":3,
+  "ok":1,"di":15,"rly":1,"vin":9.83,
+  "moving":1,
+  "evt":0,"csq":11,"ts":504699
+}</div>
+      <h3>2.4 ADC 包（evt=3）</h3>
+      <div class="code">{
+  "no":"00000005","seq":4,
+  "ok":1,"adc_max":12840,"adc_s":1,
+  "evt":3,"csq":11,"ts":505102
+}</div>
+      <h3>2.5 GPS 包（evt=4）</h3>
+      <div class="code">{
+  "no":"00000005","seq":5,
+  "ok":1,
+  "lat":31.2304167,"lon":121.4737010,
+  "gps_fix":1,"sats":9,"hdop":1.2,"gps_good":1,
+  "evt":4,"csq":11,"ts":506201
+}</div>
+      <h3>2.6 字段说明</h3>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>含义</th></tr>
+        <tr><td>rly</td><td>继电器位图：bit0=K1，bit1=K2（0=断开，1=吸合）</td></tr>
+        <tr><td>di</td><td>DI1~DI4 位图</td></tr>
+        <tr><td>moving</td><td>1=运动态，0=静止态</td></tr>
+        <tr><td>adc_max</td><td>本段 ADC 脉冲峰值，单位 mV</td></tr>
+        <tr><td>adc_s</td><td>本段 ADC 脉冲持续时间，单位秒（内部按 ms 四舍五入）</td></tr>
+        <tr><td>gps_good</td><td>1=GPS 数据可用于业务上报</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>下行通道（服务器 → 设备）</h2>
+      <h3>3.1 时机</h3>
+      <p>设备每次上行发送成功后，保持当前会话约 3 秒（长连接）监听下行：</p>
+      <div class="table-wrap"><table>
+        <tr><th>协议</th><th>行为</th></tr>
+        <tr><td>UDP</td><td>发完后不立刻关 socket，听 <span class="inline-code">+MIPURC "rudp"</span>；超时或处理完再关闭</td></tr>
+        <tr><td>TCP</td><td>在已连接上听 <span class="inline-code">+MIPURC "rtcp"</span></td></tr>
+        <tr><td>MQTT（出厂默认）</td><td>听订阅主题下行，QoS=0</td></tr>
+      </table></div>
+      <p>平台侧建议：</p>
+      <ol>
+        <li>收到设备某一包上行后，在 3 秒内向同一地址/端口（UDP 时为设备源 IP/端口对应的对端会话）回发一包下行 JSON；</li>
+        <li>或在镜像本机 20000 时，对刚发来的设备源地址做 UDP 回包。</li>
+      </ol>
+      <div class="note">设备不是常驻监听端口，只有上报后的短窗口可收控制。若需更快响应，可缩短 AT+PER 周期，或触发 FORCE 上报。</div>
+      <h3>3.2 下行 JSON 约定</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>说明</th></tr>
+        <tr><td>编码</td><td>UTF-8，建议单行，总长 ≤ 512 B（设备缓冲 1 KB）</td></tr>
+        <tr><td>键名</td><td>不区分大小写（推荐小写 k1 / k2 / rly）</td></tr>
+        <tr><td>配置类 value</td><td>字符串，格式与本地 AT+KEY= 右侧相同；也可用 "?" 查询</td></tr>
+        <tr><td>数字兼容</td><td>log / rly / k1 / k2 可用数字或字符串</td></tr>
+        <tr><td>对时</td><td>"tt": &lt;unix秒&gt;</td></tr>
+        <tr><td>落盘</td><td>仅配置类 SET 成功后写 Flash；继电器控制不落盘</td></tr>
+      </table></div>
+      <h3>3.3 MQTT Topic（出厂默认）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>值</th></tr>
+        <tr><td>Broker</td><td>mqtt.data.wwiot.com:1883</td></tr>
+        <tr><td>用户名 / 密码</td><td>bj_vehicle / bj_vehicle@123</td></tr>
+        <tr><td>QoS</td><td>0</td></tr>
+        <tr><td>前缀 topic</td><td>wwiot/ss/vehicle/prd/car/</td></tr>
+        <tr><td>设备发布</td><td>{topic}{no}/data，例：wwiot/ss/vehicle/prd/car/00000005/data</td></tr>
+        <tr><td>设备订阅（下行）</td><td>{topic}{no}/dw，例：wwiot/ss/vehicle/prd/car/00000005/dw</td></tr>
+      </table></div>
+      <p>本地可查：AT+SERVER?、AT+MQTT?。</p>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>远程配置（参数类）</h2>
+      <p>与本地 AT 同一套 KEY。</p>
+      <div class="table-wrap"><table>
+        <tr><th>JSON key</th><th>对应 AT</th><th>value 示例</th><th>说明</th></tr>
+        <tr><td>per</td><td>AT+PER=</td><td>"60,600"</td><td>运动周期秒,静止周期秒</td></tr>
+        <tr><td>server</td><td>AT+SERVER=</td><td>"MQTT,mqtt.data.wwiot.com,1883"</td><td>协议,主机,端口</td></tr>
+        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"bj_vehicle,bj_vehicle@123,&lt;cid&gt;,wwiot/ss/vehicle/prd/car/"</td><td>用户,密码,ClientId,topic 前缀</td></tr>
+        <tr><td>log</td><td>AT+LOG=</td><td>"1" 或 1</td><td>串口调试日志</td></tr>
+        <tr><td>ver</td><td>AT+VER=</td><td>"WWC1C,200"</td><td>型号,产品版本（需解锁策略时）</td></tr>
+        <tr><td>rst</td><td>AT+RST=</td><td>"24,10,10"</td><td>看门狗类复位策略</td></tr>
+        <tr><td>tt</td><td>—</td><td>1710000000</td><td>对时（Unix 秒）</td></tr>
+      </table></div>
+      <p>兼容旧键（压力类产品遗留，本机可忽略）：var / unit / ran / thre。</p>
+      <h3>4.1 配置示例</h3>
+      <div class="code">改周期:
+{"per":"30,120"}
+
+改服务器:
+{"server":"MQTT,mqtt.data.wwiot.com,1883"}
+
+对时 + 开日志:
+{"tt":1710000000,"log":1}
+
+查询周期（设备回传）:
+{"per":"?"}
+设备应答示例:
+{"per":"60,600"}</div>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>远程控制：2 路继电器</h2>
+      <p>硬件：K1=PB10，K2=PB02（MCU 高电平吸合）。上报字段 rly 为位图。</p>
+      <h3>5.1 推荐下发字段</h3>
+      <h4>方式 A：整路掩码 / 通道写法（与 AT+RLY 一致）</h4>
+      <div class="table-wrap"><table>
+        <tr><th>JSON</th><th>效果</th></tr>
+        <tr><td>{"rly":"1,1"}</td><td>K1 吸合</td></tr>
+        <tr><td>{"rly":"1,0"}</td><td>K1 断开</td></tr>
+        <tr><td>{"rly":"2,1"}</td><td>K2 吸合</td></tr>
+        <tr><td>{"rly":"2,0"}</td><td>K2 断开</td></tr>
+        <tr><td>{"rly":"3"} 或 {"rly":3}</td><td>K1+K2 同时吸合（mask=0b11）</td></tr>
+        <tr><td>{"rly":"0"} 或 {"rly":0}</td><td>两路全断</td></tr>
+        <tr><td>{"rly":"1"}</td><td>仅 K1（mask=0b01）</td></tr>
+        <tr><td>{"rly":"2"}</td><td>仅 K2（mask=0b10）</td></tr>
+        <tr><td>{"rly":"?"}</td><td>查询当前 mask，设备回 {"rly":"1"} 等</td></tr>
+      </table></div>
+      <h4>方式 B：独立开关（更直观）</h4>
+      <div class="code">{"k1":1,"k2":0}
+{"k1":0,"k2":1}
+{"k1":"?","k2":"?"}</div>
+      <p>数字与字符串均可：{"k1":1} 等价 {"k1":"1"}。</p>
+      <h3>5.2 控制后设备行为</h3>
+      <ol>
+        <li>立即改变继电器输出（不写 Flash，掉电不保持）。</li>
+        <li>回执一包 JSON（含当前 rly / k1 / k2）。</li>
+        <li>置位强制上报，随后再发一包业务数据（evt=2 或周期包），其中 rly 反映新状态。</li>
+      </ol>
+      <h3>5.3 完整交互时序（UDP）</h3>
+      <div class="code">设备 ──UDP──► 平台     业务/注册 JSON（含当前 rly）
+平台 ──UDP──► 设备     {"k1":1,"k2":0}     （须在上报后 ~3s 内）
+设备 ──UDP──► 平台     {"k1":"1","k2":"0"}  （控制回执）
+设备 ──UDP──► 平台     业务包 rly=1         （强制/周期确认）</div>
+      <h3>5.4 本地 AT 对照（调试）</h3>
+      <div class="code">AT+RLY?          → rly=0x01 K1=1 K2=0
+AT+RLY=1,1       → K1 吸合
+AT+RLY=2,0       → K2 断开
+AT+RLY=3         → 两路吸合</div>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>平台实现要点</h2>
+      <ol>
+        <li>监听设备上行端口（本项目默认 20000，可已镜像到本机）。</li>
+        <li>解析 no / evt / rly / di / moving 等。</li>
+        <li>需要控继电器时，在收到上行后 3 秒内向设备回发：推荐 {"k1":1,"k2":0} 或 {"rly":"1,1"}。</li>
+        <li>可选同时下发配置：{"per":"60,300","tt":1710000000}。</li>
+        <li>配置与控制可同包：{"k1":1,"per":"30,120"}。</li>
+        <li>以设备后续上行里的 rly 作为最终状态确认。</li>
+      </ol>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>本地 AT 指令摘要</h2>
+      <div class="table-wrap"><table>
+        <tr><th>指令</th><th>作用</th></tr>
+        <tr><td>AT+VER?</td><td>型号/产品版本</td></tr>
+        <tr><td>AT+PER? / =</td><td>运动/静止周期</td></tr>
+        <tr><td>AT+SERVER? / =</td><td>协议与服务器</td></tr>
+        <tr><td>AT+DI?</td><td>读 DI</td></tr>
+        <tr><td>AT+RLY? / =</td><td>读/写继电器</td></tr>
+        <tr><td>AT+VIN? / AT+ACC? / AT+GPS?</td><td>外电 / 加速度 / GPS</td></tr>
+        <tr><td>AT+REPORT</td><td>强制上报（便于立刻打开下行窗口）</td></tr>
+        <tr><td>AT+LOG=0/1</td><td>串口详细日志</td></tr>
+      </table></div>
+      <div class="note">技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供设备型号、设备编号、固件版本及报文样例。</div>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · WW-C1C LoRa 控制器产品说明书</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>
