@@ -31,4 +31,6 @@ tr:nth-child(even) td{background:#f8fafc}
 .inline-code{background:#f1f5f9;padding:1px 6px;border-radius:4px;font-family:ui-monospace,Menlo,monospace;font-size:13px;color:#be123c}
 footer{text-align:center;color:#64748b;padding:26px 0 46px;font-size:13px}
 @media(max-width:700px){.container{padding:0 14px}.hero{padding:26px 20px}.hero h1{font-size:26px}.company,.toc,.section{padding:20px 18px}.toc ol{columns:1}}
+
+
 @media print{.topbar,.download{display:none}body{background:#fff}.hero,.company,.toc,.section{border:0;padding:0;margin:0 0 18px}.section{page-break-inside:avoid}}

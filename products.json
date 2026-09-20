@@ -1784,5 +1784,19 @@
     "model": "SP21",
     "protocols": [],
     "power": "external"
+  },
+  {
+    "id": 165,
+    "category": "pcba",
+    "subCategory": "万维通信模组",
+    "name": "LoRaWAN 网关模组【SX1302】",
+    "model": "WW-M0-1302",
+    "protocols": [
+      "lora",
+      "lorawan-hf",
+      "lorawan-lf"
+    ],
+    "power": "external",
+    "manualUrl": "manuals/ww-m0-1302.html"
   }
 ]

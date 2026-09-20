@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-M0-1302 LoRaWAN 网关模组 - 产品说明书 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-M0-1302 LoRaWAN 网关模组产品说明书，基于 SX1302，采用 Mini PCIe 封装和 SPI 主机接口。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+  <style>.product-image{text-align:center;margin:20px 0}.product-image img{max-width:100%;max-height:520px;object-fit:contain;border:1px solid var(--border);border-radius:10px;background:#fff}.pin{font-family:ui-monospace,Menlo,monospace;color:#1d4ed8}</style>
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>WW-M0-1302 产品说明书</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">万维通信模组</span>
+      <h1>WW-M0-1302 LoRaWAN 网关模组</h1>
+      <p>基于 Semtech SX1302 的多信道 LoRaWAN 网关射频模组，采用 Mini PCIe 封装与 SPI 主机接口，适用于集成式 LoRaWAN 网关设备。</p>
+      <div class="meta"><span>型号：WW-M0-1302</span><span class="version">SX1302 / SPI</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">产品概述</a></li>
+      <li><a href="#s2">产品特性与主要参数</a></li>
+      <li><a href="#s3">结构与产品展示</a></li>
+      <li><a href="#s4">接口定义</a></li>
+      <li><a href="#s5">电源与 SPI 接口</a></li>
+      <li><a href="#s6">控制信号与天线</a></li>
+      <li><a href="#s7">电气与射频性能</a></li>
+      <li><a href="#s8">集成设计注意事项</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>产品概述</h2>
+      <p>WW-M0-1302 是一款基于 SX1302 芯片方案设计的 LoRaWAN 网关模组，采用标准 Mini PCIe 形态封装，主机侧使用 SPI 接口，模组内置 PA 和 LNA，采用半双工设计，方便用户快速开发 LoRaWAN 网关设备。</p>
+      <p>SX1302 是 Semtech 新一代 LoRa 网关基带芯片，搭载 SX1250 前端，可支持扩频因子 SF5~SF12。相比上一代 SX1301 网关方案，具备更高的数据通信速率、更低的功耗和更简化的热设计。</p>
+      <div class="note">资料来源中的旧型号“M-GW1302S”已统一按当前产品型号替换为“WW-M0-1302”。频段、尺寸、重量及认证细节以正式交付规格书为准。</div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>产品特性与主要参数</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项目</th><th>规格</th></tr>
+        <tr><td>产品型号</td><td><strong>WW-M0-1302</strong></td></tr>
+        <tr><td>核心芯片</td><td>Semtech SX1302 LoRa 网关基带芯片</td></tr>
+        <tr><td>主机接口</td><td>SPI</td></tr>
+        <tr><td>封装</td><td>标准 PCI Express Mini Card 1.2 / Mini PCIe 形态</td></tr>
+        <tr><td>工作方式</td><td>半双工</td></tr>
+        <tr><td>射频前端</td><td>内置 PA 和 LNA，搭载 SX1250 前端</td></tr>
+        <tr><td>接收能力</td><td>8 路接收，SF5~SF12 全解</td></tr>
+        <tr><td>最大发射功率</td><td>最高 26 dBm（505.5MHz 典型资料）</td></tr>
+        <tr><td>典型接收灵敏度</td><td>低至 -141 dBm（505.5MHz，SF12，BW=125kHz）</td></tr>
+        <tr><td>供电</td><td>3.3V DC，输入范围约 3.0~3.6V；供电能力至少 500mA</td></tr>
+        <tr><td>天线接口</td><td>I-PEX 1 代接口</td></tr>
+        <tr><td>适用频段</td><td>EU433、CN470、EU868、US915 等免授权频段；实际频段以版本和当地法规为准</td></tr>
+      </table></div>
+      <h3>2.1 典型工作电流</h3>
+      <div class="table-wrap"><table>
+        <tr><th>模式</th><th>工作条件</th><th>典型值</th></tr>
+        <tr><td>RX</td><td>开启接收，禁用 TX</td><td>54mA</td></tr>
+        <tr><td>TX/RX</td><td>开启接收，开启 TX（25dBm）</td><td>360mA</td></tr>
+        <tr><td>IDLE</td><td>空闲不工作模式</td><td>27mA</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>结构与产品展示</h2>
+      <div class="product-image"><img src="../images/WW-M0-1302.png" alt="WW-M0-1302 LoRaWAN Gateway Module"><p>WW-M0-1302 模组主图</p></div>
+      <p>主图标签显示：WW-M0-1302、SX1302、LoRaWAN Gateway Module、IF: SPI、wwiot.com，并带有 RoHS、CCC、CF、CE、WEEE 等标识。</p>
+      <p>该模组采用标准 Mini PCIe 金手指形态，适合插入符合 PCI Express Mini Card 连接器规范的主控底板。</p>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>接口定义</h2>
+      <h3>4.1 主要功能管脚</h3>
+      <div class="table-wrap"><table>
+        <tr><th>名称</th><th>管脚号</th><th>属性</th><th>功能描述</th></tr>
+        <tr><td>GND</td><td>4,9,15,18,21,26,27,29,34,35,37,40,43,50</td><td>—</td><td>地</td></tr>
+        <tr><td>3.3V</td><td>2,24,39,41,52</td><td>PI</td><td>3.3V DC 主电源输入</td></tr>
+        <tr><td>PPS</td><td>19</td><td>DI</td><td>GPS 授时输入，可悬空</td></tr>
+        <tr><td>NRESET</td><td>22</td><td>DI</td><td>复位控制管脚，高电平复位</td></tr>
+        <tr><td>RX_ON</td><td>42</td><td>DO</td><td>接 SX1302_GPIO[3]</td></tr>
+        <tr><td>TX_ON</td><td>44</td><td>DO</td><td>接 SX1302_GPIO[5]</td></tr>
+        <tr><td>CFG_ON</td><td>46</td><td>DO</td><td>接 SX1302_GPIO[4]</td></tr>
+        <tr><td>SX_SCK</td><td>45</td><td>DI</td><td>SPI 时钟信号输入</td></tr>
+        <tr><td>SX_MISO</td><td>47</td><td>DO</td><td>SPI 数据输出</td></tr>
+        <tr><td>SX_MOSI</td><td>49</td><td>DI</td><td>SPI 数据输入</td></tr>
+        <tr><td>SX_CSN</td><td>51</td><td>DI</td><td>SPI 片选信号输入</td></tr>
+      </table></div>
+      <h3>4.2 未使用与预留管脚</h3>
+      <p>UIM、PCIe 高速差分、USB 等管脚在该模组版本中未使用或为内部保留，按原资料要求保持悬空或不连接，不应作为外部业务接口使用。</p>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>电源与 SPI 接口</h2>
+      <h3>5.1 电源</h3>
+      <p>WW-M0-1302 使用 3.3V 供电，输入电压建议保持在 3.3V±9% 范围内。TX 模式瞬间峰值电流可达约 400mA，开关电源或 LDO 应具备足够供流能力，模组供电端建议增加容量较大的钽电容或电解电容。</p>
+      <p>若使用开关电源，应尽量使电源走线避开天线区域，降低 EMC 干扰。</p>
+      <h3>5.2 SPI 接口</h3>
+      <div class="table-wrap"><table>
+        <tr><th>名称</th><th>管脚号</th><th>I/O</th><th>功能</th><th>电压域</th></tr>
+        <tr><td>SX_SCK</td><td>45</td><td>DI</td><td>SPI 时钟信号输入</td><td>3.3V</td></tr>
+        <tr><td>SX_MISO</td><td>47</td><td>DO</td><td>SPI 数据输出</td><td>3.3V</td></tr>
+        <tr><td>SX_MOSI</td><td>49</td><td>DI</td><td>SPI 数据输入</td><td>3.3V</td></tr>
+        <tr><td>SX_CSN</td><td>51</td><td>DI</td><td>SPI 片选信号输入</td><td>3.3V</td></tr>
+      </table></div>
+      <p>主控 SPI 需要支持全双工，具体时序请结合 SX1302 数据手册设计。</p>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>控制信号与天线</h2>
+      <div class="table-wrap"><table>
+        <tr><th>信号</th><th>说明</th></tr>
+        <tr><td>PPS</td><td>支持 GPS-PPS 输入，用于接收带有时间戳的数据包</td></tr>
+        <tr><td>NRESET</td><td>将接口电平拉低 0.05~0.2s 后释放，可复位模组；走线应尽量短并做好包地</td></tr>
+        <tr><td>RX_ON</td><td>开启接收状态时输出高电平，同时板载 LED 点亮，连接 SX1302 GPIO[3]</td></tr>
+        <tr><td>TX_ON</td><td>发送数据时输出高电平，同时板载 LED 点亮，连接 SX1302 GPIO[5]</td></tr>
+        <tr><td>CFG_ON</td><td>成功配置参数时输出高电平，同时板载 LED 点亮，连接 SX1302 GPIO[4]</td></tr>
+      </table></div>
+      <h3>天线接口</h3>
+      <p>模组天线连接座采用 I-PEX 1 代接口，射频走线应远离电源开关节点、高速数字线与高噪声器件，并按目标频段匹配天线与阻抗。</p>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>电气与射频性能</h2>
+      <h3>7.1 IO 电气特性</h3>
+      <div class="table-wrap"><table>
+        <tr><th>参数</th><th>描述</th><th>最小值</th><th>最大值</th><th>单位</th></tr>
+        <tr><td>VIH</td><td>输入高电平电压</td><td>0.7×VCC</td><td>VCC+0.3</td><td>V</td></tr>
+        <tr><td>VIL</td><td>输入低电平电压</td><td>-0.3</td><td>0.3×VCC</td><td>V</td></tr>
+        <tr><td>VOH</td><td>输出高电平电压</td><td>VCC-0.5</td><td>VCC</td><td>V</td></tr>
+        <tr><td>VOL</td><td>输出低电平电压</td><td>0</td><td>0.4</td><td>V</td></tr>
+      </table></div>
+      <h3>7.2 发射功率与接收灵敏度</h3>
+      <div class="table-wrap"><table>
+        <tr><th>工作频段</th><th>最大功率</th><th>备注</th></tr>
+        <tr><td>505.5MHz</td><td>26dBm</td><td>资料给出典型值</td></tr>
+        <tr><td>868.5MHz</td><td>TBD</td><td>需以具体版本实测</td></tr>
+        <tr><td>915.5MHz</td><td>TBD</td><td>需以具体版本实测</td></tr>
+      </table></div>
+      <div class="table-wrap"><table>
+        <tr><th>工作频段</th><th>SF</th><th>典型接收灵敏度</th></tr>
+        <tr><td>505.5MHz，BW=125kHz</td><td>SF5</td><td>-121dBm</td></tr>
+        <tr><td>505.5MHz，BW=125kHz</td><td>SF7</td><td>-127dBm</td></tr>
+        <tr><td>505.5MHz，BW=125kHz</td><td>SF12</td><td>-141dBm</td></tr>
+        <tr><td>868.5MHz / 915.5MHz</td><td>SF5~SF12</td><td>TBD，需以具体版本实测</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s8"><h2><span class="num">8</span>集成设计注意事项</h2>
+      <ol>
+        <li>主控 SPI 必须支持全双工，具体时序以 SX1302 数据手册为准。</li>
+        <li>3.3V 供电需满足瞬时峰值电流；TX 时应重点检查电源压降与纹波。</li>
+        <li>电源输入端增加储能电容，电源走线避开天线与高噪声区域。</li>
+        <li>NRESET 走线短、包地处理，避免外部干扰造成误复位。</li>
+        <li>未使用的 UIM、PCIe 高速差分、USB 与 RESERVED 管脚按资料保持悬空或不连接。</li>
+        <li>频段、发射功率、天线与认证应根据目标市场和当地无线法规最终确认。</li>
+        <li>图片显示的认证标识包括 RoHS、CCC、CF、CE、WEEE；正式量产资料应以实际认证文件为准。</li>
+      </ol>
+      <div class="note">淘宝商品页未提供可核验的完整规格参数；本说明书未对尺寸、重量、工作温度、功耗、频段版本和认证编号作超出正式资料的推定。</div>
+      <p>技术支持：万维物联网（南京）有限公司。联系技术支持时，请提供模组型号、主控平台、目标频段、电源条件与 SPI 接口时序。</p>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · WW-M0-1302 LoRaWAN 网关模组产品说明书</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

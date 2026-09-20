@@ -66,9 +66,12 @@
     .btn-secondary { background:#fff; color:var(--primary-700); border:1px solid #bfdbfe; }
     .btn-secondary:hover { background:var(--soft); }
     .mobile-toggle { display:none; }
+    body.is-collapsed .layout { grid-template-columns:minmax(0,1fr); }
+    body.is-collapsed .sidebar { display:none; }
+    .layout { transition:grid-template-columns .25s ease; }
 
     /* ---------- Layout ---------- */
-    .layout { flex:1 1 auto; min-height:0; display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); }
+    .layout { flex:1 1 auto; min-height:0; display:grid; grid-template-columns:var(--sidebar) minmax(0,1fr); max-width:1400px; margin:0 auto; width:100%; }
 
     /* ---------- Sidebar ---------- */
     .sidebar {
@@ -93,9 +96,17 @@
     }
     .sidebar-group { margin-top:14px; }
     .sidebar-group-title {
-      padding:0 12px 6px; color:var(--muted); font-size:11.5px; font-weight:700;
-      letter-spacing:.06em; text-transform:uppercase;
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+      padding:0 12px 8px; color:var(--muted); font-size:16px; font-weight:700;
+      letter-spacing:.06em; text-transform:uppercase; cursor:pointer; user-select:none;
     }
+    .sidebar-group-title::after {
+      content:''; width:14px; height:14px; flex:0 0 auto; transition:transform .18s;
+      background:no-repeat center/contain url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>');
+    }
+    .sidebar-group.collapsed > .doc-link { display:none; }
+    .sidebar-group.collapsed .sidebar-group-title::after { transform:rotate(-90deg); }
+    #docNav.nav-searching .sidebar-group.collapsed > .doc-link { display:flex; }
     .sidebar a.doc-link {
       display:flex; align-items:center; gap:8px; padding:8px 12px; margin:1px 0;
       color:var(--text-2); border-radius:8px; font-size:13.5px; position:relative;
@@ -123,7 +134,7 @@
     .content-title svg { width:16px; height:16px; color:var(--primary); flex:0 0 auto; }
     .content-title span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
     .content-actions { display:flex; gap:8px; flex:0 0 auto; }
-    .content-frame { flex:1 1 auto; width:100%; border:0; background:#fff; min-height:0; }
+    .content-frame { flex:1 1 auto; width:100%; max-width:1000px; align-self:center; border:0; background:#fff; min-height:0; }
 
     /* ---------- Welcome ---------- */
     .welcome { flex:1 1 auto; overflow:auto; padding:32px; }
@@ -193,6 +204,7 @@
     @media (max-width:1100px) {
       .header__nav { display:none; }
       .mobile-toggle { display:inline-flex; }
+      .collapse-toggle { display:none; }
     }
     @media (max-width:900px) {
       .layout { grid-template-columns:1fr; }
@@ -230,6 +242,7 @@
       </nav>
       <div class="header__actions">
         <button class="btn btn-secondary mobile-toggle" id="menuToggle" type="button">目录</button>
+        <button class="btn btn-secondary collapse-toggle" id="collapseToggle" type="button" aria-expanded="true">收起目录</button>
         <a class="btn btn-secondary" href="https://doc-wwiot.oss-cn-beijing.aliyuncs.com/wwiot/%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C/%E4%B8%87%E7%BB%B4%E7%89%A9%E8%81%94%E7%BD%91-%E4%BA%A7%E5%93%81%E6%89%8B%E5%86%8C-2026.pdf" target="_blank" rel="noopener">下载 PDF</a>
         <a class="btn btn-primary" href="../contact.html">联系我们</a>
       </div>
@@ -250,6 +263,9 @@
           <a class="doc-link" href="#protocol-at-command.html" data-src="protocol-at-command.html" data-title="配置 AT 指令手册（旧版）">配置 AT 指令手册（旧版）</a>
           <a class="doc-link" href="#protocol-at-command-new.html" data-src="protocol-at-command-new.html" data-title="AT 指令配置（新版）">AT 指令配置（新版）</a>
           <a class="doc-link" href="#4g-remote-config.html" data-src="4g-remote-config.html" data-title="4G 远程配置">4G 远程配置</a>
+        </div>
+        <div class="sidebar-group" data-group><div class="sidebar-group-title">万维通信模组</div>
+          <a class="doc-link" href="#ww-m0-1302.html" data-src="ww-m0-1302.html" data-title="WW-M0-1302 LoRaWAN 网关模组">WW-M0-1302 LoRaWAN 网关模组</a>
         </div>
         <div class="sidebar-group" data-group><div class="sidebar-group-title">温湿度与环境</div>
           <a class="doc-link" href="#ww10.html" data-src="ww10.html" data-title="WW-10 工业温湿度">WW-10 工业温湿度</a>
@@ -422,9 +438,37 @@
       sidebar.classList.toggle('open');
     });
 
+    // 桌面端：收起 / 展开左侧目录
+    const collapseBtn = document.getElementById('collapseToggle');
+    const setCollapsed = collapsed => {
+      document.body.classList.toggle('is-collapsed', collapsed);
+      collapseBtn.textContent = collapsed ? '展开目录' : '收起目录';
+      collapseBtn.setAttribute('aria-expanded', String(!collapsed));
+      try { localStorage.setItem('wwiot-doc-collapsed', collapsed ? '1' : '0'); } catch (e) {}
+    };
+    let saved = '0';
+    try { saved = localStorage.getItem('wwiot-doc-collapsed') || '0'; } catch (e) {}
+    setCollapsed(saved === '1');
+    collapseBtn.addEventListener('click', () => setCollapsed(!document.body.classList.contains('is-collapsed')));
+
+    // 分组标题点击：折叠 / 展开该组菜单项（状态记忆）
+    let hiddenGroups = [];
+    try { hiddenGroups = JSON.parse(localStorage.getItem('wwiot-doc-groups') || '[]'); } catch (e) {}
+    document.querySelectorAll('.sidebar-group-title').forEach(title => {
+      const group = title.parentElement;
+      if (hiddenGroups.includes(title.textContent.trim())) group.classList.add('collapsed');
+      title.addEventListener('click', () => {
+        group.classList.toggle('collapsed');
+        const now = Array.from(document.querySelectorAll('.sidebar-group.collapsed .sidebar-group-title'))
+          .map(t => t.textContent.trim());
+        try { localStorage.setItem('wwiot-doc-groups', JSON.stringify(now)); } catch (e) {}
+      });
+    });
+
     // 侧边栏搜索
     searchInput.addEventListener('input', () => {
       const q = searchInput.value.trim().toLowerCase();
+      document.getElementById('docNav').classList.toggle('nav-searching', !!q);
       let visibleCount = 0;
       document.querySelectorAll('#docNav [data-group]').forEach(group => {
         let groupHas = false;

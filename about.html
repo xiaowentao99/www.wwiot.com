@@ -589,6 +589,131 @@
       line-height: 1.6;
     }
 
+    /* Software Copyright Gallery */
+    .software-section {
+      padding: var(--space-20) 0;
+      background: linear-gradient(180deg, var(--bg-primary), var(--bg-secondary));
+    }
+    .software-intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--space-8);
+      margin-bottom: var(--space-8);
+    }
+    .software-intro__copy { max-width: 720px; }
+    .software-intro__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--color-primary-50);
+      color: var(--color-primary-700);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+    .software-intro__title {
+      margin: var(--space-3) 0 var(--space-2);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      color: var(--text-primary);
+    }
+    .software-intro__desc {
+      margin: 0;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .software-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(100px, 1fr));
+      gap: var(--space-3);
+      min-width: 230px;
+    }
+    .software-stat {
+      padding: var(--space-4);
+      border: 1px solid var(--color-secondary-200);
+      border-radius: var(--radius-lg);
+      background: var(--bg-primary);
+      text-align: center;
+    }
+    .software-stat__value { display:block; color:var(--color-primary-600); font-size:1.75rem; font-weight:800; line-height:1; }
+    .software-stat__label { display:block; margin-top:6px; color:var(--text-muted); font-size:.75rem; }
+    .software-toolbar {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:var(--space-4);
+      margin-bottom:var(--space-6);
+    }
+    .software-search {
+      flex:1 1 280px;
+      position:relative;
+    }
+    .software-search input {
+      width:100%;
+      padding:12px 16px 12px 42px;
+      border:1px solid var(--color-secondary-200);
+      border-radius:var(--radius-lg);
+      background:var(--bg-primary);
+      color:var(--text-primary);
+      font:inherit;
+    }
+    .software-search input:focus { outline:none; border-color:var(--color-primary-500); box-shadow:0 0 0 3px var(--color-primary-100); }
+    .software-search svg { position:absolute; left:15px; top:50%; width:18px; height:18px; transform:translateY(-50%); color:var(--text-muted); pointer-events:none; }
+    .software-filters { display:flex; flex-wrap:wrap; gap:8px; }
+    .software-filter {
+      padding:8px 13px;
+      border:1px solid var(--color-secondary-200);
+      border-radius:999px;
+      background:var(--bg-primary);
+      color:var(--text-secondary);
+      cursor:pointer;
+      font:inherit;
+      font-size:.82rem;
+      transition:all var(--transition-fast);
+    }
+    .software-filter:hover, .software-filter.active { border-color:var(--color-primary-500); background:var(--color-primary-50); color:var(--color-primary-700); }
+    .software-grid {
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0, 1fr));
+      gap:var(--space-5);
+    }
+    .software-card {
+      overflow:hidden;
+      padding:0;
+      border:1px solid var(--color-secondary-200);
+      border-radius:var(--radius-xl);
+      background:var(--bg-primary);
+      cursor:pointer;
+      text-align:left;
+      transition:transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
+    }
+    .software-card:hover { transform:translateY(-6px); border-color:var(--color-primary-300); box-shadow:var(--shadow-lg); }
+    .software-card.is-hidden { display:none; }
+    .software-card__media { aspect-ratio: 1.414 / 1; overflow:hidden; background:#eef2f7; }
+    .software-card__media img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .35s ease; }
+    .software-card:hover .software-card__media img { transform:scale(1.035); }
+    .software-grid .software-card--full { grid-column:1 / -1; }
+    .software-card--full .software-card__media { aspect-ratio:auto; display:flex; align-items:center; justify-content:center; padding:var(--space-4); }
+    .software-card--full .software-card__media img { width:auto; height:auto; max-width:100%; max-height:560px; object-fit:contain; }
+    .software-card__body { padding:var(--space-4); }
+    .software-card__index { color:var(--color-primary-500); font-size:.72rem; font-weight:800; letter-spacing:.08em; }
+    .software-card__title { margin:6px 0 4px; color:var(--text-primary); font-size:.95rem; font-weight:700; line-height:1.45; }
+    .software-card__type { color:var(--text-muted); font-size:.78rem; }
+    .software-empty { display:none; padding:var(--space-10); border:1px dashed var(--color-secondary-300); border-radius:var(--radius-lg); color:var(--text-muted); text-align:center; }
+    .software-empty.is-visible { display:block; }
+    .software-lightbox { position:fixed; inset:0; z-index:300; display:none; align-items:center; justify-content:center; padding:24px; background:rgba(15,23,42,.82); }
+    .software-lightbox.is-open { display:flex; }
+    .software-lightbox__panel { position:relative; max-width:min(980px, 94vw); max-height:92vh; padding:14px; border-radius:16px; background:#fff; box-shadow:0 24px 80px rgba(0,0,0,.3); }
+    .software-lightbox__image { display:block; max-width:100%; max-height:calc(92vh - 90px); object-fit:contain; }
+    .software-lightbox__caption { padding:10px 4px 2px; color:#334155; font-size:.9rem; font-weight:600; }
+    .software-lightbox__close { position:absolute; top:-14px; right:-14px; width:36px; height:36px; border:0; border-radius:50%; background:#fff; color:#334155; cursor:pointer; font-size:20px; box-shadow:0 4px 16px rgba(0,0,0,.2); }
+    [data-theme="dark"] .software-stat,[data-theme="dark"] .software-card,[data-theme="dark"] .software-search input,[data-theme="dark"] .software-filter { background:var(--bg-secondary); border-color:var(--color-secondary-700); }
+    [data-theme="dark"] .software-lightbox__panel { background:var(--bg-secondary); }
+    [data-theme="dark"] .software-lightbox__caption { color:var(--text-primary); }
+
     /* Certificates Section */
     .cert-section {
       padding: var(--space-20) 0;
@@ -757,9 +882,24 @@
       .process-step { flex: 0 0 calc(50% - 10px); }
     }
 
+    @media (max-width: 900px) {
+      .software-intro { align-items: stretch; flex-direction: column; }
+      .software-stats { max-width: 360px; }
+      .software-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (max-width: 680px) {
+      .software-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+      .software-card__body { padding: var(--space-3); }
+      .software-card__title { font-size: .82rem; }
+      .software-card__type { font-size: .7rem; }
+    }
     @media (max-width: 480px) {
       .service-grid { grid-template-columns: 1fr; }
       .cert-grid { grid-template-columns: 1fr; }
+      .software-grid { grid-template-columns: 1fr; }
+      .software-stats { min-width: 0; }
+      .software-toolbar { align-items: stretch; }
+      .software-filters { justify-content: flex-start; }
       .footer__grid { grid-template-columns: 1fr; }
     }
 
@@ -940,39 +1080,82 @@
         </div>
       </div>
 
-      <!-- Product Certificates -->
-      <div class="cert-category">
-        <h3 class="cert-category__title">产品资质证书</h3>
-        <div class="cert-grid">
-          <div class="cert-card">
-            <div class="cert-card__icon">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            </div>
-            <h4 class="cert-card__name">发明专利</h4>
-            <p class="cert-card__type">2项核心技术专利</p>
+      <!-- Enterprise Qualification Gallery -->
+      <div class="qualification-gallery">
+        <div class="software-intro">
+          <div class="software-intro__copy">
+            <span class="software-intro__eyebrow">ENTERPRISE QUALIFICATIONS</span>
+            <h2 class="software-intro__title">企业资质与信用成果</h2>
+            <p class="software-intro__desc">企业信用、质量体系、诚信经营与知识产权等资质成果，集中展示万维物联网的服务能力与经营承诺。</p>
           </div>
-          <div class="cert-card">
-            <div class="cert-card__icon">
-              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-            </div>
-            <h4 class="cert-card__name">外观专利</h4>
-            <p class="cert-card__type">4项产品设计专利</p>
-          </div>
-          <div class="cert-card">
-            <div class="cert-card__icon">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-            </div>
-            <h4 class="cert-card__name">实用新型专利</h4>
-            <p class="cert-card__type">多项技术创新专利</p>
-          </div>
-          <div class="cert-card">
-            <div class="cert-card__icon">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
-            </div>
-            <h4 class="cert-card__name">软件著作权</h4>
-            <p class="cert-card__type">多项软件著作权</p>
+          <div class="software-stats">
+            <div class="software-stat"><span class="software-stat__value">14</span><span class="software-stat__label">资质成果</span></div>
+            <div class="software-stat"><span class="software-stat__value">AAA</span><span class="software-stat__label">信用等级</span></div>
           </div>
         </div>
+        <div class="software-grid qualification-grid">
+          <button class="software-card software-card--full" type="button" data-title="高新技术企业证书" data-image="images/enterprise-qualifications/enterprise-13-high-tech.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-13-high-tech.png" alt="高新技术企业证书" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">重点推荐 · 高新技术企业</span><span class="software-card__title">高新技术企业证书</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="企业信用评价 AAA 级信用企业" data-image="images/enterprise-qualifications/enterprise-01-credit-plaque.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-01-credit-plaque.png" alt="企业信用评价 AAA 级信用企业" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">01 · 企业信用</span><span class="software-card__title">企业信用评价 AAA 级信用企业</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="企业信用 AAA 等级证书" data-image="images/enterprise-qualifications/enterprise-02-credit-level.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-02-credit-level.png" alt="企业信用 AAA 等级证书" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">02 · 信用等级</span><span class="software-card__title">企业信用 AAA 等级证书</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="企业资信 AAA 等级证书" data-image="images/enterprise-qualifications/enterprise-03-creditworthiness.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-03-creditworthiness.png" alt="企业资信 AAA 等级证书" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">03 · 企业资信</span><span class="software-card__title">企业资信 AAA 等级证书</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="诚信经营示范 AAA 单位" data-image="images/enterprise-qualifications/enterprise-04-honest-operation.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-04-honest-operation.png" alt="诚信经营示范 AAA 单位" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">04 · 诚信经营</span><span class="software-card__title">诚信经营示范 AAA 单位</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="质量服务诚信 AAA 单位" data-image="images/enterprise-qualifications/enterprise-05-quality-service.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-05-quality-service.png" alt="质量服务诚信 AAA 单位" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">05 · 质量服务</span><span class="software-card__title">质量服务诚信 AAA 单位</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="重服务守信用 AAA 企业" data-image="images/enterprise-qualifications/enterprise-06-service-trust.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-06-service-trust.png" alt="重服务守信用 AAA 企业" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">06 · 服务信用</span><span class="software-card__title">重服务守信用 AAA 企业</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="重质量守信用 AAA 企业" data-image="images/enterprise-qualifications/enterprise-07-quality-trust.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-07-quality-trust.png" alt="重质量守信用 AAA 企业" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">07 · 质量信用</span><span class="software-card__title">重质量守信用 AAA 企业</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="重合同守信用 AAA 企业" data-image="images/enterprise-qualifications/enterprise-08-contract-trust.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-08-contract-trust.png" alt="重合同守信用 AAA 企业" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">08 · 合同信用</span><span class="software-card__title">重合同守信用 AAA 企业</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="诚信供应商 AAA 级企业" data-image="images/enterprise-qualifications/enterprise-09-honest-supplier.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-09-honest-supplier.png" alt="诚信供应商 AAA 级企业" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">09 · 供应商信用</span><span class="software-card__title">诚信供应商 AAA 级企业</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="中国诚信企业家" data-image="images/enterprise-qualifications/enterprise-10-honest-entrepreneur.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-10-honest-entrepreneur.png" alt="中国诚信企业家" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">10 · 企业家信用</span><span class="software-card__title">中国诚信企业家</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="中国诚信经理人" data-image="images/enterprise-qualifications/enterprise-11-honest-manager.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-11-honest-manager.png" alt="中国诚信经理人" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">11 · 经理人信用</span><span class="software-card__title">中国诚信经理人</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="发明专利：光电测量数据采集处理方法及系统" data-image="images/enterprise-qualifications/enterprise-12-invention-patent.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-12-invention-patent.png" alt="发明专利：光电测量数据采集处理方法及系统" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">12 · 知识产权</span><span class="software-card__title">发明专利：光电测量数据采集处理方法及系统</span><span class="software-card__type">企业资质证书</span></span></button>
+          <button class="software-card" type="button" data-title="ISO9001 质量管理体系认证" data-image="images/enterprise-qualifications/enterprise-14-iso9001.png"><span class="software-card__media"><img src="images/enterprise-qualifications/enterprise-14-iso9001.png" alt="ISO9001 质量管理体系认证" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">13 · 质量体系</span><span class="software-card__title">ISO9001 质量管理体系认证</span><span class="software-card__type">企业资质证书</span></span></button>
+        </div>
+      </div>
+
+      <!-- Software Copyright Gallery -->
+      <div class="software-section" id="softwareCopyright">
+        <div class="software-intro">
+          <div class="software-intro__copy">
+            <span class="software-intro__eyebrow">SOFTWARE COPYRIGHT</span>
+            <h2 class="software-intro__title">软件著作权成果</h2>
+            <p class="software-intro__desc">围绕数据采集、边缘计算、远程控制、平台管理与物联网可视化，持续沉淀自主软件能力，形成从设备接入到业务应用的完整技术体系。</p>
+          </div>
+          <div class="software-stats">
+            <div class="software-stat"><span class="software-stat__value">16</span><span class="software-stat__label">软件著作权</span></div>
+            <div class="software-stat"><span class="software-stat__value">5</span><span class="software-stat__label">能力方向</span></div>
+          </div>
+        </div>
+        <div class="software-toolbar">
+          <label class="software-search">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input id="softwareSearch" type="search" placeholder="搜索软件著作权名称…" autocomplete="off">
+          </label>
+          <div class="software-filters" role="group" aria-label="软件著作权分类">
+            <button class="software-filter active" type="button" data-filter="all">全部</button>
+            <button class="software-filter" type="button" data-filter="platform">平台</button>
+            <button class="software-filter" type="button" data-filter="collection">采集与通信</button>
+            <button class="software-filter" type="button" data-filter="control">控制与边缘</button>
+            <button class="software-filter" type="button" data-filter="analysis">分析与管理</button>
+          </div>
+        </div>
+        <div class="software-grid" id="softwareGrid">
+          <button class="software-card" type="button" data-category="collection" data-title="工业无线压力数据采集系统" data-image="images/software-copyright/sw-01-industrial-wireless-pressure.png"><span class="software-card__media"><img src="images/software-copyright/sw-01-industrial-wireless-pressure.png" alt="工业无线压力数据采集系统软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">01 · 采集与通信</span><span class="software-card__title">工业无线压力数据采集系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="物联网数据可视化软件" data-image="images/software-copyright/sw-02-iot-visualization.png"><span class="software-card__media"><img src="images/software-copyright/sw-02-iot-visualization.png" alt="物联网数据可视化软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">02 · 平台</span><span class="software-card__title">物联网数据可视化软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="物联网终端管理平台软件" data-image="images/software-copyright/sw-03-terminal-management.png"><span class="software-card__media"><img src="images/software-copyright/sw-03-terminal-management.png" alt="物联网终端管理平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">03 · 平台</span><span class="software-card__title">物联网终端管理平台软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="collection" data-title="LoRa 网关管理软件" data-image="images/software-copyright/sw-04-lora-gateway-management.png"><span class="software-card__media"><img src="images/software-copyright/sw-04-lora-gateway-management.png" alt="LoRa 网关管理软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">04 · 采集与通信</span><span class="software-card__title">LoRa 网关管理软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="collection" data-title="无线开关量采集系统" data-image="images/software-copyright/sw-05-wireless-io-collection.png"><span class="software-card__media"><img src="images/software-copyright/sw-05-wireless-io-collection.png" alt="无线开关量采集系统软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">05 · 采集与通信</span><span class="software-card__title">无线开关量采集系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="control" data-title="工业设备远程控制系统" data-image="images/software-copyright/sw-06-industrial-remote-control.png"><span class="software-card__media"><img src="images/software-copyright/sw-06-industrial-remote-control.png" alt="工业设备远程控制系统软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">06 · 控制与边缘</span><span class="software-card__title">工业设备远程控制系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="collection" data-title="无线数字信号采集系统" data-image="images/software-copyright/sw-07-wireless-digital-signal.png"><span class="software-card__media"><img src="images/software-copyright/sw-07-wireless-digital-signal.png" alt="无线数字信号采集系统软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">07 · 采集与通信</span><span class="software-card__title">无线数字信号采集系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="collection" data-title="LoRa 信号中继管理软件" data-image="images/software-copyright/sw-08-lora-relay-management.png"><span class="software-card__media"><img src="images/software-copyright/sw-08-lora-relay-management.png" alt="LoRa 信号中继管理软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">08 · 采集与通信</span><span class="software-card__title">LoRa 信号中继管理软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="宙斯权限管理中心平台软件" data-image="images/software-copyright/sw-09-zeus-permission-center.png"><span class="software-card__media"><img src="images/software-copyright/sw-09-zeus-permission-center.png" alt="宙斯权限管理中心平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">09 · 平台</span><span class="software-card__title">宙斯权限管理中心平台软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="analysis" data-title="物联网数据分析软件 V1.0" data-image="images/software-copyright/sw-10-iot-data-analysis.png"><span class="software-card__media"><img src="images/software-copyright/sw-10-iot-data-analysis.png" alt="物联网数据分析软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">10 · 分析与管理</span><span class="software-card__title">物联网数据分析软件 V1.0</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="analysis" data-title="数据指标管理平台" data-image="images/software-copyright/sw-11-data-metrics-platform.png"><span class="software-card__media"><img src="images/software-copyright/sw-11-data-metrics-platform.png" alt="数据指标管理平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">11 · 分析与管理</span><span class="software-card__title">数据指标管理平台</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="collection" data-title="无线压力数据采集系统" data-image="images/software-copyright/sw-12-wireless-pressure-collection.png"><span class="software-card__media"><img src="images/software-copyright/sw-12-wireless-pressure-collection.png" alt="无线压力数据采集系统软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">12 · 采集与通信</span><span class="software-card__title">无线压力数据采集系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="物联网统一数据接入平台" data-image="images/software-copyright/sw-13-unified-data-access.png"><span class="software-card__media"><img src="images/software-copyright/sw-13-unified-data-access.png" alt="物联网统一数据接入平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">13 · 平台</span><span class="software-card__title">物联网统一数据接入平台</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="control" data-title="工业数据边缘计算软件系统" data-image="images/software-copyright/sw-14-edge-computing.png"><span class="software-card__media"><img src="images/software-copyright/sw-14-edge-computing.png" alt="工业数据边缘计算软件系统著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">14 · 控制与边缘</span><span class="software-card__title">工业数据边缘计算软件系统</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="研天物联网资产管理云平台软件" data-image="images/software-copyright/sw-15-yantian-asset-cloud.png"><span class="software-card__media"><img src="images/software-copyright/sw-15-yantian-asset-cloud.png" alt="研天物联网资产管理云平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">15 · 平台</span><span class="software-card__title">研天物联网资产管理云平台软件</span><span class="software-card__type">软件著作权证书</span></span></button>
+          <button class="software-card" type="button" data-category="platform" data-title="研天物联网资产管理（移动端）云平台" data-image="images/software-copyright/sw-16-yantian-asset-mobile.png"><span class="software-card__media"><img src="images/software-copyright/sw-16-yantian-asset-mobile.png" alt="研天物联网资产管理移动端云平台软件著作权" loading="lazy"></span><span class="software-card__body"><span class="software-card__index">16 · 平台</span><span class="software-card__title">研天物联网资产管理（移动端）云平台</span><span class="software-card__type">软件著作权证书</span></span></button>
+        </div>
+        <div class="software-empty" id="softwareEmpty">没有找到匹配的软件著作权</div>
       </div>
     </div>
   </section>
@@ -1070,6 +1253,57 @@
       }
     }
     initTheme();
+
+    // Software copyright gallery
+    (function initSoftwareGallery() {
+      const cards = Array.from(document.querySelectorAll('.software-card'));
+      const search = document.getElementById('softwareSearch');
+      const empty = document.getElementById('softwareEmpty');
+      const filters = Array.from(document.querySelectorAll('.software-filter'));
+      const lightbox = document.createElement('div');
+      lightbox.className = 'software-lightbox';
+      lightbox.innerHTML = '<div class="software-lightbox__panel" role="dialog" aria-modal="true"><button class="software-lightbox__close" type="button" aria-label="关闭预览">×</button><img class="software-lightbox__image" alt=""><div class="software-lightbox__caption"></div></div>';
+      document.body.appendChild(lightbox);
+      const preview = lightbox.querySelector('.software-lightbox__image');
+      const caption = lightbox.querySelector('.software-lightbox__caption');
+      let activeFilter = 'all';
+
+      function render() {
+        const keyword = (search?.value || '').trim().toLowerCase();
+        let visible = 0;
+        cards.forEach(card => {
+          const matchFilter = activeFilter === 'all' || card.dataset.category === activeFilter;
+          const matchSearch = !keyword || card.dataset.title.toLowerCase().includes(keyword);
+          const show = matchFilter && matchSearch;
+          card.classList.toggle('is-hidden', !show);
+          if (show) visible += 1;
+        });
+        empty.classList.toggle('is-visible', visible === 0);
+      }
+
+      filters.forEach(button => button.addEventListener('click', () => {
+        filters.forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+        activeFilter = button.dataset.filter;
+        render();
+      }));
+      search?.addEventListener('input', render);
+      cards.forEach(card => card.addEventListener('click', () => {
+        preview.src = card.dataset.image;
+        preview.alt = card.dataset.title;
+        caption.textContent = card.dataset.title;
+        lightbox.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }));
+      function closePreview() {
+        lightbox.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+      lightbox.querySelector('.software-lightbox__close').addEventListener('click', closePreview);
+      lightbox.addEventListener('click', event => { if (event.target === lightbox) closePreview(); });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closePreview(); });
+      render();
+    })();
   </script>
 </body>
 </html>

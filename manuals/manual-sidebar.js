@@ -4,7 +4,8 @@
     { title: '温湿度与环境', links: [['WW-10 工业温湿度', 'ww10.html'], ['WW-11 室内温湿度', 'ww11.html'], ['WW-12 无屏温湿度', 'ww12.html'], ['WW-13 无线测温杆', 'ww13.html']] },
     { title: '开关量与安防', links: [['WW-20 开关量采集', 'ww20.html'], ['WW-21 人体感应', 'ww21.html'], ['WW-22 烟感报警', 'ww22.html'], ['WW-26 水浸/门磁', 'ww26.html'], ['WW-27 无线门磁', 'ww27.html']] },
     { title: '压力、液位与运动', links: [['WW-50 无线倾角', 'ww50.html'], ['WW-70 消防压力', 'ww70.html'], ['WW-71 工业压力', 'ww71.html'], ['WW-72 迷你压力', 'ww72.html'], ['WW-73 无线液位', 'ww73.html'], ['WW-78 微差压', 'ww78.html']] },
-    { title: '采集器与网关', links: [['WW-D1 数据采集器', 'ww-d1.html'], ['WW-D2 / WW-D3 数据采集器', 'ww-d2-d3.html'], ['WW-G1 工业网关', 'ww-g1.html'], ['WW-G2 LoRaWAN 网关', 'ww-g2.html']] }
+    { title: '采集器与网关', links: [['WW-D1 数据采集器', 'ww-d1.html'], ['WW-D2 / WW-D3 数据采集器', 'ww-d2-d3.html'], ['WW-G1 工业网关', 'ww-g1.html'], ['WW-G2 LoRaWAN 网关', 'ww-g2.html']] },
+    { title: '万维通信模组', links: [['WW-M0-1302 LoRaWAN 网关模组', 'ww-m0-1302.html']] }
   ];
 
   // 在文档中心 iframe 中加载时，不重复显示左侧菜单
@@ -20,9 +21,30 @@
   }
 
   const current = location.pathname.split('/').pop();
+
+  // 目录滚动高亮：滚动时高亮当前章节（对所有含 .toc 的页面生效）
+  const tocLinks = Array.from(document.querySelectorAll('.toc a[href^="#"]'));
+  if (tocLinks.length) {
+    const targets = tocLinks
+      .map(link => ({ link, section: document.getElementById(decodeURIComponent(link.getAttribute('href').slice(1))) }))
+      .filter(item => item.section);
+    if (targets.length) {
+      const activate = () => {
+        let active = targets[0];
+        for (const item of targets) {
+          if (item.section.getBoundingClientRect().top <= 140) active = item;
+        }
+        targets.forEach(({ link }) => link.classList.toggle('is-current', link === active.link));
+      };
+      document.addEventListener('scroll', activate, { passive: true });
+      window.addEventListener('resize', activate, { passive: true });
+      activate();
+    }
+  }
+
   const style = document.createElement('style');
   style.textContent = `
-    .manual-sidebar { position: fixed; z-index: 1000; top: 0; left: 0; bottom: 0; width: 248px; padding: 24px 14px; overflow-y: auto; background: #fff; border-right: 1px solid #e2e8f0; box-shadow: 4px 0 18px rgba(15,23,42,.06); font: 14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
+    .manual-sidebar { position: fixed; z-index: 1000; top: 0; bottom: 0; left: max(0px, calc((100vw - 1400px) / 2)); width: 248px; padding: 24px 14px; overflow-y: auto; background: #fff; border-right: 1px solid #e2e8f0; box-shadow: 4px 0 18px rgba(15,23,42,.06); font: 14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif; }
     .manual-sidebar__brand { display: block; margin: 0 10px 22px; color: #172554; font-size: 18px; font-weight: 700; text-decoration: none; }
     .manual-sidebar__home { display: block; margin: 0 4px 20px; padding: 9px 12px; color: #2563eb; background: #eff6ff; border-radius: 7px; text-decoration: none; font-weight: 600; }
     .manual-sidebar__group { margin: 18px 0 0; }
@@ -30,14 +52,16 @@
     .manual-sidebar a.manual-sidebar__item { display: block; padding: 8px 10px; color: #475569; border-radius: 7px; text-decoration: none; }
     .manual-sidebar a.manual-sidebar__item:hover, .manual-sidebar a.manual-sidebar__item.is-active { color: #1d4ed8; background: #eff6ff; font-weight: 600; }
     .manual-sidebar__toggle { display: none; }
-    body.manual-with-sidebar { margin-left: 248px; }
+    body.manual-with-sidebar { padding-left: max(248px, calc((100vw - 1400px) / 2 + 400px)); }
+    body.manual-with-sidebar .container { margin-left: 0; }
     @media (max-width: 900px) {
-      .manual-sidebar { width: 100%; height: auto; bottom: auto; max-height: 56px; padding: 10px 14px; overflow: hidden; }
+      .manual-sidebar { left: 0; width: 100%; height: auto; bottom: auto; max-height: 56px; padding: 10px 14px; overflow: hidden; }
       .manual-sidebar.is-open { max-height: 80vh; overflow-y: auto; }
       .manual-sidebar__brand { display: inline-block; margin: 4px 0 4px 8px; font-size: 16px; }
       .manual-sidebar__toggle { display: block; float: right; margin: 0 4px; padding: 7px 11px; color: #1d4ed8; background: #eff6ff; border: 0; border-radius: 6px; cursor: pointer; }
       .manual-sidebar__home { margin: 12px 4px; }
-      body.manual-with-sidebar { margin-left: 0; padding-top: 56px; }
+      body.manual-with-sidebar { margin-left: 0; padding-left: 0; padding-top: 56px; }
+      body.manual-with-sidebar .container { margin-left: auto; }
     }
   `;
   document.head.appendChild(style);
