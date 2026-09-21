@@ -1798,5 +1798,49 @@
     ],
     "power": "external",
     "manualUrl": "manuals/ww-m0-1302.html"
+  },
+  {
+    "id": 166,
+    "category": "rs485",
+    "subCategory": "RS485 传感器",
+    "name": "RS485 温湿度传感器",
+    "model": "WW-RS10",
+    "protocols": [
+      "rs485"
+    ],
+    "power": "external"
+  },
+  {
+    "id": 167,
+    "category": "rs485",
+    "subCategory": "RS485 传感器",
+    "name": "RS485 绳式水浸传感器",
+    "model": "WW-RS20",
+    "protocols": [
+      "rs485"
+    ],
+    "power": "external"
+  },
+  {
+    "id": 168,
+    "category": "rs485",
+    "subCategory": "RS485 传感器",
+    "name": "RS485 点式水浸传感器",
+    "model": "WW-RS21",
+    "protocols": [
+      "rs485"
+    ],
+    "power": "external"
+  },
+  {
+    "id": 169,
+    "category": "rs485",
+    "subCategory": "RS485 传感器",
+    "name": "RS485 门磁传感器",
+    "model": "WW-RS22",
+    "protocols": [
+      "rs485"
+    ],
+    "power": "external"
   }
 ]

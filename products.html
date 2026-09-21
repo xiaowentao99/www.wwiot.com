@@ -564,11 +564,10 @@
     /* Category Nav */
     .category-nav {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: var(--space-2);
       padding: var(--space-4) 0;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
     }
 
     .category-nav::-webkit-scrollbar {
@@ -1537,6 +1536,7 @@
             <option value="lorawan-lf">LoRaWAN 低频</option>
             <option value="4g">4G</option>
             <option value="bluetooth">蓝牙</option>
+            <option value="rs485">RS485</option>
           </select>
           <select class="filter-select" id="filter-power">
             <option value="">供电方式</option>
@@ -1588,6 +1588,10 @@
         <button class="category-nav__item" data-category="gas">
           <span class="category-nav__icon">💨</span>
           <span>气体检测</span>
+        </button>
+        <button class="category-nav__item" data-category="rs485">
+          <span class="category-nav__icon">🔗</span>
+          <span>RS485</span>
         </button>
         <button class="category-nav__item" data-category="pcba">
           <span class="category-nav__icon">🔧</span>
@@ -1819,6 +1823,7 @@
       collector: { name: "数据采集器", icon: "📡" },
       sensor: { name: "位置/运动", icon: "🧭" },
       gas: { name: "气体检测", icon: "💨" },
+      rs485: { name: "RS485 传感器", icon: "🔗" },
       pcba: { name: "PCBA/配件", icon: "🔧" }
     };
 
@@ -1866,6 +1871,12 @@
       '13LW': 'WW-13.png',
       '13HW': 'WW-13.png',
       '13C': 'WW-13.png',
+
+      // ========== WW-RS 系列 - RS485 总线传感器 ==========
+      'RS10': 'WW-RS10.png',
+      'RS20': 'WW-RS20.png',
+      'RS21': 'WW-RS21.png',
+      'RS22': 'WW-RS22.png',
 
       // ========== WW-15 系列 - K型温度传感器 ==========
       // 图片: WW-15[L:C]-K.jpg → WW-15L-K, WW-15C-K
@@ -2275,6 +2286,7 @@
 
     // 产品描述模板
     const productDescriptions = {
+      rs485: '工业级 RS485 总线式传感器，采用标准 Modbus-RTU 协议，两线制总线组网，支持长距离多点级联。适合机房、仓库、管廊、楼宇等有线监测场景。',
       temp: '工业级无线温湿度采集终端，采用低功耗设计，支持LoRa/LoRaWAN/4G多种通讯方式。适用于车间、仓库、机房等工业环境的温湿度监测。',
       io: '无线开关量采集终端，支持多种探头类型（门磁、水浸、烟感、人体红外）。低功耗设计，电池可用2-3年，适合各种安防和监测场景。',
       gateway: '高性能物联网网关，支持LoRa/LoRaWAN转以太网/4G/WiFi。适用于中小型物联网系统，支持本地数据处理和云端对接。',
