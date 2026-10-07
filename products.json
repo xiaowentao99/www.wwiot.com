@@ -1158,8 +1158,8 @@
   {
     "id": 161,
     "category": "pressure",
-    "subCategory": "微差压",
-    "name": "无线微差压传感器/LoRa",
+    "subCategory": "拉力",
+    "name": "无线拉力传感器/LoRa",
     "model": "WW-78L",
     "protocols": [
       "lora"
@@ -1171,8 +1171,8 @@
   {
     "id": 162,
     "category": "pressure",
-    "subCategory": "微差压",
-    "name": "无线微差压传感器/LoRaWAN",
+    "subCategory": "拉力",
+    "name": "无线拉力传感器/LoRaWAN",
     "model": "WW-78LW",
     "protocols": [
       "lorawan-lf"
@@ -1184,8 +1184,8 @@
   {
     "id": 163,
     "category": "pressure",
-    "subCategory": "微差压",
-    "name": "无线微差压传感器/高频LoRaWAN",
+    "subCategory": "拉力",
+    "name": "无线拉力传感器/高频LoRaWAN",
     "model": "WW-78HW",
     "protocols": [
       "lorawan-hf"
@@ -1197,8 +1197,8 @@
   {
     "id": 164,
     "category": "pressure",
-    "subCategory": "微差压",
-    "name": "无线微差压传感器/4G",
+    "subCategory": "拉力",
+    "name": "无线拉力传感器/4G",
     "model": "WW-78C",
     "protocols": [
       "4g"

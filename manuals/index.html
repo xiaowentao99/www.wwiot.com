@@ -226,10 +226,10 @@
   <header class="header">
     <div class="header__container">
       <a class="header__logo" href="../index.html">
-        <div class="header__logo-icon">W</div>
+        <img src="../images/logo.png" alt="万维物联网 WWIOT" style="height:36px;">
         <div class="header__logo-text">
           <strong>万维物联网</strong>
-          <span class="header__logo-en">Document Center</span>
+          <span class="header__logo-en">WWIOT</span>
         </div>
       </a>
       <nav class="header__nav">
@@ -258,10 +258,10 @@
       <nav id="docNav">
         <div class="sidebar-group" data-group><div class="sidebar-group-title">万维物联传输协议</div>
           <a class="doc-link" href="#protocol-tlv.html" data-src="protocol-tlv.html" data-title="传感器 TLV 协议">传感器 TLV 协议</a>
-          <a class="doc-link" href="#protocol-lora-json.html" data-src="protocol-lora-json.html" data-title="LoRa 传感器 JSON 协议">LoRa 传感器 JSON 协议</a>
+          <a class="doc-link" href="#protocol-lora-json.html" data-src="protocol-lora-json.html" data-title="LoRa网关JSON 协议">LoRa网关JSON 协议</a>
           <a class="doc-link" href="#protocol-4g-json.html" data-src="protocol-4g-json.html" data-title="4G 传感器 JSON 协议">4G 传感器 JSON 协议</a>
-          <a class="doc-link" href="#protocol-at-command.html" data-src="protocol-at-command.html" data-title="配置 AT 指令手册（旧版）">配置 AT 指令手册（旧版）</a>
-          <a class="doc-link" href="#protocol-at-command-new.html" data-src="protocol-at-command-new.html" data-title="AT 指令配置（新版）">AT 指令配置（新版）</a>
+          <a class="doc-link" href="#protocol-at-command.html" data-src="protocol-at-command.html" data-title="AT指令配置（旧版）"> AT 指令配置（旧版）</a>
+          <a class="doc-link" href="#protocol-at-command-new.html" data-src="protocol-at-command-new.html" data-title="AT指令配置（新版）">AT 指令配置（新版）</a>
           <a class="doc-link" href="#4g-remote-config.html" data-src="4g-remote-config.html" data-title="4G 远程配置">4G 远程配置</a>
         </div>
         <div class="sidebar-group" data-group><div class="sidebar-group-title">万维通信模组</div>
@@ -286,7 +286,7 @@
           <a class="doc-link" href="#ww71.html" data-src="ww71.html" data-title="WW-71 工业压力">WW-71 工业压力</a>
           <a class="doc-link" href="#ww72.html" data-src="ww72.html" data-title="WW-72 迷你压力">WW-72 迷你压力</a>
           <a class="doc-link" href="#ww73.html" data-src="ww73.html" data-title="WW-73 无线液位">WW-73 无线液位</a>
-          <a class="doc-link" href="#ww78.html" data-src="ww78.html" data-title="WW-78 微差压">WW-78 微差压</a>
+          <a class="doc-link" href="#ww78.html" data-src="ww78.html" data-title="WW-78 无线拉力 铁塔拉力">WW-78 无线拉力</a>
         </div>
         <div class="sidebar-group" data-group><div class="sidebar-group-title">采集器与网关</div>
           <a class="doc-link" href="#ww-d1.html" data-src="ww-d1.html" data-title="WW-D1 数据采集器">WW-D1 数据采集器</a>
@@ -329,24 +329,49 @@
           </div>
           <div class="section-head"><h2>常用产品说明书</h2><span>点击卡片直接查看</span></div>
           <div class="cards" id="quickCards">
-            <article class="card" data-src="ww10.html" data-title="WW-10 工业温湿度">
-              <div class="card-icon">🌡️</div><span class="tag">温湿度</span>
-              <h3>WW-10 系列</h3><p>工业温湿度传感器，支持 LoRa、LoRaWAN、4G 无线传输。</p>
+            <article class="card" data-src="ww10.html" data-title="温湿度类 WW-1x 系列">
+              <div class="card-icon">🌡️</div><span class="tag">温湿度类</span>
+              <h3>WW-1x 系列</h3><p>工业温湿度传感器，支持 LoRa、LoRaWAN、4G 无线传输。</p>
               <span class="card-more">查看说明书 →</span>
             </article>
-            <article class="card" data-src="ww20.html" data-title="WW-20 开关量采集">
-              <div class="card-icon">🔌</div><span class="tag">开关量</span>
-              <h3>WW-20 系列</h3><p>水浸、门磁等无线开关量采集终端，多探头可选。</p>
+            <article class="card" data-src="ww20.html" data-title="开关量类 WW-2x 系列">
+              <div class="card-icon">🔌</div><span class="tag">开关量类</span>
+              <h3>WW-2x 系列</h3><p>水浸、门磁等无线开关量采集终端，多探头可选。</p>
               <span class="card-more">查看说明书 →</span>
             </article>
-            <article class="card" data-src="ww27.html" data-title="WW-27 无线门磁">
-              <div class="card-icon">🚪</div><span class="tag">安防</span>
-              <h3>WW-27 系列</h3><p>无线门磁检测终端，支持标准款与 SP22 带线款。</p>
+            <article class="card" data-src="ww50.html" data-title="运动类 WW-5x 系列">
+              <div class="card-icon">🧭</div><span class="tag">运动类</span>
+              <h3>WW-5x 系列</h3><p>倾角、震动等运动状态监测终端，适用于结构健康监测。</p>
               <span class="card-more">查看说明书 →</span>
             </article>
-            <article class="card" data-src="ww-d2-d3.html" data-title="WW-D2 / WW-D3 数据采集器">
-              <div class="card-icon">📡</div><span class="tag">采集器</span>
-              <h3>WW-D2 / WW-D3</h3><p>无线数据采集器，电池与太阳能供电版本可选。</p>
+            <article class="card" data-src="ww70.html" data-title="压力类 WW-7x 系列">
+              <div class="card-icon">📊</div><span class="tag">压力类</span>
+              <h3>WW-7x 系列</h3><p>压力、液位、拉力等工业测量传感器，多种量程可选。</p>
+              <span class="card-more">查看说明书 →</span>
+            </article>
+            <article class="card" data-src="" data-title="计量类 WW-6x 系列">
+              <div class="card-icon">🧮</div><span class="tag">计量类</span>
+              <h3>WW-6x 系列</h3><p>计量类产品说明书整理中，敬请期待。</p>
+              <span class="card-more">文档整理中…</span>
+            </article>
+            <article class="card" data-src="ww-d2-d3.html" data-title="数据采集类 WW-Dx 系列">
+              <div class="card-icon">📡</div><span class="tag">数据采集类</span>
+              <h3>WW-Dx 系列</h3><p>无线数据采集器，电池与太阳能供电版本可选。</p>
+              <span class="card-more">查看说明书 →</span>
+            </article>
+            <article class="card" data-src="ww-c1c.html" data-title="控制类 WW-Cx 系列">
+              <div class="card-icon">🎛️</div><span class="tag">控制类</span>
+              <h3>WW-Cx 系列</h3><p>无线控制终端，支持远程开关控制与报警输出。</p>
+              <span class="card-more">查看说明书 →</span>
+            </article>
+            <article class="card" data-src="ww-m0-1302.html" data-title="模组类 WW-Mx 系列">
+              <div class="card-icon">🧩</div><span class="tag">模组类</span>
+              <h3>WW-Mx 系列</h3><p>万维通信模组，支持 LoRa / LoRaWAN 组网接入。</p>
+              <span class="card-more">查看说明书 →</span>
+            </article>
+            <article class="card" data-src="ww-g1.html" data-title="网关类 WW-Gx 系列">
+              <div class="card-icon">🌐</div><span class="tag">网关类</span>
+              <h3>WW-Gx 系列</h3><p>物联网网关，支持 LoRa/LoRaWAN 转以太网、4G 上云。</p>
               <span class="card-more">查看说明书 →</span>
             </article>
           </div>

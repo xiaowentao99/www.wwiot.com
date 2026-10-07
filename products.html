@@ -2479,10 +2479,10 @@
           { label: '下行接口', value: 'LoRa / LoRaWAN' },
           { label: '网关通道', value: product.model.includes('G0') ? '单通道' : '多通道' },
           { label: '供电方式', value: 'DC 12V' },
-          { label: '防护等级', value: 'IP30' },
-          { label: '工作温度', value: '-20~60°C' },
+          { label: '防护等级', value: product.model.includes('G2') ? 'IP67' : 'IP30' },
+          { label: '工作温度', value: '-20~85°C' },
           { label: '安装方式', value: '壁挂/桌面' },
-          { label: '并发容量', value: '200+节点' }
+          { label: '并发容量', value: '1000+节点' }
         ];
       } else if (product.category === 'power') {
         specs = [
@@ -2509,14 +2509,16 @@
                           product.model.includes('73') ? '液位' : '拉力' },
           { label: '测量范围', value: product.model.includes('70') ? '0~1.6MPa' : 
                           product.model.includes('71') || product.model.includes('72') ? '0~10MPa' :
-                          product.model.includes('73') ? '0~10m' : '0~1000kg' },
+                          product.model.includes('73') ? '0~10m' :
+                          product.model.includes('78') ? '10 吨（100kN，量程可定制）' : '0~1000kg' },
           { label: '测量精度', value: product.model.includes('70') ? '±0.5%' : 
                           product.model.includes('71') ? '±0.25%' :
-                          product.model.includes('73') ? '±0.5%' : '±0.1%' },
+                          product.model.includes('73') ? '±0.5%' :
+                          product.model.includes('78') ? '±0.5 %Span' : '±0.1%' },
           { label: '供电方式', value: powerLabels[product.power] || '锂电池供电' },
-          { label: '防护等级', value: product.model.includes('73') ? 'IP68' : 'IP65' },
-          { label: '连接接口', value: product.model.includes('70') ? 'G1/2外螺纹' : 'M20×1.5' },
-          { label: '产品尺寸', value: product.model.includes('72') ? '直径28mm' : '112×72×38mm' }
+          { label: '防护等级', value: product.model.includes('73') ? 'IP68' : product.model.includes('78') ? 'IP64' : 'IP65' },
+          { label: '连接接口', value: product.model.includes('70') ? 'G1/2外螺纹' : product.model.includes('78') ? '—' : 'M20×1.5' },
+          { label: '产品尺寸', value: product.model.includes('72') ? '直径28mm' : product.model.includes('78') ? '220×86×99mm' : '112×72×38mm' }
         ];
       } else {
         // 默认参数
