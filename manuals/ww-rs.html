@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-RS 系列 RS485 传感器（小白盒）说明书 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-RS10 / WW-RS20 / WW-RS21 / WW-RS22 RS485 传感器说明书：隔离 RS-485、Modbus RTU 从机、寄存器总表、读取示例与传感器量程。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>WW-RS 系列 RS485 传感器</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">RS485 传感器</span>
+      <h1>WW-RS 系列 RS485 传感器（小白盒）</h1>
+      <p>隔离 RS-485 多路采集节点，Modbus RTU 从机协议，支持温湿度、水浸、门磁等信号采集与网关对接。</p>
+      <div class="meta"><span>固件版本：V1.0.1（寄存器 0x0007 = 0x0101）</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">产品概述与型号</a></li>
+      <li><a href="#s2">硬件规格</a></li>
+      <li><a href="#s3">RS-485 通信参数</a></li>
+      <li><a href="#s4">Modbus RTU 协议说明</a></li>
+      <li><a href="#s5">寄存器总表</a></li>
+      <li><a href="#s6">读取示例</a></li>
+      <li><a href="#s7">传感器参数与量程</a></li>
+      <li><a href="#s8">工作流程与安装注意</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>产品概述与型号</h2>
+      <p>WW-RS 系列（小白盒 485）是一款基于<strong>隔离 RS-485</strong> 的传感器采集节点，通过 <strong>Modbus RTU 从机协议</strong>对外提供寄存器数据，适用于机房环境、配电柜、机柜等场景的门磁、水浸、温湿度、温度采集与网关对接。</p>
+
+      <h3>1.1 订货型号</h3>
+      <div class="table-wrap"><table>
+        <tr><th>型号</th><th>产品</th><th>采集通道</th><th>说明</th></tr>
+        <tr><td><strong>WW-RS10</strong></td><td>RS485 温湿度传感器</td><td>SHT40 温湿度</td><td>温度、湿度双参数输出</td></tr>
+        <tr><td><strong>WW-RS20</strong></td><td>RS485 绳式水浸传感器</td><td>水浸（绳式）</td><td>水浸线缆沿铺设路径检测泄漏</td></tr>
+        <tr><td><strong>WW-RS21</strong></td><td>RS485 点式水浸传感器</td><td>水浸（点式）</td><td>单点电极检测积水</td></tr>
+        <tr><td><strong>WW-RS22</strong></td><td>RS485 门磁传感器</td><td>门磁开关量</td><td>柜门 / 房门开合状态检测</td></tr>
+      </table></div>
+      <div class="note">四个型号共用同一套硬件平台与寄存器映射，仅按型号启用对应通道；未启用的通道寄存器返回无效值 <code>0xFFFF</code>。</div>
+
+      <h3>1.2 产品图片</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--space-4);margin:var(--space-6) 0;">
+        <figure style="text-align:center;margin:0;">
+          <img src="../images/WW-RS10.png" alt="WW-RS10 RS485 温湿度传感器" style="max-width:100%;height:180px;object-fit:contain;" onerror="this.style.display='none'">
+          <figcaption style="font-size:13px;color:var(--text-muted);margin-top:8px;">WW-RS10 温湿度</figcaption>
+        </figure>
+        <figure style="text-align:center;margin:0;">
+          <img src="../images/WW-RS20.png" alt="WW-RS20 RS485 绳式水浸传感器" style="max-width:100%;height:180px;object-fit:contain;" onerror="this.style.display='none'">
+          <figcaption style="font-size:13px;color:var(--text-muted);margin-top:8px;">WW-RS20 绳式水浸</figcaption>
+        </figure>
+        <figure style="text-align:center;margin:0;">
+          <img src="../images/WW-RS21.png" alt="WW-RS21 RS485 点式水浸传感器" style="max-width:100%;height:180px;object-fit:contain;" onerror="this.style.display='none'">
+          <figcaption style="font-size:13px;color:var(--text-muted);margin-top:8px;">WW-RS21 点式水浸</figcaption>
+        </figure>
+        <figure style="text-align:center;margin:0;">
+          <img src="../images/WW-RS22.png" alt="WW-RS22 RS485 门磁传感器" style="max-width:100%;height:180px;object-fit:contain;" onerror="this.style.display='none'">
+          <figcaption style="font-size:13px;color:var(--text-muted);margin-top:8px;">WW-RS22 门磁</figcaption>
+        </figure>
+      </div>
+
+      <h3>1.3 主要特性</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>隔离 RS-485 总线，Modbus RTU 从机，默认 9600 8N1、从站号 1</li>
+        <li>内置采集通道：SHT40 温湿度（I²C）、PT100 三线制温度（ADS1220 24 位 ADC）、DS18B20 数字温度（单总线）、门磁与水浸两路开关量输入</li>
+        <li>板载 LED 心跳指示（1 Hz）</li>
+        <li>兼容网关槽协议（基址 16000），可无缝接入既有网关系统</li>
+      </ul>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>硬件规格</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项目</th><th>参数</th></tr>
+        <tr><td>主控 MCU</td><td>HC32L196KCTA-LQ64（ARM Cortex-M0+）</td></tr>
+        <tr><td>供电输入</td><td>9 ~ 36 V DC</td></tr>
+        <tr><td>电源链路</td><td>LMR16006（降压至 5V）→ AMS1117（3.3V）</td></tr>
+        <tr><td>RS-485 收发器</td><td>CA-IS2092A（隔离），总线保护 CDSOT23-SM712</td></tr>
+        <tr><td>输入浪涌保护</td><td>SMBJ60CA</td></tr>
+        <tr><td>通信接口</td><td>RS-485、调试串口、I²C、SPI、单总线</td></tr>
+        <tr><td>指示灯</td><td>1 路 LED（PA05），运行心跳 1 Hz</td></tr>
+        <tr><td>调试串口</td><td>UART1，TX=PA02，RX=PA03，115200 8N1</td></tr>
+      </table></div>
+
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>RS-485 通信参数</h2>
+      <div class="table-wrap"><table>
+        <tr><th>参数</th><th>值</th></tr>
+        <tr><td>物理层</td><td>RS-485，隔离收发（CA-IS2092A）</td></tr>
+        <tr><td>协议</td><td>Modbus RTU</td></tr>
+        <tr><td>波特率</td><td>9600 bps</td></tr>
+        <tr><td>数据位 / 校验位 / 停止位</td><td>8 / 无（None） / 1</td></tr>
+        <tr><td>默认从站地址</td><td>1（支持广播地址 0）</td></tr>
+        <tr><td>校验</td><td>CRC16-Modbus（多项式 0xA001，初值 0xFFFF，低字节在前）</td></tr>
+        <tr><td>帧间隔（空闲判定）</td><td>5 ms</td></tr>
+        <tr><td>接收缓冲区</td><td>64 字节</td></tr>
+        <tr><td>单次最大读取数量</td><td>32 个寄存器</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>Modbus RTU 协议说明</h2>
+      <h3>4.1 功能码</h3>
+      <div class="table-wrap"><table>
+        <tr><th>功能码</th><th>名称</th><th>说明</th></tr>
+        <tr><td>0x03</td><td>读保持寄存器</td><td>读取 1 ~ 32 个寄存器</td></tr>
+        <tr><td>0x04</td><td>读输入寄存器</td><td>与 0x03 读取同一份数据镜像</td></tr>
+      </table></div>
+      <div class="note">仅支持读操作。非法功能码、CRC 错误、非本机地址的报文将被静默丢弃，不返回异常码。</div>
+
+      <h3>4.2 请求帧格式（8 字节）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>字节</th><th>内容</th><th>说明</th></tr>
+        <tr><td>0</td><td>从站地址</td><td>1 ~ 247（或 0 广播）</td></tr>
+        <tr><td>1</td><td>功能码</td><td>0x03 / 0x04</td></tr>
+        <tr><td>2~3</td><td>起始地址</td><td>高字节在前</td></tr>
+        <tr><td>4~5</td><td>寄存器数量</td><td>高字节在前，1 ~ 32</td></tr>
+        <tr><td>6~7</td><td>CRC16</td><td>低字节在前</td></tr>
+      </table></div>
+
+      <h3>4.3 响应帧格式</h3>
+      <div class="table-wrap"><table>
+        <tr><th>字节</th><th>内容</th></tr>
+        <tr><td>0</td><td>从站地址</td></tr>
+        <tr><td>1</td><td>功能码</td></tr>
+        <tr><td>2</td><td>字节数（= 寄存器数量 × 2）</td></tr>
+        <tr><td>3…</td><td>数据（每个寄存器 2 字节，高字节在前）</td></tr>
+        <tr><td>末 2 字节</td><td>CRC16，低字节在前</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>寄存器总表</h2>
+      <h3>5.1 本机寄存器（0x0000 ~ 0x000E）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址 Dec</th><th>地址 Hex</th><th>名称</th><th>类型</th><th>说明</th></tr>
+        <tr><td>0</td><td>0x0000</td><td>门磁状态</td><td>U16</td><td>0=开门，1=闭合</td></tr>
+        <tr><td>1</td><td>0x0001</td><td>水浸状态</td><td>U16</td><td>0=干燥，1=泄漏</td></tr>
+        <tr><td>2</td><td>0x0002</td><td>SHT40 温度</td><td>S16</td><td>单位 0.1℃，无效 0xFFFF</td></tr>
+        <tr><td>3</td><td>0x0003</td><td>SHT40 湿度</td><td>U16</td><td>单位 0.1%RH，范围 0~1000，无效 0xFFFF</td></tr>
+        <tr><td>4</td><td>0x0004</td><td>PT100 温度</td><td>S16</td><td>单位 0.1℃，无效 0xFFFF</td></tr>
+        <tr><td>5</td><td>0x0005</td><td>DS18B20 温度</td><td>S16</td><td>单位 0.1℃，无效 0xFFFF</td></tr>
+        <tr><td>6</td><td>0x0006</td><td>传感器状态</td><td>U16</td><td>见 5.3 状态位定义</td></tr>
+        <tr><td>7</td><td>0x0007</td><td>固件版本</td><td>U16</td><td>0x0101 = V1.0.1</td></tr>
+        <tr><td>8</td><td>0x0008</td><td>从站地址</td><td>U16</td><td>默认 1</td></tr>
+        <tr><td>9</td><td>0x0009</td><td>采样序号</td><td>U16</td><td>每 1 s +1，溢出回绕</td></tr>
+        <tr><td>10</td><td>0x000A</td><td>ADS1220 原始码 [31:16]</td><td>U16</td><td>ADC 24 位原始码高 16 位</td></tr>
+        <tr><td>11</td><td>0x000B</td><td>ADS1220 原始码 [15:0]</td><td>U16</td><td>ADC 24 位原始码低 16 位</td></tr>
+        <tr><td>12</td><td>0x000C</td><td>PT100 电阻值</td><td>U16</td><td>单位 1 Ω，量程 0 ~ 65535</td></tr>
+        <tr><td>13</td><td>0x000D</td><td>DS18B20 原始值</td><td>U16</td><td>温度原始寄存器或总线状态</td></tr>
+        <tr><td>14</td><td>0x000E</td><td>调试信息</td><td>U16</td><td>高字节=DS18B20 返回码，低字节=ADS1220 返回码</td></tr>
+      </table></div>
+
+      <h3>5.2 网关兼容槽（基址 16000 = 0x3E80，共 10 个）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>地址 Dec</th><th>地址 Hex</th><th>偏移</th><th>名称</th><th>类型</th><th>说明</th></tr>
+        <tr><td>16000</td><td>0x3E80</td><td>0</td><td>电量/供电</td><td>U16</td><td>市电供电，固定 100</td></tr>
+        <tr><td>16001</td><td>0x3E81</td><td>1</td><td>温度</td><td>S16</td><td>优先级 SHT40 → PT100 → DS18B20，单位 0.1℃</td></tr>
+        <tr><td>16002</td><td>0x3E82</td><td>2</td><td>湿度</td><td>U16</td><td>SHT40，单位 0.1%RH</td></tr>
+        <tr><td>16003</td><td>0x3E83</td><td>3</td><td>PT100 温度</td><td>S16</td><td>单位 0.1℃</td></tr>
+        <tr><td>16004 / 16005</td><td>0x3E84 / 0x3E85</td><td>4 / 5</td><td>保留</td><td>U16</td><td>返回 0xFFFF</td></tr>
+        <tr><td>16006</td><td>0x3E86</td><td>6</td><td>开关量</td><td>U16</td><td>bit0=门磁，bit1=水浸</td></tr>
+        <tr><td>16007 / 16008</td><td>0x3E87 / 0x3E88</td><td>7 / 8</td><td>保留</td><td>U16</td><td>返回 0xFFFF</td></tr>
+        <tr><td>16009</td><td>0x3E89</td><td>9</td><td>采样序号</td><td>U16</td><td>每 1 s +1，溢出回绕</td></tr>
+      </table></div>
+      <div class="note">与既有网关 WWG3/CRoC 的 10 寄存器槽对齐（device_type=16，index=0）。</div>
+
+      <h3>5.3 状态寄存器（地址 6）位定义</h3>
+      <div class="table-wrap"><table>
+        <tr><th>位</th><th>值</th><th>名称</th><th>说明</th></tr>
+        <tr><td>bit0</td><td>0x0001</td><td>SHT40 有效</td><td>1 = 温湿度读取成功</td></tr>
+        <tr><td>bit1</td><td>0x0002</td><td>PT100 有效</td><td>1 = PT100 读取成功</td></tr>
+        <tr><td>bit2</td><td>0x0004</td><td>DS18B20 有效</td><td>1 = DS18B20 读取成功</td></tr>
+        <tr><td>bit3~15</td><td>—</td><td>保留</td><td>恒为 0</td></tr>
+      </table></div>
+
+      <h3>5.4 数据编码说明</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li><strong>温度类寄存器：</strong>有符号 16 位整数，实际温度(℃) = 寄存器值 ÷ 10。如 0x00FA（250）= 25.0℃；负温为补码，0xFFCE（-50）= -5.0℃。</li>
+        <li><strong>湿度寄存器：</strong>无符号 16 位整数，实际湿度(%RH) = 寄存器值 ÷ 10，范围 0~1000 对应 0.0~100.0%RH。</li>
+        <li><strong>电阻寄存器（地址 12）：</strong>无符号 16 位整数，单位 1 Ω。</li>
+        <li><strong>无效值：</strong>未接入或读取失败的传感器返回 0xFFFF（有符号温度寄存器读作 -1）。</li>
+      </ul>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>读取示例</h2>
+      <p>以下均为读取请求帧（从站地址 01）。</p>
+      <div class="code">读前 10 个寄存器（地址 0~9）：
+01 03 00 00 00 0A C5 CD
+
+读全部本机寄存器（地址 0~14）：
+01 03 00 00 00 0F 05 CE
+
+读网关兼容槽（地址 16000 起，共 10 个）：
+01 03 3E 80 00 0A C9 CD</div>
+
+      <h3>6.1 响应示例</h3>
+      <p>读取前 10 个寄存器（假设门闭合、无漏水、SHT 25.0℃ / 50.0%RH、PT100 25.5℃、DS18B20 25.2℃、状态 0x07、固件 0x0101、从站 1、序号 12）：</p>
+      <div class="code">01 03 14
+00 01 00 00
+00 FA 01 F4
+00 FF 00 FC
+00 07 01 01
+00 01 00 0C
+XX XX
+
+XX XX 为 CRC16（低字节在前）</div>
+      <div class="table-wrap"><table>
+        <tr><th>地址</th><th>值</th><th>含义</th></tr>
+        <tr><td>0</td><td>0x0001</td><td>门磁闭合</td></tr>
+        <tr><td>1</td><td>0x0000</td><td>无水浸</td></tr>
+        <tr><td>2</td><td>0x00FA</td><td>25.0℃</td></tr>
+        <tr><td>3</td><td>0x01F4</td><td>50.0%RH</td></tr>
+        <tr><td>4</td><td>0x00FF</td><td>25.5℃</td></tr>
+        <tr><td>5</td><td>0x00FC</td><td>25.2℃</td></tr>
+        <tr><td>6</td><td>0x0007</td><td>SHT40 + PT100 + DS18B20 均有效</td></tr>
+        <tr><td>7</td><td>0x0101</td><td>固件 V1.0.1</td></tr>
+        <tr><td>8</td><td>0x0001</td><td>从站号 1</td></tr>
+        <tr><td>9</td><td>0x000C</td><td>采样序号 12</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>传感器参数与量程</h2>
+      <div class="table-wrap"><table>
+        <tr><th>传感器</th><th>通信接口</th><th>量程</th><th>精度 / 说明</th></tr>
+        <tr><td>SHT40</td><td>I²C（0x44/0x45）</td><td>温度 -45~130℃，湿度 0~100%RH</td><td>高精度模式</td></tr>
+        <tr><td>PT100</td><td>ADS1220 SPI，三线制</td><td>-80~400℃</td><td>双 IDAC 100µA + PGA16，外部参考 4530Ω</td></tr>
+        <tr><td>DS18B20</td><td>单总线 PA04</td><td>-55~85℃</td><td>9 字节暂存器 CRC 校验</td></tr>
+        <tr><td>门磁</td><td>数字输入 PF05</td><td>0/1</td><td>闭合=高，20 ms 消抖</td></tr>
+        <tr><td>水浸</td><td>数字输入 PF04</td><td>0/1</td><td>湿=高，20 ms 消抖</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s8"><h2><span class="num">8</span>工作流程与安装注意</h2>
+      <h3>8.1 工作流程</h3>
+      <ol style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li><strong>上电初始化：</strong>先初始化 RS-485（避免传感器初始化阻塞时无应答），再初始化各传感器。</li>
+        <li><strong>主循环周期：</strong>数字量（门磁 / 水浸）连续采样消抖；每 1 s 采集一次 SHT40、PT100、DS18B20 并刷新寄存器；轮询 RS-485 解析 Modbus 请求并应答；LED 以 1 Hz 心跳闪烁。</li>
+        <li><strong>异常处理：</strong>传感器失联时自动尝试重新初始化，对应寄存器返回 0xFFFF，状态位置 0。</li>
+      </ol>
+      <h3>8.2 安装与接线注意</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>供电范围 DC 9~36 V，接线前确认极性，避免反接损坏电源链路。</li>
+        <li>RS-485 总线 A/B 不要接反，长距离布线建议在总线两端加 120 Ω 终端电阻。</li>
+        <li>同一总线上各从站地址不得重复，单次读取寄存器数量不超过 32。</li>
+        <li>水浸探头（WW-RS20 绳式 / WW-RS21 点式）应避免长期浸泡在腐蚀性液体中。</li>
+        <li>门磁（WW-RS22）安装时确保磁铁与主体间隙在有效感应距离内。</li>
+      </ul>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · WW-RS 系列 RS485 传感器</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>

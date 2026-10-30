@@ -47,7 +47,7 @@
       <div class="note">出厂默认上报服务器为 MQTT <span class="inline-code">mqtt.data.wwiot.com:1883</span>。</div>
     </section>
 
-    <section class="section" id="s2"><h2><span class="num">2</span>上行报文</h2>
+    <section class="section" id="s2"><div style="text-align:center;margin:var(--space-6) 0;padding:var(--space-6);border:1px dashed var(--border,#cbd5e1);border-radius:12px;color:var(--text-muted,#64748b);">📷 产品外观图待补充（可联系销售获取实物图与尺寸图）</div><h2><span class="num">2</span>上行报文</h2>
       <p>报文为单行 JSON + \n。用字段 evt 区分类型（无 reason 字段）。</p>
       <div class="table-wrap"><table>
         <tr><th>evt</th><th>名称</th><th>何时发送</th></tr>
@@ -143,13 +143,14 @@
       <div class="table-wrap"><table>
         <tr><th>项</th><th>值</th></tr>
         <tr><td>Broker</td><td>mqtt.data.wwiot.com:1883</td></tr>
-        <tr><td>用户名 / 密码</td><td>bj_vehicle / bj_vehicle@123</td></tr>
+        <tr><td>用户名 / 密码</td><td>按项目分配，出厂时随设备交付（见设备铭牌贴纸或交付资料），本手册不提供明文</td></tr>
         <tr><td>QoS</td><td>0</td></tr>
-        <tr><td>前缀 topic</td><td>wwiot/ss/vehicle/prd/car/</td></tr>
+        <tr><td>前缀 topic</td><td>按项目分配，随设备交付资料提供（示例结构：&lt;项目前缀&gt;/&lt;设备号&gt;/data）</td></tr>
         <tr><td>设备发布</td><td>{topic}{no}/data，例：wwiot/ss/vehicle/prd/car/00000005/data</td></tr>
         <tr><td>设备订阅（下行）</td><td>{topic}{no}/dw，例：wwiot/ss/vehicle/prd/car/00000005/dw</td></tr>
       </table></div>
       <p>本地可查：AT+SERVER?、AT+MQTT?。</p>
+      <div class="note">MQTT 用户名、密码与 ClientId 属于项目凭据，由交付资料单独提供，不在公开手册中公布；现场部署时请按项目凭据配置，并避免凭据明文外传。</div>
     </section>
 
     <section class="section" id="s4"><h2><span class="num">4</span>远程配置（参数类）</h2>
@@ -158,7 +159,7 @@
         <tr><th>JSON key</th><th>对应 AT</th><th>value 示例</th><th>说明</th></tr>
         <tr><td>per</td><td>AT+PER=</td><td>"60,600"</td><td>运动周期秒,静止周期秒</td></tr>
         <tr><td>server</td><td>AT+SERVER=</td><td>"MQTT,mqtt.data.wwiot.com,1883"</td><td>协议,主机,端口</td></tr>
-        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"bj_vehicle,bj_vehicle@123,&lt;cid&gt;,wwiot/ss/vehicle/prd/car/"</td><td>用户,密码,ClientId,topic 前缀</td></tr>
+        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"&lt;user&gt;,&lt;pwd&gt;,&lt;cid&gt;,&lt;topic前缀&gt;"</td><td>用户,密码,ClientId,topic 前缀（均由项目交付资料提供，请勿在公开文档中填写明文）</td></tr>
         <tr><td>log</td><td>AT+LOG=</td><td>"1" 或 1</td><td>串口调试日志</td></tr>
         <tr><td>ver</td><td>AT+VER=</td><td>"WWC1C,200"</td><td>型号,产品版本（需解锁策略时）</td></tr>
         <tr><td>rst</td><td>AT+RST=</td><td>"24,10,10"</td><td>看门狗类复位策略</td></tr>

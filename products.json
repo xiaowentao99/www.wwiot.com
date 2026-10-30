@@ -766,6 +766,43 @@
     "manualUrl": "manuals/ww27.html"
   },
   {
+    "id": 170,
+    "category": "io",
+    "subCategory": "开关量IO",
+    "name": "SOS 报警终端/LoRa",
+    "model": "WW-28L",
+    "protocols": [
+      "lora"
+    ],
+    "power": "battery",
+    "manualUrl": "manuals/ww28.html"
+  },
+  {
+    "id": 171,
+    "category": "io",
+    "subCategory": "开关量IO",
+    "name": "SOS 报警终端/LoRaWAN",
+    "model": "WW-28H",
+    "protocols": [
+      "lorawan-hf",
+      "lorawan-lf"
+    ],
+    "power": "battery",
+    "manualUrl": "manuals/ww28.html"
+  },
+  {
+    "id": 172,
+    "category": "io",
+    "subCategory": "开关量IO",
+    "name": "SOS 报警终端/4G",
+    "model": "WW-28C",
+    "protocols": [
+      "4g"
+    ],
+    "power": "battery",
+    "manualUrl": "manuals/ww28.html"
+  },
+  {
     "id": 71,
     "category": "gas",
     "subCategory": "气体类检测",
@@ -1599,193 +1636,6 @@
     "power": "external"
   },
   {
-    "id": 137,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "倾角主板",
-    "model": "WW-D2L-50-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 138,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "网关主板",
-    "model": "WW-G1-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 139,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "人体红外主板",
-    "model": "WW-21LF-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 140,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "LoRa温湿度/水浸/门磁主板",
-    "model": "WW-10LF-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 141,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "4G温湿度/水浸/门磁主板",
-    "model": "WW-10C1-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 142,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "LoRa采集器主板",
-    "model": "WW-D1LF-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 143,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "4G采集器主板",
-    "model": "WW-D1C1-PCB",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 144,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "低频LoRa透传模组",
-    "model": "WW-M1-L",
-    "protocols": [
-      "lora"
-    ],
-    "power": "external"
-  },
-  {
-    "id": 145,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "高频LoRa透传模组",
-    "model": "WW-M1-H",
-    "protocols": [
-      "lora"
-    ],
-    "power": "external"
-  },
-  {
-    "id": 146,
-    "category": "pcba",
-    "subCategory": "PCBA",
-    "name": "LoRa转4G模组",
-    "model": "WW-M1-C",
-    "protocols": [
-      "lora",
-      "4g"
-    ],
-    "power": "external"
-  },
-  {
-    "id": 147,
-    "category": "pcba",
-    "subCategory": "电池",
-    "name": "电池ER14505M",
-    "model": "ER34615-102",
-    "protocols": [],
-    "power": "battery"
-  },
-  {
-    "id": 148,
-    "category": "pcba",
-    "subCategory": "电池",
-    "name": "电池ER34615",
-    "model": "ER34615-D2",
-    "protocols": [],
-    "power": "battery"
-  },
-  {
-    "id": 149,
-    "category": "pcba",
-    "subCategory": "电池",
-    "name": "电池ER14505*2M电池组",
-    "model": "ER14505-10C",
-    "protocols": [],
-    "power": "battery"
-  },
-  {
-    "id": 150,
-    "category": "pcba",
-    "subCategory": "电池",
-    "name": "电池ER14505*2电池组",
-    "model": "ER14505-21C",
-    "protocols": [],
-    "power": "battery"
-  },
-  {
-    "id": 151,
-    "category": "pcba",
-    "subCategory": "外置探头",
-    "name": "水浸探头",
-    "model": "-",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 152,
-    "category": "pcba",
-    "subCategory": "外置探头",
-    "name": "水绳探头",
-    "model": "-",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 153,
-    "category": "pcba",
-    "subCategory": "耳机探头",
-    "name": "耳机款温湿度探头",
-    "model": "SP1",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 154,
-    "category": "pcba",
-    "subCategory": "耳机探头",
-    "name": "耳机款门磁探头",
-    "model": "SP22",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 155,
-    "category": "pcba",
-    "subCategory": "耳机探头",
-    "name": "耳机款水浸探头",
-    "model": "SP20",
-    "protocols": [],
-    "power": "external"
-  },
-  {
-    "id": 156,
-    "category": "pcba",
-    "subCategory": "耳机探头",
-    "name": "耳机款水绳探头",
-    "model": "SP21",
-    "protocols": [],
-    "power": "external"
-  },
-  {
     "id": 165,
     "category": "pcba",
     "subCategory": "万维通信模组",
@@ -1808,7 +1658,8 @@
     "protocols": [
       "rs485"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-rs.html"
   },
   {
     "id": 167,
@@ -1819,7 +1670,8 @@
     "protocols": [
       "rs485"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-rs.html"
   },
   {
     "id": 168,
@@ -1830,7 +1682,8 @@
     "protocols": [
       "rs485"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-rs.html"
   },
   {
     "id": 169,
@@ -1841,6 +1694,19 @@
     "protocols": [
       "rs485"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-rs.html"
+  },
+  {
+    "id": 173,
+    "category": "rs485",
+    "subCategory": "RS485 传感器",
+    "name": "多合一环境监测终端",
+    "model": "WW-RS18",
+    "protocols": [
+      "rs485"
+    ],
+    "power": "external",
+    "manualUrl": "manuals/ww-rs18.html"
   }
 ]

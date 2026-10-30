@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-RS18 多合一环境监测终端 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-RS18 多合一环境监测终端说明书：空气温湿度、PM2.5、PM10、CO2、TVOC、甲醛六参数监测，RS485 接口，标准 Modbus-RTU 协议，小方吸顶彩屏款。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>WW-RS18 多合一环境监测终端</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">RS485 传感器</span>
+      <h1>WW-RS18 多合一环境监测终端</h1>
+      <p>空气温湿度、PM2.5、PM10、CO<sub>2</sub>、TVOC、甲醛多参数监测，RS485 输出，标准 Modbus-RTU 协议，小方吸顶彩屏款。</p>
+      <div class="meta"><span>修订日期：2026.10</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">产品概述</a></li>
+      <li><a href="#s2">主要技术指标</a></li>
+      <li><a href="#s3">安装与调试</a></li>
+      <li><a href="#s4">查看数据</a></li>
+      <li><a href="#s5">通讯协议</a></li>
+      <li><a href="#s6">注意事项</a></li>
+      <li><a href="#s7">常见问题及解决办法</a></li>
+      <li><a href="#s8">售后与质保</a></li>
+    </ol></nav>
+
+    <section class="section" id="s1"><h2><span class="num">1</span>产品概述</h2>
+      <p>WW-RS18 多合一环境监测终端可用于监测室内空气质量状况，具备测量精度高、响应速度快、运行稳定等特点。设备作为现场采集从站，按标准 <strong>MODBUS-RTU</strong> 通信协议以 <strong>RS485</strong> 信号输出，能兼容组态王等多种上位机组态软件，可广泛用于办公楼宇、工业园区、智慧校园、智能家居等物联网监测领域。</p>
+      <p>本终端可监测<strong>温度、相对湿度、PM2.5、PM10、甲醛、TVOC、CO<sub>2</sub></strong> 共 7 项参数，采用小方吸顶式安装，正面为彩色显示屏，实时显示各项参数与状态色条。</p>
+      <h3>状态指示逻辑</h3>
+      <p>PM2.5、PM10、甲醛、TVOC、CO<sub>2</sub> 五项污染物采用参数前方长柱形色条进行状态指示；温度、湿度采用数字字体颜色进行状态指示，判色逻辑如下：</p>
+      <div class="table-wrap"><table>
+        <tr><th>类型</th><th>条件</th><th>显示</th></tr>
+        <tr><td rowspan="3">PM2.5 / PM10 / 甲醛 / TVOC / CO<sub>2</sub>（柱形条）</td><td>检测值低于阈值下限</td><td>绿色</td></tr>
+        <tr><td>检测值高于下限且低于上限</td><td>黄色</td></tr>
+        <tr><td>检测值高于阈值上限</td><td>红色</td></tr>
+        <tr><td rowspan="2">温度 / 相对湿度（字体变色）</td><td>检测值高于下限且低于上限</td><td>绿色</td></tr>
+        <tr><td>检测值低于下限或高于上限</td><td>黄色</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s2"><h2><span class="num">2</span>主要技术指标</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项目</th><th>参数值</th></tr>
+        <tr><td>直流供电</td><td>DC 9~24V</td></tr>
+        <tr><td>工作环境</td><td>-20~55℃，10~95%RH</td></tr>
+        <tr><td>存储环境</td><td>常规环境 0~35℃，15%~90%RH；要求无硅胶、酒精等污染气体长期存在</td></tr>
+        <tr><td>输出信号</td><td>RS485 输出，Modbus-RTU 协议</td></tr>
+      </table></div>
+
+      <h3>2.1 测量范围与精度</h3>
+      <div class="table-wrap"><table>
+        <tr><th>参数</th><th>测量范围</th><th>测量精度</th></tr>
+        <tr><td>空气温度</td><td>-40~80℃</td><td>±0.5℃</td></tr>
+        <tr><td>空气湿度</td><td>0~100%RH</td><td>±3%RH</td></tr>
+        <tr><td>PM2.5</td><td>0~1000 μg/m³</td><td>±10%（@100~500 μg/m³）；±10 μg/m³（@0~100 μg/m³）</td></tr>
+        <tr><td>CO<sub>2</sub></td><td>0~5000 PPM</td><td>±5%</td></tr>
+        <tr><td>TVOC</td><td>0~2 mg/m³</td><td>±15%</td></tr>
+        <tr><td>甲醛</td><td>0~2 mg/m³</td><td>±4%</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s3"><h2><span class="num">3</span>安装与调试</h2>
+      <h3>3.1 外形尺寸</h3>
+      <p>外形尺寸 100mm × 100mm × 35mm（小方吸顶款，含底板）。</p>
+      <div style="text-align:center;margin:var(--space-6) 0;">
+        <img src="../images/WW-RS18.png" alt="WW-RS18 多合一环境监测终端产品图" style="max-width:280px;height:auto;border-radius:10px;" onerror="this.style.display='none'">
+      </div>
+      <p style="text-align:center;color:var(--text-muted);">正面彩色显示屏实时显示各项参数与状态色条，外壳为白色小方吸顶造型。</p>
+      <div class="dim-diagram" style="margin:var(--space-8) 0 var(--space-6);text-align:center;">
+      <svg viewBox="0 0 520 230" style="width:100%;max-width:520px;height:auto;color:var(--text-secondary,#475569);" role="img" aria-label="外形尺寸示意图">
+      <g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round">
+      <rect x="95" y="55" width="110.0" height="110.0" rx="7"/>
+      <rect x="355" y="55" width="38.5" height="110.0" rx="4"/>
+      <line x1="95" y1="199.0" x2="205.0" y2="199.0"/>
+      <line x1="95" y1="194.0" x2="95" y2="204.0"/>
+      <line x1="205.0" y1="194.0" x2="205.0" y2="204.0"/>
+      <line x1="65" y1="55" x2="65" y2="165.0"/>
+      <line x1="60" y1="55" x2="70" y2="55"/>
+      <line x1="60" y1="165.0" x2="70" y2="165.0"/>
+      <line x1="355" y1="185.0" x2="393.5" y2="185.0"/>
+      <line x1="355" y1="180.0" x2="355" y2="190.0"/>
+      <line x1="393.5" y1="180.0" x2="393.5" y2="190.0"/>
+      </g>
+      <g fill="currentColor" font-size="12" font-family="inherit" text-anchor="middle">
+      <text x="150" y="190.0">宽 100 mm</text>
+      <text x="55" y="110" transform="rotate(-90 55 110)">高 100 mm</text>
+      <text x="374" y="179.0">厚 35 mm</text>
+      <text x="110" y="77" font-size="11" opacity="0.75">正视图</text>
+      <text x="355" y="77" font-size="11" opacity="0.75">侧视图</text>
+      <text x="260" y="215" font-size="11.5" opacity="0.8">外形尺寸 100 × 100 × 35 mm</text>
+      </g></svg></div>
+
+      <h3>3.2 安装方法</h3>
+      <ol style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li><strong>固定底板：</strong>使用自攻丝将底板固定在墙上（吸顶安装时固定于吊顶面）。</li>
+        <li><strong>固定传感器：</strong>传感器背面的三个孔对应底板三个挂钩，顺时针旋转至传感器牢固即可。</li>
+      </ol>
+
+      <h3>3.3 端子说明</h3>
+      <p>端子定义参照设备铭牌，标准定义如下：</p>
+      <div class="table-wrap"><table>
+        <tr><th>位置</th><th>定义</th></tr>
+        <tr><td>左上</td><td>RS485-B</td></tr>
+        <tr><td>左下</td><td>RS485-A</td></tr>
+        <tr><td>右上</td><td>电源地</td></tr>
+        <tr><td>右下</td><td>DC 9-24V 电源+</td></tr>
+      </table></div>
+
+      <h3>3.4 地址设置</h3>
+      <p>出厂时地址已设置好（详见产品铭牌）。如需修改：设备左侧拨码开关（丝印 P10）为地址拨码，用户需在 <strong>001~255</strong> 内选择从站地址，设定好后<strong>断电重启</strong>生效。</p>
+      <p>拨码开关每位代表一个数值，拨到「ON」为有效值，拨到相反方向为无效值，地址为所有有效值相加。例：地址 100，则第 3、6、7 位拨到 ON，即 4+32+64=100。</p>
+      <div class="note"><strong>注意：</strong>修改地址时必须断电操作。</div>
+    </section>
+
+    <section class="section" id="s4"><h2><span class="num">4</span>查看数据</h2>
+      <ol style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>用 USB 转 485 线连接电脑。</li>
+        <li>打开 Modbus Poll 软件，按设备串口参数完成基础配置（端口、波特率 9600、数据位 8、无校验、停止位 1），点击 OK。</li>
+        <li>配置读取的环境参数：传感器地址按背面铭牌，寄存器个数按需求设置，点击 OK 即可正常通讯。</li>
+        <li>如需查看下发与返回指令，在软件中开启通信报文显示即可。</li>
+        <li><strong>修改波特率：</strong>写寄存器 14（0x000E），在 Value 框内输入波特率对应数字后发送。</li>
+        <li><strong>修改地址：</strong>写寄存器 15（0x000F），在 Value 框内输入地址后发送。</li>
+        <li><strong>修改阈值：</strong>寄存器 18（0x0012）写入参数 ID，寄存器 19（0x0013）写入阈值上限，寄存器 20（0x0014）写入阈值下限。输入阈值 = 实际阈值 × 采样值。</li>
+        <li><strong>校准数值：</strong>寄存器 18（0x0012）写入要校准的参数 ID，寄存器 21（0x0015）写入微调值。输入值 = 实际值 × 采样值。</li>
+      </ol>
+
+      <h3>4.1 波特率对应值</h3>
+      <div class="table-wrap"><table>
+        <tr><th>数值</th><th>波特率</th><th>数值</th><th>波特率</th></tr>
+        <tr><td>0</td><td>2400</td><td>5</td><td>38400</td></tr>
+        <tr><td>1</td><td>4800</td><td>6</td><td>56000</td></tr>
+        <tr><td>2</td><td>9600</td><td>7</td><td>57600</td></tr>
+        <tr><td>3</td><td>14400</td><td>8</td><td>115200</td></tr>
+        <tr><td>4</td><td>19200</td><td>9</td><td>128000</td></tr>
+      </table></div>
+
+      <h3>4.2 参数 ID 对照表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>ID</th><th>对应参数</th></tr>
+        <tr><td>0</td><td>温度</td></tr>
+        <tr><td>1</td><td>湿度</td></tr>
+        <tr><td>2</td><td>PM2.5</td></tr>
+        <tr><td>3</td><td>PM10</td></tr>
+        <tr><td>4</td><td>TVOC</td></tr>
+        <tr><td>5</td><td>CO<sub>2</sub></td></tr>
+        <tr><td>9</td><td>甲醛</td></tr>
+      </table></div>
+
+      <h3>4.3 指令修改示例</h3>
+      <p>将地址 1 修改为地址 5（写入成功后设备返回一条相同数据即为写入成功）：</p>
+      <div class="code">发送：01 06 00 0F 00 05 79 CA
+  01    当前地址
+  06    功能码（写）
+  00 0F 寄存器 15
+  00 05 将地址改为 5
+  79 CA 校验
+
+返回：01 06 00 0F 00 05 79 CA</div>
+      <p>校准示例：温度需增加 2℃，则在寄存器 18 输入温度 ID（0）并发送，再在寄存器 21 输入微调值 20（2 × 采样值 10）并发送。</p>
+    </section>
+
+    <section class="section" id="s5"><h2><span class="num">5</span>通讯协议</h2>
+      <div class="table-wrap"><table>
+        <tr><th>项目</th><th>参数值</th></tr>
+        <tr><td>输出方式</td><td>RS485</td></tr>
+        <tr><td>通讯协议</td><td>MODBUS-RTU</td></tr>
+        <tr><td>波特率</td><td>9600（默认）</td></tr>
+        <tr><td>数据位</td><td>8 位</td></tr>
+        <tr><td>校验位</td><td>NONE</td></tr>
+        <tr><td>停止位</td><td>1 位</td></tr>
+        <tr><td>广播地址</td><td>0</td></tr>
+        <tr><td>出厂默认数据格式</td><td>1 位起始位、8 位数据位、1 位停止位、无校验、9600bps</td></tr>
+      </table></div>
+
+      <h3>5.1 协议规约</h3>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>地址码</th><th>功能码</th><th>数据</th><th>校验低位</th><th>校验高位</th></tr>
+        <tr><td>字节</td><td>1</td><td>1</td><td>n</td><td>1</td><td>1</td></tr>
+        <tr><td>说明</td><td>1~255</td><td>03 读保持寄存器 / 04 读输入寄存器 / 06 写单个保持寄存器</td><td>数据</td><td>CRC 低</td><td>CRC 高</td></tr>
+      </table></div>
+
+      <h3>5.2 寄存器地址表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>寄存器地址</th><th>参数</th><th>单位</th><th>量程</th><th>采样值</th><th>操作</th></tr>
+        <tr><td>0000H</td><td>空气温度</td><td>℃</td><td>-40~80</td><td>/10</td><td>只读</td></tr>
+        <tr><td>0001H</td><td>空气湿度</td><td>%RH</td><td>0~100</td><td>/10</td><td>只读</td></tr>
+        <tr><td>0002H</td><td>PM2.5</td><td>μg/m³</td><td>0~1000</td><td>/1</td><td>只读</td></tr>
+        <tr><td>0003H</td><td>PM10</td><td>μg/m³</td><td>0~1000</td><td>/1</td><td>只读</td></tr>
+        <tr><td>0004H</td><td>TVOC</td><td>mg/m³</td><td>0~2</td><td>/1000</td><td>只读</td></tr>
+        <tr><td>0005H</td><td>CO<sub>2</sub></td><td>PPM</td><td>0~5000</td><td>/1</td><td>只读</td></tr>
+        <tr><td>0009H</td><td>甲醛</td><td>mg/m³</td><td>0~2</td><td>/1000</td><td>只读</td></tr>
+        <tr><td>000EH</td><td>波特率</td><td>—</td><td>见 4.1</td><td>—</td><td>读写</td></tr>
+        <tr><td>000FH</td><td>设备地址</td><td>—</td><td>1~255</td><td>—</td><td>读写</td></tr>
+        <tr><td>0012H</td><td>参数 ID</td><td>—</td><td>见 4.2</td><td>—</td><td>读写</td></tr>
+        <tr><td>0013H</td><td>阈值上限</td><td>—</td><td>实际阈值 × 采样值</td><td>—</td><td>读写</td></tr>
+        <tr><td>0014H</td><td>阈值下限</td><td>—</td><td>实际阈值 × 采样值</td><td>—</td><td>读写</td></tr>
+        <tr><td>0015H</td><td>校准数值</td><td>—</td><td>实际值 × 采样值</td><td>—</td><td>读写</td></tr>
+      </table></div>
+
+      <h3>5.3 协议示例与解析</h3>
+      <div class="code">问询：01 03 00 00 00 0A C5 CD
+  01        传感器地址
+  03        功能码
+  00 00     读取寄存器起始位置
+  00 0A     读取寄存器个数（10）
+  C5 CD     校验
+
+返回：01 03 14 01 07 01 D7 00 12 00 00 00 02 04 05 00 00 00 00 00 00 00 20 59 81
+  01        传感器地址
+  03        功能码
+  14        数据长度（20 字节）
+  01 07     空气温度  = 26.3 ℃
+  01 D7     空气湿度  = 47.1 %RH
+  00 12     PM2.5     = 18 μg/m³
+  00 00     预留
+  00 02     TVOC      = 0.002 mg/m³
+  04 05     CO₂       = 1029 PPM
+  00 00     预留
+  00 00     预留
+  00 00     预留
+  00 20     甲醛      = 0.032 mg/m³
+  59 81     校验</div>
+    </section>
+
+    <section class="section" id="s6"><h2><span class="num">6</span>注意事项</h2>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>传感器避免接触有机溶剂（包括硅胶及其它胶粘剂）、涂料、药剂、油类及高浓度气体。</li>
+        <li>传感器探头不可用树脂材料完全封装，也不可浸没在无氧环境中，否则会损坏传感器性能。</li>
+        <li>传感器不能长时间应用于含有腐蚀性气体的环境中，腐蚀性气体会损害传感器。</li>
+        <li>传感器不可经受过度的撞击或震动。</li>
+        <li>传感器电缆接线时注意不要接错，否则可能烧毁内部元件。</li>
+        <li>RS485 接线不要带电插拔，否则可能损伤 485 通讯芯片；请尽量选用信号专用电缆以提高传输距离。</li>
+        <li>RS485 站地址不得与其它从站地址重复；从站最多不超过 31 个，否则需另加 RS485 总线桥（中继），且与主站的协议、波特率等数据格式必须一致。</li>
+        <li>如需修改波特率或数据格式，请订货时提前通知。</li>
+        <li>Modbus Poll 安装包、使用说明、485 现场接线手册及完整通信协议格式可联系我公司提供。</li>
+        <li>传感器标配不含通信电缆与直流电源，需另行购买。</li>
+      </ul>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>常见问题及解决办法</h2>
+      <p>设备无法连接到电脑或 PLC 的可能原因：</p>
+      <div class="table-wrap"><table>
+        <tr><th>可能原因</th><th>处理办法</th></tr>
+        <tr><td>电脑有多个 COM 口，选择的串口不正确</td><td>在设备管理器中确认正确的端口号</td></tr>
+        <tr><td>设备地址错误或存在重复地址</td><td>检查传感器地址设置，必要时用万用表测量拨码开关状态</td></tr>
+        <tr><td>波特率、校验方式、数据位、停止位错误</td><td>核对串口参数与设备一致</td></tr>
+        <tr><td>主机轮询间隔和等待应答时间太短</td><td>建议设置在 1000ms 以上</td></tr>
+        <tr><td>485 总线断开，或 A、B 线接反</td><td>检查接线，A/B 互换重试</td></tr>
+        <tr><td>设备数量过多或布线太长</td><td>就近供电，增加 485 增强器，并增加 120Ω 终端电阻</td></tr>
+        <tr><td>USB 转 485 驱动未安装或损坏</td><td>重新安装驱动</td></tr>
+        <tr><td>设备损坏</td><td>联系售后处理</td></tr>
+      </table></div>
+    </section>
+
+    <section class="section" id="s8"><h2><span class="num">8</span>售后与质保</h2>
+      <p>本公司产品自出厂之日起 1 年内由于产品质量问题免费维修；不可抗拒因素或人为损坏、使用不当则不在保修范围内。本产品长期维护。</p>
+      <p>秉承科技进步原则，致力于技术创新理念。我公司保留任何产品改进而不预先通知的权利，产品结构、参数可能与本手册略有出入，请以实际购买物为准。</p>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · WW-RS18 多合一环境监测终端</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>
