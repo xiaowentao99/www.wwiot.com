@@ -1586,7 +1586,8 @@
     "protocols": [
       "wired"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-g0.html"
   },
   {
     "id": 133,
@@ -1609,7 +1610,8 @@
       "lora",
       "rs485"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-g0.html"
   },
   {
     "id": 135,
@@ -1621,7 +1623,8 @@
       "lora",
       "ethernet"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-g0.html"
   },
   {
     "id": 136,
@@ -1633,7 +1636,8 @@
       "lora",
       "4g"
     ],
-    "power": "external"
+    "power": "external",
+    "manualUrl": "manuals/ww-g0.html"
   },
   {
     "id": 165,

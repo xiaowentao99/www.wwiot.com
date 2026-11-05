@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WW-G3 / WW-G0 边缘计算网关说明书 - 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="WW-G3（WWG3）边缘计算网关说明书：以太网/WiFi/4G 多网络接入、4 路数据转发、RS485 Modbus、可选 SX1302 LoRa、HTTP API 与 AT 命令。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>WW-G3 / WW-G0 边缘计算网关</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">网关</span>
+      <h1>WW-G3 / WW-G0 边缘计算网关</h1>
+      <p>ESP32-S3 平台，以太网 + WiFi + 4G 多网络接入，4 路数据转发（TCP/UDP/MQTT/HTTP），RS485 Modbus，可选 SX1302 LoRa。</p>
+      <div class="meta"><span>固件版本：0.1.41（以 Web「系统」页 / AT+VER? 为准）</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+    <nav class="toc"><h2>目录</h2><ol>
+      <li><a href="#s1">产品概述与快速上手</a></li>
+      <li><a href="#s2">出厂默认配置</a></li>
+      <li><a href="#s3">网络接入</a></li>
+      <li><a href="#s4">Web 管理与数据转发</a></li>
+      <li><a href="#s5">RS485 / Modbus 协议</a></li>
+      <li><a href="#s6">HTTP API</a></li>
+      <li><a href="#s7">AT 命令</a></li>
+      <li><a href="#s8">GW 网关 TLV 协议</a></li>
+      <li><a href="#s9">固件烧录与设备 ID</a></li>
+      <li><a href="#s10">附录：枚举与路由速查</a></li>
+    </ol></nav>
+    <section class="section" id="s1"><h2><span class="num">1</span>产品概述与快速上手</h2>
+      <p>WWG3（对外型号 WW-G3 / WW-G0 系列）是面向物联网汇聚场景的边缘网关，支持：</p>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li><strong>多网络接入：</strong>以太网（静态 / DHCP）、WiFi STA/AP、4G Cat.1</li>
+        <li><strong>数据转发：</strong>最多 4 路 TCP/UDP/MQTT/HTTP，格式 RAW / JSON / TLV</li>
+        <li><strong>RS485 Modbus：</strong>输出（Slave，LoRa→寄存器）/ 输入（Master 轮询）</li>
+        <li><strong>LoRa（可选）：</strong>烧录工厂设备 ID 后启用 SX1302 收发与转发</li>
+        <li><strong>管理入口：</strong>Web（端口 80）、USB AT（115200）、BLE NUS</li>
+      </ul>
+      <div style="text-align:center;margin:var(--space-6) 0;">
+        <img src="../images/WW-G0.png" alt="WW-G0 边缘计算网关" style="max-width:560px;width:100%;height:auto;border-radius:10px;" onerror="this.style.display='none'">
+      </div>
+      <h3>1.1 上电步骤</h3>
+      <ol style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>接通电源，约 5～10 秒完成自检与联网初始化。</li>
+        <li>网线接电脑（本机设同网段，如 192.168.1.100），或按 WiFi 配置连接。</li>
+        <li>浏览器打开管理页（见下表）。</li>
+        <li>USB-C：波特率 115200 8N1，可发 AT 并查看日志。</li>
+      </ol>
+      <div class="table-wrap"><table>
+        <tr><th>入口</th><th>默认地址 / 参数</th></tr>
+        <tr><td>有线网口</td><td>http://192.168.1.252/</td></tr>
+        <tr><td>WiFi 热点 AP</td><td>http://192.168.7.1/</td></tr>
+        <tr><td>USB 串口</td><td>115200 8N1</td></tr>
+      </table></div>
+      <div class="note">Web 管理账号与初始密码以随箱配置卡 / 设备标签为准；首次登录后请立即修改默认密码。</div>
+      <h3>1.2 常用操作</h3>
+      <div class="code">AT+VER?          # 版本
+AT+INFO?         # 综合信息
+AT+WIFI? / AT+ETH?
+AT+SAVE
+AT+REBOOT / AT+RSTC</div>
+    </section>
+    <section class="section" id="s2"><h2><span class="num">2</span>出厂默认配置</h2>
+      <h3>2.1 速查表</h3>
+      <div class="table-wrap"><table>
+        <tr><th>类别</th><th>默认</th></tr>
+        <tr><td>网口</td><td>静态 192.168.1.252/24，网关 192.168.1.1，DNS 8.8.8.8</td></tr>
+        <tr><td>WiFi 模式</td><td>STA → SSID wwiot.com（现场无该热点时请改为 AP 或现场路由器）</td></tr>
+        <tr><td>WiFi AP</td><td>SSID WWG3-{后缀}，IP 192.168.7.1/24，信道 6</td></tr>
+        <tr><td>RS485</td><td>9600 8N1，使能，输入模式 mode=1，从站号 1</td></tr>
+        <tr><td>云通道</td><td>tcp.data.wwiot.com:20004，TCP + TLV</td></tr>
+        <tr><td>USB</td><td>115200 8N1</td></tr>
+      </table></div>
+      <div class="note">WiFi 密码类默认值见随箱配置卡；AP 后缀规则：已烧录工厂 SN（16 hex）时为 SN 后 4 位，否则为 WiFi MAC 后 2 字节（4 位十六进制）。</div>
+      <h3>2.2 以太网</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>默认值</th></tr>
+        <tr><td>模式</td><td>静态 IP（非 DHCP）</td></tr>
+        <tr><td>IP / 掩码</td><td>192.168.1.252 / 255.255.255.0</td></tr>
+        <tr><td>网关 / DNS</td><td>192.168.1.1 / 8.8.8.8</td></tr>
+      </table></div>
+      <p>可在 Web「以太网」或 PUT /api/eth、AT+ETH= 修改，一般立即生效。</p>
+      <h3>2.3 RS485 引脚（V1.04）与默认通道</h3>
+      <div class="table-wrap"><table>
+        <tr><th>信号</th><th>GPIO</th><th rowspan="4"></th><th>默认转发通道</th><th>值</th></tr>
+        <tr><td>TX</td><td>21</td><td>主机</td><td>tcp.data.wwiot.com</td></tr>
+        <tr><td>RX</td><td>47</td><td>端口</td><td>20004</td></tr>
+        <tr><td>DE</td><td>48</td><td>协议 / 格式</td><td>TCP（proto=0）/ TLV（format=2）</td></tr>
+      </table></div>
+      <div class="note"><strong>重要：</strong>上位机要通过 RS485 读温湿度寄存器，必须改为输出模式 mode=0（出厂是输入模式）。</div>
+    </section>
+    <section class="section" id="s3"><h2><span class="num">3</span>网络接入（以太网 / WiFi / 4G）</h2>
+      <h3>3.1 以太网</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>默认静态见第 2 章；DHCP：PUT /api/eth {"dhcp":true} 或 AT+ETH=0,0。</li>
+        <li>静态：AT+ETH=0,1,192.168.1.252,255.255.255.0,192.168.1.1,8.8.8.8。</li>
+      </ul>
+      <h3>3.2 WiFi</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>mode=0 为 AP，mode=1 为 STA。</li>
+        <li>AT：AT+WIFI=&lt;mode&gt;,&lt;ap_ssid&gt;,&lt;ap_pwd&gt;,&lt;sta_ssid&gt;,&lt;sta_pwd&gt;,&lt;ch&gt;（改后需重启）。</li>
+        <li>HTTP：PUT /api/wifi（见第 6 章）。</li>
+      </ul>
+      <h3>3.3 4G</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>插 SIM 后自动搜网；GET /api/lte 或 AT+4G? 查看状态。</li>
+        <li>透传：AT+4GAT=AT+CSQ。LTE state：0 关机 … 4 已注册 … <strong>5 已联网</strong>。</li>
+      </ul>
+      <h3>3.4 LoRa（可选）</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>必须已烧录工厂设备 ID（SN）才会初始化 SX1302。</li>
+        <li>无 SN / 无射频时不影响 ETH / WiFi / 4G / RS485 / Web 功能。</li>
+      </ul>
+    </section>
+    <section class="section" id="s4"><h2><span class="num">4</span>Web 管理与数据转发</h2>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>管理页：GET / 或 /index.html，端口 80。</li>
+        <li>通道：最多 4 路；协议 0=TCP 1=UDP 2=MQTT 3=HTTP；格式 0=RAW 1=JSON 2=TLV。</li>
+        <li>万维云默认通道见第 2 章；可在页面「数据通道」增删改。</li>
+        <li>OTA：POST /api/ota 上传 .bin（64KB～3MB），成功后设备重启。</li>
+      </ul>
+    </section>
+    <section class="section" id="s5"><h2><span class="num">5</span>RS485 / Modbus 协议</h2>
+      <h3>5.1 两种工作模式</h3>
+      <div class="table-wrap"><table>
+        <tr><th>模式</th><th>mode</th><th>网关角色</th><th>LoRa→寄存器</th><th>上位机查询网关</th></tr>
+        <tr><td>输出</td><td>0</td><td>Slave</td><td>是</td><td>是（FC03/FC04）</td></tr>
+        <tr><td>输入（出厂默认）</td><td>1</td><td>Master</td><td>否</td><td>否（网关主动轮询外设）</td></tr>
+      </table></div>
+      <p>串口参数默认 9600 8N1，从站号默认 1。<strong>查询传感器寄存器（温湿度等）必须使用「输出」模式。</strong></p>
+      <h3>5.2 设备列表与寄存器地址</h3>
+      <p>对设备列表按 device_type 分组，同类型内按顺序分配 index=0,1,2,…（每类型最多 100，设备总数上限 32）：</p>
+      <div class="code">slot = device_type * 100 + index
+base = slot * 10
+寄存器地址 = base + offset    // offset = 0..9</div>
+      <div class="table-wrap"><table>
+        <tr><th>偏移</th><th>字段</th><th>类型</th><th>含义</th></tr>
+        <tr><td>0</td><td>battery</td><td>u16</td><td>电量 %</td></tr>
+        <tr><td>1</td><td>temperature</td><td>i16</td><td>温度 ℃×10（有符号）</td></tr>
+        <tr><td>2</td><td>humidity</td><td>u16</td><td>湿度 %RH</td></tr>
+        <tr><td>3</td><td>adc</td><td>i16</td><td>ADC</td></tr>
+        <tr><td>4</td><td>voltage</td><td>i16</td><td>电压×10</td></tr>
+        <tr><td>5</td><td>electricity</td><td>i16</td><td>电流类</td></tr>
+        <tr><td>6</td><td>switch</td><td>u16</td><td>开关量</td></tr>
+        <tr><td>7</td><td>oxygen</td><td>u16</td><td>氧浓度等</td></tr>
+        <tr><td>8</td><td>lux</td><td>u16</td><td>光照（截断）</td></tr>
+        <tr><td>9</td><td>seq</td><td>u16</td><td>报文序号低 16 位</td></tr>
+      </table></div>
+      <p>温湿度节点常用偏移 0~2；缺字段保持 0xFFFF。地址示例：device_type=16、index=0 → base=16000（电量 16000 / 温度 16001 / 湿度 16002）。</p>
+      <h3>5.3 LoRa 报文 → 寄存器</h3>
+      <p>帧格式与 sensor_decode 一致：字节 0 为 version；1..4 为 device_no（拼成 8 位大写十六进制）；5 为 ctl；6..7 为 seq（大端，写入偏移 9）；8 起为 TLV 数据区（末 2 字节为链路 CRC）。相关 TLV：</p>
+      <div class="table-wrap"><table>
+        <tr><th>Tag</th><th>长度</th><th>写入</th></tr>
+        <tr><td>0x00</td><td>2</td><td>bat：(byte0&amp;0x1F)/31×100 → 偏移 0；byte1&amp;0x7F → device_type</td></tr>
+        <tr><td>0x04</td><td>2</td><td>温度：i16 BE /10 → 再×10 存入偏移 1</td></tr>
+        <tr><td>0x05</td><td>1</td><td>湿度 → 偏移 2</td></tr>
+        <tr><td>0x21</td><td>4</td><td>精细温湿：temp/100、hum/10 → 偏移 1 / 2</td></tr>
+        <tr><td>0x03</td><td>2</td><td>ADC → 偏移 3</td></tr>
+        <tr><td>0x06</td><td>1</td><td>oxygen → 偏移 7</td></tr>
+      </table></div>
+      <p>实测温湿度帧示例（CRC OK）：<code>03 30 00 3E 2F 00 09 23 00 7F 10 04 01 10 05 34 1D 3E</code> → device_no=30003E2F、device_type=16、电量 100、温度 272（27.2℃）、湿度 52，对应基址 16000。</p>
+      <h3>5.4 上位机查询（输出模式 Slave）</h3>
+      <p>支持 FC03 / FC04（同一镜像）。请求帧：<code>[SlaveID][Func][StartHi][StartLo][QtyHi][QtyLo][CrcLo][CrcHi]</code>，CRC16-Modbus（初值 0xFFFF、多项式 0xA001、低字节在前），Qty 1..64。应答帧：<code>[SlaveID][Func][ByteCount][Data…]×Qty [CrcLo][CrcHi]</code>，寄存器高字节在前，有符号值按 int16 大端解释。不落在任何槽位的地址返回 0xFFFF；非法功能码 / CRC 错误静默丢弃。</p>
+      <p><strong>温湿度标准查询</strong>（先配置 mode=0 并登记设备白名单）：</p>
+      <div class="code">PUT /api/rs485
+{ "enabled": true, "mode": 0, "slave_id": 1, "baud": 9600 }
+
+PUT /api/rs485/devices
+{ "devices": [ { "enabled": true, "device_type": 16, "device_no": "30003E2F" } ] }
+
+请求：01 03 3E 80 00 03 09 CB
+应答：01 03 06 00 64 01 10 00 34 51 53
+  00 64 → 16000 = 100（电量%）
+  01 10 → 16001 = 272（27.2℃）
+  00 34 → 16002 = 52（湿度%）</div>
+      <h3>5.5 配置检查清单与常见失败</h3>
+      <ol style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>GET /api/rs485 → mode=0（输出）、enabled=true、ready=true。</li>
+        <li>GET /api/rs485/devices → 含真实 device_no / device_type，确认 base_addr。</li>
+        <li>GET /api/overview 或串口 LORA # → rx_crc_ok 在增长。</li>
+        <li>GET /api/lora/rxlog → 核对 hex 中 device_no / type 与白名单一致。</li>
+        <li>RS485 主站：9600 8N1，从站号与 slave_id 一致，发 FC03。</li>
+      </ol>
+      <div class="table-wrap"><table>
+        <tr><th>现象</th><th>原因</th></tr>
+        <tr><td>一直 0xFFFF</td><td>白名单 device_no/type 与实包不一致；或尚未收到 LoRa</td></tr>
+        <tr><td>无应答</td><td>仍是输入模式；波特率 / 接线 / 从站号错误；CRC 错被丢弃</td></tr>
+        <tr><td>温度离谱</td><td>按 ℃×10 解释；有符号 int16</td></tr>
+      </table></div>
+      <h3>5.6 输入模式（Master 轮询）</h3>
+      <p>mode=1 时网关不把 LoRa 写入寄存器，而是按 /api/rs485/polls 主动读外设（字段：slave_id、func 3/4、start_addr / quantity≤32、interval_ms 最小 200ms、enabled；最多 8 条轮询）。成功读到的完整应答帧（含 CRC）经 channel_broadcast 转发到数据通道。</p>
+    </section>
+    <section class="section" id="s6"><h2><span class="num">6</span>HTTP API</h2>
+      <p>管理接口均走设备 Web 服务（端口 80），修改类用 PUT / POST，JSON 编码；配置修改后如需持久化请调用保存或在页面保存。主要资源：</p>
+      <div class="table-wrap"><table>
+        <tr><th>方法</th><th>路径</th><th>作用</th></tr>
+        <tr><td>GET</td><td>/api/ping、/api/status、/api/overview</td><td>探活 / 轻量状态 / 运行概览</td></tr>
+        <tr><td>GET/PUT</td><td>/api/sn</td><td>工厂 SN / 设备 ID（16 hex）</td></tr>
+        <tr><td>GET/POST/PUT/DELETE</td><td>/api/channels</td><td>数据转发通道（最多 4 路）</td></tr>
+        <tr><td>GET/PUT</td><td>/api/lora、/api/lora/rxlog</td><td>LoRa 配置与接收日志</td></tr>
+        <tr><td>GET</td><td>/api/lte</td><td>4G 状态</td></tr>
+        <tr><td>GET/PUT</td><td>/api/eth、/api/wifi</td><td>以太网 / WiFi</td></tr>
+        <tr><td>GET/PUT</td><td>/api/rs485、/api/rs485/devices、/api/rs485/polls</td><td>RS485 与 Modbus 白名单 / 轮询表</td></tr>
+        <tr><td>GET/PUT</td><td>/api/ui、/api/time</td><td>页头文案 / 校时</td></tr>
+        <tr><td>GET/POST</td><td>/api/ota</td><td>OTA 固件升级（.bin，64KB~3MB）</td></tr>
+      </table></div>
+      <p>调用示例：</p>
+      <div class="code"># 探活
+curl -s http://192.168.1.252/api/ping
+# 概览
+curl -s http://192.168.1.252/api/overview
+# 添加 UDP 透传通道
+curl -s -X POST http://192.168.1.252/api/channels -H "Content-Type: application/json" \
+  -d '{"proto":1,"host":"192.168.1.100","port":9000,"format":0}'
+# 校时（本机 epoch 秒）
+curl -s -X PUT http://192.168.1.252/api/time -H "Content-Type: application/json" -d '{"epoch":1710000000}'
+# OTA 上传
+curl -X POST http://192.168.1.252/api/ota --data-binary @build/esp32-loragw.bin</div>
+    </section>
+    <section class="section" id="s7"><h2><span class="num">7</span>AT 命令</h2>
+      <h3>7.1 命令通道与模式</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li><strong>USB Serial/JTAG（推荐）：</strong>USB-C（IO19/IO20），115200 8N1，Putty / TeraTerm / 串口调试助手均可。</li>
+        <li><strong>BLE SPP (NUS)：</strong>Nordic UART Service（UUID 6E400001-B5A3-F393-E0A9-E50E24DCCA9E），设备名 WWG3_XXXX（XXXX 为 SN 后 4 位），无配对密码。</li>
+        <li>两通道互不干扰可同时使用；串口 UART0 仅输出日志，不接受 AT 输入。</li>
+        <li>上电默认即 AT 命令模式；ATO 退出并上锁，+++（带回车）重新进入——已设 SER 密码时返回 OK.SER，需 AT+SER=&lt;密码&gt; 认证，错误返回 ERR2。</li>
+      </ul>
+      <h3>7.2 命令总览</h3>
+      <div class="table-wrap"><table>
+        <tr><th>命令</th><th>查询</th><th>设置</th><th>说明</th></tr>
+        <tr><td>AT / ATH / ATO / AT+RSTC</td><td>—</td><td>—</td><td>连通测试 / 断开 BLE / 退出 AT 模式 / 软复位</td></tr>
+        <tr><td>AT+SER</td><td>✓</td><td>✓</td><td>AT 安全密码</td></tr>
+        <tr><td>AT+SN</td><td>✓</td><td>✓</td><td>设备序列号（16 hex）</td></tr>
+        <tr><td>AT+MAC / AT+VER / AT+INFO</td><td>✓</td><td>—</td><td>芯片 MAC（只读）/ 型号版本 / 综合信息</td></tr>
+        <tr><td>AT+4G / AT+4GAT</td><td>✓</td><td>✓</td><td>4G 状态 / 透传原始 AT 到模组</td></tr>
+        <tr><td>AT+RST</td><td>✓</td><td>✓</td><td>自动重启策略 &lt;h&gt;,&lt;nf&gt;,&lt;sf&gt;</td></tr>
+        <tr><td>AT+LORAMODE / AT+LORARF</td><td>✓</td><td>✓</td><td>LoRa 工作模式 / 射频参数（改后需重启）</td></tr>
+        <tr><td>AT+WIFI</td><td>✓</td><td>✓</td><td>WiFi 配置（改后需重启）</td></tr>
+        <tr><td>AT+ETH</td><td>✓</td><td>✓</td><td>以太网配置</td></tr>
+        <tr><td>AT+BS</td><td>✓</td><td>✓</td><td>LoRaWAN Basics Station 配置</td></tr>
+        <tr><td>AT+NWCH</td><td>✓</td><td>✓</td><td>转发通道管理（=ADD,... / =DEL,&lt;idx&gt;）</td></tr>
+        <tr><td>AT+LOG / AT+SAVE</td><td>✓</td><td>✓</td><td>调试日志开关 / 保存配置到 NVS</td></tr>
+      </table></div>
+      <div class="note">所有设置命令必须指定全部参数；修改后务必 AT+SAVE 持久化，否则断电丢失；AT+LORAMODE、AT+WIFI 修改后需重启生效。</div>
+    </section>
+    <section class="section" id="s8"><h2><span class="num">8</span>GW 网关 TLV 协议</h2>
+      <h3>8.1 帧结构（第一层 Frame）</h3>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>长度</th><th>说明</th></tr>
+        <tr><td>Delimiter</td><td>5</td><td>固定 ASCII "start"（73 74 61 72 74）</td></tr>
+        <tr><td>Version</td><td>1</td><td>0=V0（废弃）、1=V1 … 5=V5</td></tr>
+        <tr><td>Length</td><td>2 (u16)</td><td>除 Delimiter 外的总长度（含 GatewayID、Data、CRC）</td></tr>
+        <tr><td>GatewayID</td><td>8</td><td>网关 ID</td></tr>
+        <tr><td>Data</td><td>N</td><td>TLV1 数据项，可多个自由组合</td></tr>
+        <tr><td>CRC</td><td>2</td><td>CRC16，计算范围 Version → Data 末尾</td></tr>
+      </table></div>
+      <p>流式解析：遇到 "start" 开始按帧解析，用 Length + CRC 校验完整性，通过后继续扫描下一帧（天然支持粘包）。</p>
+      <h3>8.2 TLV 层级</h3>
+      <div class="table-wrap"><table>
+        <tr><th>TLV1 Type</th><th>名称</th><th>Value 内容</th></tr>
+        <tr><td>0x00</td><td>GW_UP_STATUS</td><td>网关状态包（心跳），内部为 TLV2：0x00 Info（2B）、0x01 CCID（20B）、0x02 Location（2×float32 经纬度）</td></tr>
+        <tr><td>0x01</td><td>GW_UP_DATA</td><td>终端上行数据：0x00 RF_CHAIN、0x01 FREQUENCY、0x02 MODULATION、0x03 CRC_STATUS、0x04 SF、0x05 CODE_RATE、0x06 RSSI、0x07 SNR（0.1dB）、0x08 RF_DATA（带 Length 的终端原始数据）、0x09 TMST、0x0A IS_CACHE</td></tr>
+        <tr><td>0x02</td><td>GW_UP_OTA</td><td>OTA / 文件传输：0x00~0x03 OTA_REQ/ACK/DATA/DATA_ACK；0x10~0x13 FILE 系列（结构相同）</td></tr>
+        <tr><td>0x03~0xFF</td><td>RFU</td><td>保留，按 Length 跳过</td></tr>
+      </table></div>
+      <p>TLV1 编码：Type(uint8) + Length(uint16) + Value；GW_UP_DATA 中除 RF_DATA 外的项为固定长度仅传 Type + Value。解析器必须按 Type 逐项解析、支持字段缺失与未知类型跳过（前向兼容）。SF 编码：V3+ 直接用数字 5~12，旧版本 0x40=SF12；V4 中 FREQUENCY 字段用作频偏；V5+ 新增 TMST 与 IS_CACHE（≥1 为离线缓存数据）。</p>
+    </section>
+    <section class="section" id="s9"><h2><span class="num">9</span>固件烧录与设备 ID</h2>
+      <h3>9.1 SN 规则</h3>
+      <div class="table-wrap"><table>
+        <tr><th>项</th><th>要求</th></tr>
+        <tr><td>格式</td><td>恰好 16 个十六进制字符（8 字节），字符集 0-9 / A-F</td></tr>
+        <tr><td>示例</td><td>0001006400000001</td></tr>
+        <tr><td>存储</td><td>NVS 命名空间 loragw_factory，键 sn；不受配置重置 / 出厂恢复影响</td></tr>
+        <tr><td>生效</td><td>写入后需重启，LoRa 才会初始化；整片擦除（erase-flash）会清空 SN</td></tr>
+      </table></div>
+      <h3>9.2 固件烧录（ESP-IDF）</h3>
+      <ul style="margin-left:var(--space-6);color:var(--text-secondary);">
+        <li>芯片目标 ESP32-S3，工具链 ESP-IDF v5.x，USB 板载 Serial/JTAG。</li>
+        <li>16MB Flash 双 OTA 分区：ota_0 0x20000（3MB）、ota_1 0x320000（3MB）；工厂 SN 在 NVS，与 app 分区无关。</li>
+        <li>编译烧录：<code>idf.py set-target esp32s3 && idf.py build && idf.py -p COMx flash</code>；开发迭代可 <code>idf.py -p COMx app-flash</code>。</li>
+        <li>量产脚本可用 esptool 按地址烧录（bootloader 0x0 / 分区表 0x8000 / app 0x20000），或使用 release/WWG3_vX.Y.Z_flash 全量烧录包。</li>
+        <li>已联网设备 OTA：<code>curl -X POST http://&lt;设备IP&gt;/api/ota --data-binary @build/esp32-loragw.bin</code>，OTA 不清除工厂 SN。</li>
+      </ul>
+      <h3>9.3 烧录设备 ID（工厂 SN）</h3>
+      <p>产线推荐流程：先烧固件 → 再写 SN → 重启 → 确认 LoRa 已启用。</p>
+      <div class="table-wrap"><table>
+        <tr><th>方式</th><th>操作</th></tr>
+        <tr><td>A：BLE AT（推荐）</td><td>连接 WWG3_XXXX，发送 AT+SN=0001006400000001（期望 OK + +SN: saved），AT+RSTC 重启后 AT+SN? / AT+INFO? 校验（应见 DeviceID: 0001006400000001）</td></tr>
+        <tr><td>B：HTTP</td><td>设备 AP（192.168.7.1）或 STA/ETH IP：PUT /api/sn {"sn":"0001006400000001"}，必须写满 16 hex，成功后重启</td></tr>
+        <tr><td>C：产测脚本批量</td><td>烧固件 → 联网 → PUT /api/sn → 重启 → GET /api/overview 核对 device_id 与标签一致</td></tr>
+      </table></div>
+      <h3>9.4 验收检查清单</h3>
+      <div class="table-wrap"><table>
+        <tr><th>步骤</th><th>期望</th></tr>
+        <tr><td>烧固件后未写 SN</td><td>Web 设备 ID 为 --；LoRa 未初始化（日志提示 Factory SN NOT SET）</td></tr>
+        <tr><td>仅写入 8 hex（如 00000001）</td><td>无效，设备不认</td></tr>
+        <tr><td>AT+SN= / PUT /api/sn</td><td>保存成功</td></tr>
+        <tr><td>重启后</td><td>日志有 SN loaded: …；设备 ID 显示完整 16 hex</td></tr>
+        <tr><td>整片擦除后</td><td>SN 丢失，需重烧</td></tr>
+      </table></div>
+    </section>
+    <section class="section" id="s10"><h2><span class="num">10</span>附录：枚举与路由速查</h2>
+      <h3>10.1 通道协议 / 格式 / 状态</h3>
+      <div class="table-wrap"><table>
+        <tr><th>proto</th><th>含义</th><th>format</th><th>含义</th><th>state</th><th>含义</th></tr>
+        <tr><td>0</td><td>TCP</td><td>0</td><td>RAW</td><td>0</td><td>未配置</td></tr>
+        <tr><td>1</td><td>UDP</td><td>1</td><td>JSON</td><td>1 / 2</td><td>等待连接 / 连接中</td></tr>
+        <tr><td>2</td><td>MQTT</td><td>2</td><td>TLV</td><td>3 / 4</td><td>已连接 / 就绪(UDP)</td></tr>
+        <tr><td>3</td><td>HTTP</td><td>—</td><td>—</td><td>5 / 6</td><td>MQTT 握手 / 错误</td></tr>
+      </table></div>
+      <h3>10.2 RS485 mode</h3>
+      <div class="table-wrap"><table>
+        <tr><th>mode</th><th>含义</th></tr>
+        <tr><td>0</td><td>输出 Slave（LoRa→寄存器，上位机可读）</td></tr>
+        <tr><td>1</td><td>输入 Master（出厂默认，轮询外设）</td></tr>
+      </table></div>
+      <h3>10.3 修订说明</h3>
+      <p>本手册整合自原「产品使用说明」「HTTP-API」「AT_COMMAND」「RS485-Modbus」「FLASH-AND-DEVICE-ID」「GW 网关 TLV 协议」等文档，并以当前固件实现为准。AT+NWCH 的 format 编码按固件更正为：0=RAW，1=JSON，2=TLV。</p>
+    </section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · WW-G3 / WW-G0 边缘计算网关</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>
