@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 指令与远程配置指导手册 V4.11-LoRa。空口为 TLV-V1；支持 unit/ran 做模拟量量程标定。§6 含 AT key 对照，§6.5 附官网 CRC 的 C / Java 参考代码。">
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.12-LoRa。空口上报为 TLV。私有 LoRa 下行有两种正式格式：远程 AT 与 Modbus。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,18 @@
     <section class="hero">
       <span class="badge">LoRa · 空口 TLV</span>
       <h1>AT 与远程配置（LoRa）</h1>
-      <p>协议：LoRa / LoRaWAN · 版本 V4.11-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口 = TLV</strong>：设备侧上报唯一载体为官网 TLV-V1（V1.7.2）二进制帧，无 JSON 空口。V4.11 起 <strong>支持</strong> <span class="inline-code">unit</span> / <span class="inline-code">ran</span>（不是 ERR3）：同款 0–3V ADC 可用 <span class="inline-code">AT+UNIT=2</span> 与 <span class="inline-code">AT+RAN=0,3</span> 标成 0~3 MPa。§6 与独立 TLV 协议页同源，<strong>以 §6 加 AT key 对照为准</strong>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
-      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.11-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.12-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>（无 JSON 空口）。私有 LoRa <strong>远程配置有两种正式下行</strong>：远程 AT（8 位设备编号紧贴 AT，无空格）和 Modbus（功能码 10/03 + 寄存器 + CRC16）。设备先认远程 AT，对不上再按 Modbus 解析。§6 与独立 TLV 协议页同源，<strong>以 §6 加 AT key 对照为准</strong>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.12-LoRa</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <div class="note"><strong>空口 = TLV。</strong>本分册是 AT、远程配置与 TLV 的合一手册。<strong>§6 为权威口径</strong>（帧、Type、注册包/数据包，并带 AT key 对照）。§6.5 附官网 CRC 参考代码（C / Java，init=<span class="inline-code">0xFFFF</span>）。<strong>V4.11：LoRa 支持 <span class="inline-code">unit</span> / <span class="inline-code">ran</span></strong>（压力、液位、拉力等模拟量，不是 ERR3）。同款 0–3V ADC、不同工程量程 SKU 用 <span class="inline-code">AT+UNIT=</span> 与 <span class="inline-code">AT+RAN=</span> 标定，例如 <span class="inline-code">AT+UNIT=2</span>、<span class="inline-code">AT+RAN=0,3</span> 表示 0~3 MPa。4G 分册仍为 JSON 上报。</div>
+    <div class="note"><strong>V4.12 · 私有 LoRa 两种下行，都是正式格式。</strong>先判 8 位十六进制设备编号 + AT 文本（中间无空格），对上按<strong>远程 AT</strong>执行，否则再按 <strong>Modbus 03/10</strong> 解析。远程 AT 例：<span class="inline-code">12345678AT+PER=30,60</span>。Modbus 写 PER（寄存器 <span class="inline-code">0001</span>–<span class="inline-code">0002</span>，检测 0、发送 10，数据 <span class="inline-code">0000 000A</span>，CRC-16/XMODEM 初值 0）：<span class="inline-code">12 34 56 78 10 00 01 00 02 04 00 00 00 0A 86 3F</span>。上行仍是 TLV，不新造 Type。详见 §5.2、§5.3。</div>
 
-    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27">3.2 门磁（SL210 / WW-27）</a></li><li><a href="#s-3.3-水浸SL200--WW-26与烟感WW-22L">3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置三种载体">第三部分 &middot; 远程配置（三种载体）</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-LoRaWAN-下行--key--功能码">5.2 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.3-私有协议寄存器--key--寄存器">5.3 私有协议寄存器 &middot; key &harr; 寄存器</a></li><li><a href="#s-5.4-可选私有编号--AT文本帧">5.4 可选：私有「编号 + AT」文本帧</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
+    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27">3.2 门磁（SL210 / WW-27）</a></li><li><a href="#s-3.3-水浸SL200--WW-26与烟感WW-22L">3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器写入须按组一次写齐">5.3.3 key &harr; 寄存器（写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.11-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.12-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
 4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -53,7 +53,7 @@
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.11-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+<td><strong>V4.12-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -65,7 +65,7 @@
 </tr>
 <tr>
 <td>结构</td>
-<td><strong>第一部分 通用型</strong>：命令格式 + 通用/硬件/射频/系统 key<br/><strong>第二部分 传感器</strong>：&sect;3.0 型号速查 + 按类型矩阵<br/><strong>第三部分 远程配置</strong>：本地 AT &middot; LoRaWAN 下行 &middot; 私有寄存器（+ 可选「编号+AT」文本帧）<br/><strong>附录</strong>：&sect;6 上报报文（<strong>空口唯一 = TLV-V1</strong>；&sect;6.6 注册包/数据包设计）&middot; &sect;7 与 4G 差异 &middot; &sect;8 改动清单 &middot; &sect;9 自检 &middot; &sect;10 修订记录</td>
+<td><strong>第一部分 通用型</strong>：命令格式 + 通用/硬件/射频/系统 key<br/><strong>第二部分 传感器</strong>：&sect;3.0 型号速查 + 按类型矩阵<br/><strong>第三部分 远程配置</strong>：本地 AT &middot; <strong>远程 AT</strong> &middot; <strong>Modbus</strong> &middot; LoRaWAN 下行<br/><strong>附录</strong>：&sect;6 上报报文（<strong>空口唯一 = TLV-V1</strong>；&sect;6.6 注册包/数据包设计）&middot; &sect;7 与 4G 差异 &middot; &sect;8 改动清单 &middot; &sect;9 自检 &middot; &sect;10 修订记录</td>
 </tr>
 <tr>
 <td>原则</td>
@@ -1140,7 +1140,7 @@ AT+RAN?</div><ul>
 </tr>
 </tbody>
 </table></div><p>平台下发前先跑 <span class="inline-code">ATH</span>，清单外不下发。</p></section>
-<section class="section" id="第三部分--远程配置三种载体"><h2 class="part-title">第三部分 &middot; 远程配置（三种载体）</h2><p>同一张 key 表，三种通道落地；平台按设备在线状态选择。</p><div class="table-wrap"><table>
+<section class="section" id="第三部分--远程配置"><h2 class="part-title">第三部分 &middot; 远程配置</h2><p>同一张 key 表；<strong>私有 LoRa 远程配置</strong>明确支持两种下行格式（可在同一监听窗口内并用）。设备先判是否「8 位设备编号 + AT 文本」；对上则按<strong>远程 AT</strong>执行，否则再按 <strong>Modbus 寄存器帧</strong>解析。</p><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>载体</th>
@@ -1155,19 +1155,250 @@ AT+RAN?</div><ul>
 <td><span class="inline-code">AT+KEY=value</span>（本文表）</td>
 </tr>
 <tr>
-<td><strong>LoRaWAN 下行</strong></td>
-<td>设备入网后远程配置</td>
-<td>Type <span class="inline-code">0x01</span>+<span class="inline-code">0x81</span> 读；Type <span class="inline-code">0x02</span>+功能码写</td>
+<td><strong>远程 AT（无线 AT）</strong></td>
+<td>私有空口 / 网关透传</td>
+<td><span class="inline-code">设备编号</span> + <span class="inline-code">AT</span> 指令，无空格，见 <strong>&sect;5.2</strong></td>
 </tr>
 <tr>
-<td><strong>私有协议寄存器</strong></td>
-<td>万维协议 / 网关透传</td>
-<td>Modbus 风格：地址 + 读03/写10 + 寄存器 + CRC16</td>
+<td><strong>Modbus 配置</strong></td>
+<td>私有空口 / 网关透传</td>
+<td>设备编号 + 功能码 <span class="inline-code">10</span>/<span class="inline-code">03</span> + 寄存器 + 数据 + CRC16，见 <strong>&sect;5.3</strong></td>
+</tr>
+<tr>
+<td><strong>LoRaWAN 下行</strong></td>
+<td>设备已入网（LoRaWAN）</td>
+<td>Type <span class="inline-code">0x01</span>+<span class="inline-code">0x81</span> 读；Type <span class="inline-code">0x02</span>+功能码写，见 <strong>&sect;5.4</strong></td>
 </tr>
 </tbody>
-</table></div><p>另：<strong>私有「编号+AT」文本帧</strong>（合并手册 &sect;5.7）适用于部分私有空口网关透传场景，见 &sect;5.4（与上表第三种可并存，按项目选用）。</p></section>
-<section class="section" id="s-5.1-本地-AT"><h2>5.1 本地 AT</h2><p>同第一部分；上报后可用 <span class="inline-code">AT+LIS</span> 留监听窗收后续下行（私有文本帧或网关透传）。</p></section>
-<section class="section" id="s-5.2-LoRaWAN-下行--key--功能码"><h2>5.2 LoRaWAN 下行 &middot; key &harr; 功能码</h2><div class="table-wrap"><table>
+</table></div><div class="note">
+<p><strong>要点</strong>：远程配置 &ne; 仅 LoRaWAN。私有网上行上报走 TLV（&sect;6）；<strong>下行改参</strong>走 <strong>远程 AT</strong> 或 <strong>Modbus</strong>。</p>
+</div></section>
+<section class="section" id="s-5.1-本地-AT"><h2>5.1 本地 AT</h2><p>同第一部分；上报后可用 <span class="inline-code">AT+LIS</span> 留监听窗收后续下行（远程 AT 或 Modbus）。</p></section>
+<section class="section" id="s-5.2-远程-AT设备编号--AT"><h2>5.2 远程 AT（设备编号 + AT）</h2><p>载荷为 <strong>ASCII 文本</strong>（无 CRC），长度即 LoRa 包长；末尾 <span class="inline-code">\r</span>/<span class="inline-code">\n</span> 可有可无。</p><div class="code">&lt;8位十六进制设备编号&gt;&lt;AT指令&gt;</div><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>规则</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设备编号</td>
+<td>与 <span class="inline-code">AT+INFO?</span> 的 <span class="inline-code">NO</span> 相同，<strong>4 字节</strong>常写成 <strong>8 位 hex</strong>（如 <span class="inline-code">12345678</span>、<span class="inline-code">00000135</span>），大小写均可；与 <span class="inline-code">AT</span> 之间<strong>无空格、不带型号</strong></td>
+</tr>
+<tr>
+<td>寻址</td>
+<td>设备只处理编号匹配的帧；不匹配<strong>不应答</strong>（防同频广播）</td>
+</tr>
+<tr>
+<td>广播</td>
+<td>编号 <span class="inline-code">FFFFFFFF</span> + <strong>写指令</strong>（含 <span class="inline-code">=</span>、不含 <span class="inline-code">?</span>）时，在听设备都执行且<strong>不回包</strong>；查询 / <span class="inline-code">AT+REPORT</span> / <span class="inline-code">ATR</span> 丢弃</td>
+</tr>
+<tr>
+<td>单播应答</td>
+<td>把串口会打印的应答原样接在 <strong>8 位大写编号</strong>后发回；查询常为两段（<span class="inline-code">AT+KEY=&hellip;</span> 再 <span class="inline-code">OK</span>），中间 <span class="inline-code">\r\n</span>，同一空口包</td>
+</tr>
+<tr>
+<td>可用指令</td>
+<td>与串口命令态同能力集（见第一部分）；<span class="inline-code">aes</span>/<span class="inline-code">eui</span>/<span class="inline-code">ver</span> 不建议远程开放</td>
+</tr>
+<tr>
+<td>与 LoRaWAN</td>
+<td><strong>不用</strong>本帧寻址 DevEUI；LoRaWAN 入网后走 &sect;5.4</td>
+</tr>
+</tbody>
+</table></div><p><strong>改周期示例</strong>（设备 <span class="inline-code">12345678</span>，检测 30 s / 发送 60 s）：</p><div class="code">12345678AT+PER=30,60</div><p>其它示例：</p><div class="code">12345678AT+PER?
+00000135AT+LORA=,10
+00000135AT+IO=1
+FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-code">12345678OK</span>（查询则先回显再 <span class="inline-code">OK</span>）。</p></section>
+<section class="section" id="s-5.3-Modbus-配置设备编号--写读寄存器"><h2>5.3 Modbus 配置（设备编号 + 写/读寄存器）</h2><p>二进制，<strong>大端</strong>。CRC-16/<strong>XMODEM</strong>（多项式 <span class="inline-code">0x1021</span>，初值 <span class="inline-code">0</span>，XorOut <span class="inline-code">0</span>），覆盖 CRC 之前全部字节，与上行 TLV 同一套。设备地址 = 设备号 4 字节数值（<span class="inline-code">12345678</span> &rarr; <span class="inline-code">12 34 56 78</span>）；广播地址 <span class="inline-code">FF FF FF FF</span>。</p><h3 id="s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 <span class="inline-code">0x10</span>）</h3><div class="code">DevAddr(4) | 10 | 起始寄存器(2) | 寄存器个数(2) | 字节数(1) | 数据(个数&times;2) | CRC16(2)</div><p>字节数必须 = 寄存器个数 &times; 2。单播写成功回 11 字节：<span class="inline-code">DevAddr(4) | 10 | 起始(2) | 个数(2) | CRC16(2)</span>；广播写成功不回包。</p><p><strong>改 <span class="inline-code">per</span> 示例</strong>（设备 <span class="inline-code">12345678</span>，<span class="inline-code">PER</span> 占用寄存器 <strong><span class="inline-code">0x0001</span>～<span class="inline-code">0x0002</span></strong> 共 2 个；写成检测 <strong>0</strong>、发送 <strong>10</strong> &rarr; 数据 <span class="inline-code">0000 000A</span>）：</p><div class="code">12 34 56 78 10 00 01 00 02 04 00 00 00 0A 86 3F</div><p>对照拆解：</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>hex</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>设备编号</td>
+<td><span class="inline-code">12 34 56 78</span></td>
+<td><span class="inline-code">12345678</span></td>
+</tr>
+<tr>
+<td>功能码</td>
+<td><span class="inline-code">10</span></td>
+<td>写多个寄存器</td>
+</tr>
+<tr>
+<td>起始</td>
+<td><span class="inline-code">00 01</span></td>
+<td>寄存器 <span class="inline-code">0x0001</span></td>
+</tr>
+<tr>
+<td>个数</td>
+<td><span class="inline-code">00 02</span></td>
+<td>2 个寄存器（<span class="inline-code">0001</span>～<span class="inline-code">0002</span>）</td>
+</tr>
+<tr>
+<td>字节数</td>
+<td><span class="inline-code">04</span></td>
+<td>4 字节数据</td>
+</tr>
+<tr>
+<td>数据</td>
+<td><span class="inline-code">00 00 00 0A</span></td>
+<td>检测=0，发送=10（各 <strong>uint16</strong>）</td>
+</tr>
+<tr>
+<td>CRC</td>
+<td><span class="inline-code">86 3F</span></td>
+<td>XMODEM，初值 0</td>
+</tr>
+</tbody>
+</table></div><p>紧凑写法（与口头「设备编号 + 10 + &hellip;」一致，空格可省）：</p><div class="code">123456781000010002040000000A863F</div><div class="note">
+<p>平台/工具若另算 CRC，须与设备同算法（XMODEM init=0）；上表 CRC 按该算法现算。若工具给出其它 CRC（如 <span class="inline-code">7267</span>），先核对字节序与初值是否一致。</p>
+</div><h3 id="s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 <span class="inline-code">0x03</span>）</h3><p>仅单播，个数 1～32：</p><div class="code">DevAddr(4) | 03 | 起始(2) | 个数(2) | CRC16(2)</div><p>应答：<span class="inline-code">DevAddr(4) | 03 | 字节数(1) | 数据 | CRC16(2)</span>。</p><h3 id="s-5.3.3-key--寄存器写入须按组一次写齐">5.3.3 key &harr; 寄存器（写入须按组一次写齐）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>起始</th>
+<th>个数</th>
+<th>对应 AT</th>
+<th>数据编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x0001</span></td>
+<td><strong>2</strong></td>
+<td><span class="inline-code">AT+PER</span></td>
+<td>检测秒、发送秒，各 <strong>uint16</strong>（寄存器 <span class="inline-code">0001</span>、<span class="inline-code">0002</span>）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0005</span></td>
+<td>2</td>
+<td><span class="inline-code">AT+VAR</span></td>
+<td>int16 温度 0.01℃，int16 湿度 0.01%RH</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x000F</span></td>
+<td>1</td>
+<td><span class="inline-code">AT+LOG</span></td>
+<td>0 或 1</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0015</span></td>
+<td>1</td>
+<td><span class="inline-code">AT+ACK</span></td>
+<td>0 或 1</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0016</span></td>
+<td>2</td>
+<td><span class="inline-code">AT+BATT</span></td>
+<td>下限、上限，单位 0.1 V</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x00F0</span></td>
+<td>1</td>
+<td>控制</td>
+<td><span class="inline-code">0x0001</span> 立即上报；<span class="inline-code">0x0002</span> 重启（广播拒绝）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0100</span>～<span class="inline-code">0x0112</span></td>
+<td>见射频表</td>
+<td><span class="inline-code">AT+LORA</span> / <span class="inline-code">EXLORA</span> 各段</td>
+<td>32 位字段须高低寄存器同一次写入</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0300</span> 起</td>
+<td>&mdash;</td>
+<td>只读</td>
+<td>固件标识、电量格、射频就绪、最近缓存等</td>
+</tr>
+</tbody>
+</table></div><p><span class="inline-code">AT+IO</span> / <span class="inline-code">AT+PWR</span> / <span class="inline-code">AT+DOOR?</span> / <span class="inline-code">AT+INFO?</span> <strong>仅</strong>远程 AT 文本通路有，寄存器帧无对应项。</p><p>射频寄存器（可连续写一段）：</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>地址</th>
+<th>字段</th>
+<th>广播</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x0100</span></td>
+<td>网络号 net_id</td>
+<td>拒绝</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0101</span></td>
+<td>发送 SF</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0102</span></td>
+<td>接收 SF</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0103</span>～<span class="inline-code">0x0104</span></td>
+<td>发送频点 Hz，uint32</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0105</span>～<span class="inline-code">0x0106</span></td>
+<td>跳频步进 Hz，uint32</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0107</span></td>
+<td>信道个数</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0108</span></td>
+<td>跳频开关 0/1</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0109</span>～<span class="inline-code">0x010A</span></td>
+<td>接收频点 Hz，uint32</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x010B</span> / <span class="inline-code">0x010C</span></td>
+<td>发送/接收极性</td>
+<td>拒绝</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x010D</span></td>
+<td>前导长度</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x010E</span></td>
+<td>编码率 1～4</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x010F</span></td>
+<td>发射功率 dBm，int16</td>
+<td>拒绝</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0110</span>～<span class="inline-code">0x0111</span></td>
+<td>带宽 Hz，uint32</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0112</span></td>
+<td>接收轮询毫秒</td>
+<td>允许</td>
+</tr>
+</tbody>
+</table></div></section>
+<section class="section" id="s-5.4-LoRaWAN-下行--key--功能码"><h2>5.4 LoRaWAN 下行 &middot; key &harr; 功能码</h2><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>key</th>
@@ -1215,47 +1446,7 @@ AT+RAN?</div><ul>
 </tr>
 </tbody>
 </table></div><p>读：Type <span class="inline-code">0x01</span> + Value <span class="inline-code">0x81</span> &rarr; 回 <span class="inline-code">0x81</span> + Length + 按序 value（Length 自适应，只回已实现项）。</p><p>对时：下行 <span class="inline-code">0x02</span>+<span class="inline-code">0x00</span>+<span class="inline-code">YYMMDDhhmmss</span>（无 4G 的 JSON <span class="inline-code">tt</span>）。</p></section>
-<section class="section" id="s-5.3-私有协议寄存器--key--寄存器"><h2>5.3 私有协议寄存器 &middot; key &harr; 寄存器</h2><div class="table-wrap"><table>
-<thead>
-<tr>
-<th>key</th>
-<th>寄存器</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><span class="inline-code">per</span></td>
-<td><span class="inline-code">0x0001</span> 起 4 寄存器</td>
-<td>检测秒、上报秒（uint32 &times;2）</td>
-</tr>
-<tr>
-<td><span class="inline-code">ack</span></td>
-<td><span class="inline-code">0x0015</span></td>
-<td>写 0/1</td>
-</tr>
-<tr>
-<td><span class="inline-code">lora</span> / <span class="inline-code">exlora</span> 各段</td>
-<td><span class="inline-code">0x0100</span>~<span class="inline-code">0x0112</span></td>
-<td>网络号、SF、频点、跳频、极性、前导、编码率、带宽、轮询毫秒；极性/功率只读</td>
-</tr>
-<tr>
-<td>&mdash;（只读）</td>
-<td><span class="inline-code">0x0300</span> 起</td>
-<td>固件标识、电量格、射频就绪、最近缓存数据</td>
-</tr>
-</tbody>
-</table></div><p>写周期示例（设备 <span class="inline-code">00000135</span>，检测 60s / 上报 600s）：</p><div class="code">00 00 01 35 10 00 01 00 04 08 00 00 00 3C 00 00 02 58 35 E6</div></section>
-<section class="section" id="s-5.4-可选私有编号--AT文本帧"><h2>5.4 可选：私有「编号 + AT」文本帧</h2><p>适用：万维私有空口、网关把 AT 文本透传到节点（<strong>非</strong>标准 LoRaWAN 功能码）。与 4G JSON 无关。</p><div class="code">&lt;no&gt;AT+KEY=&lt;值&gt;</div><ul>
-<li><span class="inline-code">&lt;no&gt;</span>：纯设备编号，<strong>不带型号</strong>；私有 LoRa 为 <strong>4 字节</strong>（常写作 8 位十六进制，如 <span class="inline-code">00000135</span>），与 <span class="inline-code">AT+</span> 之间无空格。  </li>
-<li><strong>LoRaWAN 不用本帧寻址 DevEUI</strong>：DevEUI 为 <strong>8 字节</strong>（前缀 4B + 标号 4B），入网后走 &sect;5.2 功能码；本「编号+AT」仅私有空口。  </li>
-<li>设备只处理编号匹配的帧，不匹配<strong>不应答</strong>（防同频广播风暴）。  </li>
-<li>一帧一条；批量按「发&rarr;等应答&rarr;再发」，间隔参考 <span class="inline-code">lis</span>（默认 3 s；SF12 建议 5~8）。  </li>
-<li>例：<span class="inline-code">00000135AT+PER=30,50</span> &rarr; 应答 <span class="inline-code">00000135OK</span> </li>
-<li>私有空口部署时应配置 <span class="inline-code">AT+AES=&lt;32hex&gt;</span>（128-bit 密钥）；<span class="inline-code">aes</span>/<span class="inline-code">eui</span>/<span class="inline-code">ver</span> 不建议远程开放。  </li>
-<li>超长查询不宜走此空口；优先 LoRaWAN 功能码或寄存器。</li>
-</ul></section>
-<section class="section" id="s-5.5-监听窗口-lis"><h2>5.5 监听窗口 <span class="inline-code">lis</span></h2><p>每次上报后保持接收 <span class="inline-code">lis</span> 秒（默认 3）。<span class="inline-code">0</span>=不留窗。取值 1~30。</p></section>
+<section class="section" id="s-5.5-监听窗口-lis"><h2>5.5 监听窗口 <span class="inline-code">lis</span></h2><p>每次上报后保持接收 <span class="inline-code">lis</span> 秒（默认 3；部分产品开机窗更长）。<span class="inline-code">0</span>=不留窗。取值 1~30。远程 AT 与 Modbus 均在此窗口内下发。</p></section>
 <section class="section" id="附录"><h2 class="part-title">附录</h2></section>
 <section class="section" id="s-6-上报报文"><h2>6 上报报文</h2><div class="note">
 <p><strong>空口唯一载体 = 官网 TLV-V1 二进制帧；LoRa 设备侧不再发送 JSON 上报报文。</strong><br/>
@@ -2609,7 +2800,7 @@ FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inli
 <tr>
 <td>配置载体</td>
 <td>AT + TCP/UDP/MQTT JSON</td>
-<td>AT + LoRaWAN 下行 + 私有寄存器（+ 可选编号+AT）</td>
+<td>AT + <strong>远程 AT</strong> + <strong>Modbus</strong> + LoRaWAN 下行</td>
 </tr>
 <tr>
 <td>电量</td>
@@ -2701,6 +2892,11 @@ ATO</div></section>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.12-LoRa</strong></td>
+<td><strong>远程配置补齐两种私有下行</strong>：&sect;5.2 <strong>远程 AT</strong>（<span class="inline-code">设备编号+AT</span>，例 <span class="inline-code">12345678AT+PER=30,60</span>）；&sect;5.3 <strong>Modbus</strong>（<span class="inline-code">设备编号+10+起始+个数+字节数+数据+CRC</span>，<span class="inline-code">per</span>=<span class="inline-code">0001</span>～<span class="inline-code">0002</span> 两路 uint16，例检测0/发送10 &rarr; <span class="inline-code">0000 000A</span>）；去掉「编号+AT 可选」表述；寄存器与射频映射展开</td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.11-LoRa</strong></td>
