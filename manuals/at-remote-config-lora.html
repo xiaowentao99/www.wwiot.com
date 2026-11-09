@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 指令与远程配置指导手册 V4.10-LoRa。空口为 TLV-V1；§6 含 AT key 对照，§6.5 附官网 CRC 的 C / Java 参考代码。">
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 指令与远程配置指导手册 V4.11-LoRa。空口为 TLV-V1；支持 unit/ran 做模拟量量程标定。§6 含 AT key 对照，§6.5 附官网 CRC 的 C / Java 参考代码。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,18 @@
     <section class="hero">
       <span class="badge">LoRa · 空口 TLV</span>
       <h1>AT 与远程配置（LoRa）</h1>
-      <p>协议：LoRa / LoRaWAN · 版本 V4.10-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口 = TLV</strong>：设备侧上报唯一载体为官网 TLV-V1（V1.7.2）二进制帧，无 JSON 空口。本手册 §6 与独立 TLV 协议页同源，<strong>以 §6 加 AT key 对照为准</strong>；§6.5 含官网 CRC 参考代码（C / Java，init=<span class="inline-code">0xFFFF</span>）。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
-      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.10-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.11-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口 = TLV</strong>：设备侧上报唯一载体为官网 TLV-V1（V1.7.2）二进制帧，无 JSON 空口。V4.11 起 <strong>支持</strong> <span class="inline-code">unit</span> / <span class="inline-code">ran</span>（不是 ERR3）：同款 0–3V ADC 可用 <span class="inline-code">AT+UNIT=2</span> 与 <span class="inline-code">AT+RAN=0,3</span> 标成 0~3 MPa。§6 与独立 TLV 协议页同源，<strong>以 §6 加 AT key 对照为准</strong>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.11-LoRa</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <div class="note"><strong>空口 = TLV。</strong>本分册是 AT、远程配置与 TLV 的合一手册。<strong>§6 为权威口径</strong>（帧、Type、注册包/数据包，并带 AT key 对照）。§6.5 附官网 CRC 参考代码（C <span class="inline-code">get_crc16</span> / <span class="inline-code">cal_crc16</span>、Java <span class="inline-code">calcRJCRC16</span>，init=<span class="inline-code">0xFFFF</span>）。WW-27L 的 CRC 初值仍为 <span class="inline-code">0</span>，不可与官网代码混用。4G 分册仍为 JSON 上报。</div>
+    <div class="note"><strong>空口 = TLV。</strong>本分册是 AT、远程配置与 TLV 的合一手册。<strong>§6 为权威口径</strong>（帧、Type、注册包/数据包，并带 AT key 对照）。§6.5 附官网 CRC 参考代码（C / Java，init=<span class="inline-code">0xFFFF</span>）。<strong>V4.11：LoRa 支持 <span class="inline-code">unit</span> / <span class="inline-code">ran</span></strong>（压力、液位、拉力等模拟量，不是 ERR3）。同款 0–3V ADC、不同工程量程 SKU 用 <span class="inline-code">AT+UNIT=</span> 与 <span class="inline-code">AT+RAN=</span> 标定，例如 <span class="inline-code">AT+UNIT=2</span>、<span class="inline-code">AT+RAN=0,3</span> 表示 0~3 MPa。4G 分册仍为 JSON 上报。</div>
 
     <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27">3.2 门磁（SL210 / WW-27）</a></li><li><a href="#s-3.3-水浸SL200--WW-26与烟感WW-22L">3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置三种载体">第三部分 &middot; 远程配置（三种载体）</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-LoRaWAN-下行--key--功能码">5.2 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.3-私有协议寄存器--key--寄存器">5.3 私有协议寄存器 &middot; key &harr; 寄存器</a></li><li><a href="#s-5.4-可选私有编号--AT文本帧">5.4 可选：私有「编号 + AT」文本帧</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.10-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.11-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
 4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -53,7 +53,7 @@
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.10-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+<td><strong>V4.11-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -77,7 +77,7 @@
 </tr>
 <tr>
 <td>与 4G 差异</td>
-<td><strong>上报载体</strong>：4G=JSON；LoRa 空口=<strong>TLV</strong>（平台若要扁平字段由网关翻译）。无 <span class="inline-code">server</span>/<span class="inline-code">mqtt</span>/<span class="inline-code">apn</span>/<span class="inline-code">4G?</span>/<span class="inline-code">rst</span>/<span class="inline-code">unit</span>/<span class="inline-code">ran</span>；<span class="inline-code">thre</span> <strong>预留</strong>（ERR3）；射频走 <span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">ack</span>/<span class="inline-code">batt</span>；另见 <strong>AES / DevEUI / 编号字节</strong>（&sect;2.3）；无 <span class="inline-code">iccid</span>/<span class="inline-code">imei</span>/<span class="inline-code">csq</span></td>
+<td><strong>上报载体</strong>：4G=JSON；LoRa 空口=<strong>TLV</strong>（平台若要扁平字段由网关翻译）。无 <span class="inline-code">server</span>/<span class="inline-code">mqtt</span>/<span class="inline-code">apn</span>/<span class="inline-code">4G?</span>/<span class="inline-code">rst</span>；<strong>支持</strong> <span class="inline-code">unit</span>/<span class="inline-code">ran</span>（模拟量量程，枚举同 4G）；<span class="inline-code">thre</span> <strong>预留</strong>（ERR3）；射频走 <span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">ack</span>/<span class="inline-code">batt</span>；另见 <strong>AES / DevEUI / 编号字节</strong>（&sect;2.3）；无 <span class="inline-code">iccid</span>/<span class="inline-code">imei</span>/<span class="inline-code">csq</span></td>
 </tr>
 </tbody>
 </table></div><p><strong>看图找命令</strong>：&sect;1.2 总表 &rarr; &sect;3.0 按型号 &rarr; &sect;3.1~ 类型细则 &rarr; 第三部分三种配置载体 &rarr; <strong>&sect;6 上报报文</strong>（<strong>仅 TLV</strong>）。</p></section>
@@ -222,6 +222,27 @@
 <td>&mdash;</td>
 <td>&mdash;</td>
 <td><strong>预留&rarr;ERR3</strong></td>
+</tr>
+<tr>
+<td><strong>传感器 &middot; 压力/模拟量</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+UNIT=</span></td>
+<td><span class="inline-code">0</span> Pa / <span class="inline-code">1</span> kPa / <span class="inline-code">2</span> MPa / <span class="inline-code">3</span> bar / <span class="inline-code">4</span> cm / <span class="inline-code">5</span> m（同 4G）</td>
+<td><span class="inline-code">AT+UNIT=2</span>；默认视产品</td>
+<td>立即</td>
+<td>压力&middot;现行</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+RAN=</span></td>
+<td><span class="inline-code">起始,满量程</span>，单位随 <span class="inline-code">unit</span>；把 ADC 满量程映射到工程量程（量产标定）</td>
+<td><span class="inline-code">AT+RAN=0,3</span>（+<span class="inline-code">UNIT=2</span> &rarr; 0~3 MPa）</td>
+<td>立即</td>
+<td>压力&middot;现行</td>
 </tr>
 <tr>
 <td><strong>硬件层</strong></td>
@@ -379,7 +400,8 @@
 </tr>
 </tbody>
 </table></div><div class="note">
-<p><strong>4G 专属 key（LoRa 回 ERR3）</strong>：<span class="inline-code">unit</span> / <span class="inline-code">ran</span> / <span class="inline-code">thre</span>（预留）/ <span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">rst</span> / <span class="inline-code">tt</span>（JSON）。详见 &sect;4。</p>
+<p><strong>模拟量量产</strong>：同款 0&ndash;3V ADC 前端、不同工程量程 SKU（如 1/2/3 MPa）用 <span class="inline-code">AT+UNIT=</span> + <span class="inline-code">AT+RAN=</span> 标定；例 <span class="inline-code">AT+UNIT=2</span> + <span class="inline-code">AT+RAN=0,3</span> &rarr; 0~3 MPa。<br/>
+<strong>4G 专属 key（LoRa 回 ERR3）</strong>：<span class="inline-code">thre</span>（预留）/ <span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">rst</span> / <span class="inline-code">tt</span>（JSON）。详见 &sect;4。</p>
 </div></section>
 <section class="section" id="第一部分--通用型"><h2 class="part-title">第一部分 &middot; 通用型</h2></section>
 <section class="section" id="s-2.1-通用层per--var--cal--tun"><h2>2.1 通用层（per / var / cal / tun）</h2><div class="table-wrap"><table>
@@ -933,51 +955,51 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 </tr>
 <tr>
 <td><strong>WW-70L / LW / HW</strong></td>
-<td>22</td>
+<td>24</td>
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>压力；<strong>无</strong> <span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span>（规范：走私有寄存器）</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>压力；<span class="inline-code">unit</span>/<span class="inline-code">ran</span> 标定 ADC&rarr;工程量程（量产 1/2/3 MPa 等）</td>
 </tr>
 <tr>
 <td><strong>WW-71L-P1 / LW / HW</strong></td>
-<td>23</td>
+<td>25</td>
 <td>同上 + <span class="inline-code">AT+TUN</span></td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>温压一体（压力量程走私有寄存器）</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>温压一体；压力量程用 <span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span>（同压力类）</td>
 </tr>
 <tr>
 <td><strong>WW-72L / LW / HW</strong></td>
-<td>22</td>
+<td>24</td>
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>迷你压力；无 4G</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>迷你压力；无 4G；量程同 <span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span></td>
 </tr>
 <tr>
 <td><strong>WW-73L / LW / HW</strong></td>
-<td>22</td>
+<td>24</td>
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>液位</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>液位；量程/单位同压力类</td>
 </tr>
 <tr>
 <td><strong>WW-74L</strong></td>
-<td>22</td>
+<td>24</td>
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>拉力（仅 LoRa）</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>拉力（仅 LoRa）；量程/单位同压力类</td>
 </tr>
 <tr>
 <td><strong>WW-78L / LW / HW</strong></td>
-<td>22</td>
+<td>24</td>
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
-<td>&mdash;</td>
-<td>拉力</td>
+<td><span class="inline-code">AT+UNIT</span>, <span class="inline-code">AT+RAN</span></td>
+<td>拉力；量程/单位同压力类</td>
 </tr>
 <tr>
 <td><strong>WW-60L</strong></td>
@@ -1069,7 +1091,15 @@ AT+VAR=1</div></section>
 烟感：<span class="inline-code">per, lora, exlora, ack, batt, ver, log</span>（更精简）</p><div class="code">AT+PER=60,3600
 AT+VAR=1          # 水浸：状态变化即报</div></section>
 <section class="section" id="s-3.4-其他-L-族压力--运动--采集器--控制"><h2>3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</h2><ul>
-<li><strong>压力类</strong>：规范明确 <strong>不支持</strong> <span class="inline-code">unit</span>/<span class="inline-code">ran</span>（旧压力机走私有寄存器）；AT 侧勿按 4G 分册下发这两项。  </li>
+<li><strong>压力 / 液位 / 拉力（模拟量）</strong>：<strong>支持</strong> <span class="inline-code">unit</span> / <span class="inline-code">ran</span>（与 4G 同枚举与段序）。  </li>
+<li><span class="inline-code">AT+UNIT=</span>：<span class="inline-code">0</span> Pa / <span class="inline-code">1</span> kPa / <span class="inline-code">2</span> MPa / <span class="inline-code">3</span> bar / <span class="inline-code">4</span> cm / <span class="inline-code">5</span> m  </li>
+<li><span class="inline-code">AT+RAN=</span>：<span class="inline-code">起始,满量程</span>，单位随 <span class="inline-code">unit</span> </li>
+<li><strong>量产场景</strong>：同款 0&ndash;3V ADC 前端，SKU 量程不同（如 1 / 2 / 3 MPa）时，用 <span class="inline-code">AT+RAN=</span>（+ <span class="inline-code">AT+UNIT=</span>）把 ADC 满量程映射到工程量程；例 <span class="inline-code">AT+UNIT=2</span> + <span class="inline-code">AT+RAN=0,3</span> &rarr; 0~3 MPa。  </li>
+<li>旧压力机若仍保留私有寄存器量程项，可作补充通道；<strong>以 <span class="inline-code">ATH</span> 列出的 <span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span> 为准</strong>，勿与「不支持 unit/ran」旧说法并用。  </li>
+</ul><div class="code">AT+UNIT=2
+AT+RAN=0,3
+AT+UNIT?
+AT+RAN?</div><ul>
 <li><strong>运动类</strong>：<span class="inline-code">acc</span> 预留（ERR3）。  </li>
 <li><strong>采集器</strong>：<span class="inline-code">pwr</span> 属硬件层。  </li>
 <li><strong>控制类</strong>：<span class="inline-code">io</span>（及固件若实现的 <span class="inline-code">omd</span>/<span class="inline-code">pls</span>）以 <span class="inline-code">ATH</span> 为准。</li>
@@ -1091,11 +1121,6 @@ AT+VAR=1          # 水浸：状态变化即报</div></section>
 <tr>
 <td><span class="inline-code">rst</span> <span class="inline-code">tt</span></td>
 <td>4G 专属（对时改走 LoRaWAN 下行时间功能码）</td>
-<td><span class="inline-code">ERR3</span></td>
-</tr>
-<tr>
-<td><span class="inline-code">unit</span> <span class="inline-code">ran</span></td>
-<td>压力类 LoRa 不支持（走私有寄存器）</td>
 <td><span class="inline-code">ERR3</span></td>
 </tr>
 <tr>
@@ -2463,6 +2488,11 @@ FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inli
 <td></td>
 </tr>
 <tr>
+<td><span class="inline-code">unit</span> / <span class="inline-code">ran</span></td>
+<td><strong>无独立上行 Type</strong></td>
+<td>配置走 AT / 远程；测量带单位时可用既有 <span class="inline-code">0x38</span> 单位字节（<strong>勿发明新 Type</strong>）</td>
+</tr>
+<tr>
 <td><span class="inline-code">v</span> <span class="inline-code">i</span> <span class="inline-code">w</span></td>
 <td><span class="inline-code">0x1A</span> / <span class="inline-code">0x1B</span></td>
 <td></td>
@@ -2572,9 +2602,9 @@ FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inli
 <td><span class="inline-code">door</span> / <span class="inline-code">io</span> / <span class="inline-code">pwr</span></td>
 </tr>
 <tr>
-<td>压力</td>
+<td>压力/模拟量</td>
 <td><span class="inline-code">unit</span> / <span class="inline-code">ran</span></td>
-<td>不支持（走私有寄存器）</td>
+<td><strong>支持</strong>（同 4G 枚举；<span class="inline-code">ran</span> 用于 ADC&rarr;工程量程量产标定）</td>
 </tr>
 <tr>
 <td>配置载体</td>
@@ -2623,6 +2653,11 @@ FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inli
 <td>能力集外 &rarr; ERR3</td>
 </tr>
 <tr>
+<td>明确（文档）</td>
+<td>LoRa <strong>支持</strong> <span class="inline-code">unit</span>/<span class="inline-code">ran</span>（压力/液位/拉力等模拟量）；<span class="inline-code">ran</span> 用于 ADC 满量程&rarr;工程量程量产标定（例 0&ndash;3V&rarr;1/2/3 MPa）</td>
+<td>与用户口径对齐；<strong>非</strong> ERR3</td>
+</tr>
+<tr>
 <td>明确</td>
 <td><span class="inline-code">door</span>/<span class="inline-code">io</span>/<span class="inline-code">pwr</span> 归硬件层</td>
 <td>与现状一致</td>
@@ -2652,6 +2687,8 @@ AT+AES?           # 私有加密；ATH 有则测
 AT+EUI?           # LoRaWAN DevEUI；或 AT+DEVEUI?
 AT+LIS?
 AT+DOOR?          # 仅门磁
+AT+UNIT?          # 压力/液位/拉力等模拟量
+AT+RAN?           # 同上
 AT+INFO?
 AT+REPORT
 ATO</div></section>
@@ -2664,6 +2701,11 @@ ATO</div></section>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.11-LoRa</strong></td>
+<td><strong>LoRa 支持 <span class="inline-code">unit</span>/<span class="inline-code">ran</span></strong>（非 ERR3）：枚举同 4G；<span class="inline-code">ran</span> 用于模拟量 ADC 满量程&rarr;工程量程量产标定（例同款 0&ndash;3V ADC &rarr; 1/2/3 MPa）；&sect;1.2 / &sect;3.0.3 / &sect;3.4 / &sect;4 / &sect;6.6.5 / &sect;7~&sect;9 同步；空口仍用既有 Type（<span class="inline-code">0x38</span> 等），勿发明新 Type</td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.10-LoRa</strong></td>
