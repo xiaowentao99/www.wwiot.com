@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.14-LoRa。门磁与水浸无 VAR/CAL/ZERO；WW-21L 人体感应需要这些指令；新增 WW-27L-D 双门磁。">
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.15-LoRa。Modbus 寄存器从 0001 起连续编排，射频从 0010 起，只读从 0023 起。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,18 @@
     <section class="hero">
       <span class="badge">LoRa · 空口 TLV</span>
       <h1>AT 与远程配置（LoRa）</h1>
-      <p>协议：LoRa / LoRaWAN · 版本 V4.14-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>。V4.14 型号能力：<strong>WW-26L 水浸、WW-27L 门磁没有</strong> <span class="inline-code">AT+VAR</span> / <span class="inline-code">AT+CAL</span> / <span class="inline-code">AT+ZERO</span>（下发回 ERR3）。<strong>WW-21L 人体感应</strong>带光照与温湿度，<strong>需要</strong> <span class="inline-code">AT+VAR</span> / <span class="inline-code">CAL</span> / <span class="inline-code">ZERO</span> / <span class="inline-code">TUN</span>。新增 <strong>WW-27L-D 双门磁</strong>，AT 与 WW-27L 相同，<span class="inline-code">AT+DOOR?</span> 回两路。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
-      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.14-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.15-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>。V4.15 起 Modbus 寄存器<strong>连续编号、中间不留空号</strong>：配置区 <span class="inline-code">0001</span>–<span class="inline-code">000A</span>（PER、VAR、CAL、LOG、ACK、BATT），衔接区 <span class="inline-code">000B</span>–<span class="inline-code">000F</span>，射频 <span class="inline-code">0010</span>–<span class="inline-code">0022</span>，只读从 <span class="inline-code">0023</span> 起。旧断号地址作废。写 PER 仍是起始 <span class="inline-code">0001</span>、个数 2，CRC <span class="inline-code">86 3F</span>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.15-LoRa</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <div class="note"><strong>V4.14 · 型号能力。</strong><strong>WW-26L（水浸）与 WW-27L（门磁）没有</strong> <span class="inline-code">AT+VAR</span>、<span class="inline-code">AT+CAL</span>、<span class="inline-code">AT+ZERO</span>，下发回 ERR3。<strong>WW-21L（人体感应）</strong>带光照、温度、湿度，<strong>需要</strong> <span class="inline-code">AT+VAR</span> / <span class="inline-code">CAL</span> / <span class="inline-code">ZERO</span> / <span class="inline-code">TUN</span>。<strong>WW-27L-D</strong> 为双门磁，AT 集合与 WW-27L 相同，<span class="inline-code">AT+DOOR?</span> 回两路，同样没有 VAR/CAL/ZERO。矩阵见 §3.0.2、§3.0.3，示例见 §3.2、§3.3。</div>
+    <div class="note"><strong>V4.15 · Modbus 寄存器连续重排。</strong>配置区 <span class="inline-code">0001</span>–<span class="inline-code">0002</span> PER，<span class="inline-code">0003</span>–<span class="inline-code">0004</span> VAR，<span class="inline-code">0005</span>–<span class="inline-code">0006</span> CAL，<span class="inline-code">0007</span> LOG，<span class="inline-code">0008</span> ACK，<span class="inline-code">0009</span>–<span class="inline-code">000A</span> BATT（0.1 V）。衔接区 <span class="inline-code">000B</span> 控制、<span class="inline-code">000C</span> UNIT、<span class="inline-code">000D</span>–<span class="inline-code">000E</span> RAN、<span class="inline-code">000F</span> 保留。射频从 <span class="inline-code">0010</span> 连续到 <span class="inline-code">0022</span>；只读从 <span class="inline-code">0023</span> 起。旧地址 <span class="inline-code">000F</span> / <span class="inline-code">0015</span> / <span class="inline-code">00F0</span> / <span class="inline-code">0100</span> 等断号作废。PER 写示例不变：<span class="inline-code">12 34 56 78 10 00 01 00 02 04 00 00 00 0A 86 3F</span>。全文见 §5.3.3。</div>
 
-    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27L与双门磁WW-27L-D">3.2 门磁（SL210 / WW-27L）与双门磁（WW-27L-D）</a></li><li><a href="#s-3.3-水浸SL200--WW-26L与烟感WW-22L">3.3 水浸（SL200 / WW-26L）与烟感（WW-22L）</a></li><li><a href="#s-3.3.1-人体感应WW-21L">3.3.1 人体感应（WW-21L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器写入须按组一次写齐">5.3.3 key &harr; 寄存器（写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
+    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27L与双门磁WW-27L-D">3.2 门磁（SL210 / WW-27L）与双门磁（WW-27L-D）</a></li><li><a href="#s-3.3-水浸SL200--WW-26L与烟感WW-22L">3.3 水浸（SL200 / WW-26L）与烟感（WW-22L）</a></li><li><a href="#s-3.3.1-人体感应WW-21L">3.3.1 人体感应（WW-21L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器连续编号写入须按组一次写齐">5.3.3 key &harr; 寄存器（连续编号；写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.14-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.15-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
 4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -53,7 +53,7 @@
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.14-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+<td><strong>V4.15-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -1282,66 +1282,104 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 </tbody>
 </table></div><p>紧凑写法（与口头「设备编号 + 10 + &hellip;」一致，空格可省）：</p><div class="code">123456781000010002040000000A863F</div><div class="note">
 <p>平台/工具若另算 CRC，须与设备同算法（XMODEM init=0）；上表 CRC 按该算法现算。若工具给出其它 CRC（如 <span class="inline-code">7267</span>），先核对字节序与初值是否一致。</p>
-</div><h3 id="s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 <span class="inline-code">0x03</span>）</h3><p>仅单播，个数 1～32：</p><div class="code">DevAddr(4) | 03 | 起始(2) | 个数(2) | CRC16(2)</div><p>应答：<span class="inline-code">DevAddr(4) | 03 | 字节数(1) | 数据 | CRC16(2)</span>。</p><h3 id="s-5.3.3-key--寄存器写入须按组一次写齐">5.3.3 key &harr; 寄存器（写入须按组一次写齐）</h3><div class="table-wrap"><table>
+</div><h3 id="s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 <span class="inline-code">0x03</span>）</h3><p>仅单播，个数 1～32：</p><div class="code">DevAddr(4) | 03 | 起始(2) | 个数(2) | CRC16(2)</div><p>应答：<span class="inline-code">DevAddr(4) | 03 | 字节数(1) | 数据 | CRC16(2)</span>。</p><h3 id="s-5.3.3-key--寄存器连续编号写入须按组一次写齐">5.3.3 key &harr; 寄存器（<strong>连续编号</strong>；写入须按组一次写齐）</h3><div class="note">
+<p><strong>规则</strong>：配置区 <strong><span class="inline-code">0001</span>～<span class="inline-code">000A</span> 按序排满、中间不留空号</strong>；射频从 <strong><span class="inline-code">0010</span></strong> 起按序排满、中间不留空号。旧地址（如 <span class="inline-code">0005</span>/<span class="inline-code">000F</span>/<span class="inline-code">0015</span>/<span class="inline-code">00F0</span>/<span class="inline-code">0100</span>&hellip;）作废，以本表为准。</p>
+</div><h4 id="配置区-0001000A连续">配置区 <span class="inline-code">0001</span>～<span class="inline-code">000A</span>（连续）</h4><div class="table-wrap"><table>
 <thead>
 <tr>
-<th>起始</th>
-<th>个数</th>
-<th>对应 AT</th>
-<th>数据编码</th>
+<th>地址</th>
+<th>对应 AT / 项</th>
+<th>编码</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><span class="inline-code">0x0001</span></td>
-<td><strong>2</strong></td>
-<td><span class="inline-code">AT+PER</span></td>
-<td>检测秒、发送秒，各 <strong>uint16</strong>（寄存器 <span class="inline-code">0001</span>、<span class="inline-code">0002</span>）</td>
+<td><span class="inline-code">0001</span></td>
+<td><span class="inline-code">AT+PER</span> 检测秒</td>
+<td>uint16</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0005</span></td>
-<td>2</td>
-<td><span class="inline-code">AT+VAR</span></td>
-<td>int16 温度 0.01℃，int16 湿度 0.01%RH</td>
+<td><span class="inline-code">0002</span></td>
+<td><span class="inline-code">AT+PER</span> 发送秒</td>
+<td>uint16</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x000F</span></td>
-<td>1</td>
+<td><span class="inline-code">0003</span></td>
+<td><span class="inline-code">AT+VAR</span> 温度变化量</td>
+<td>int16，0.01℃</td>
+</tr>
+<tr>
+<td><span class="inline-code">0004</span></td>
+<td><span class="inline-code">AT+VAR</span> 湿度变化量</td>
+<td>int16，0.01%RH</td>
+</tr>
+<tr>
+<td><span class="inline-code">0005</span></td>
+<td><span class="inline-code">AT+CAL</span> 温度校准</td>
+<td>int16（对齐产品；无该能力则忽略/ERR）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0006</span></td>
+<td><span class="inline-code">AT+CAL</span> 湿度校准</td>
+<td>int16</td>
+</tr>
+<tr>
+<td><span class="inline-code">0007</span></td>
 <td><span class="inline-code">AT+LOG</span></td>
-<td>0 或 1</td>
+<td>uint16，<span class="inline-code">0</span>/<span class="inline-code">1</span></td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0015</span></td>
-<td>1</td>
+<td><span class="inline-code">0008</span></td>
 <td><span class="inline-code">AT+ACK</span></td>
-<td>0 或 1</td>
+<td>uint16，<span class="inline-code">0</span>/<span class="inline-code">1</span></td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0016</span></td>
-<td>2</td>
-<td><span class="inline-code">AT+BATT</span></td>
-<td>下限、上限，单位 0.1 V</td>
+<td><span class="inline-code">0009</span></td>
+<td><span class="inline-code">AT+BATT</span> 下限</td>
+<td>uint16，单位 <strong>0.1 V</strong></td>
 </tr>
 <tr>
-<td><span class="inline-code">0x00F0</span></td>
-<td>1</td>
+<td><span class="inline-code">000A</span></td>
+<td><span class="inline-code">AT+BATT</span> 上限</td>
+<td>uint16，单位 <strong>0.1 V</strong></td>
+</tr>
+</tbody>
+</table></div><p>写 <span class="inline-code">per</span> 仍为起始 <span class="inline-code">0001</span>、个数 <span class="inline-code">2</span>（见 &sect;5.3.1 示例）。写 <span class="inline-code">var</span>：起始 <span class="inline-code">0003</span>、个数 <span class="inline-code">2</span>；写 <span class="inline-code">batt</span>：起始 <span class="inline-code">0009</span>、个数 <span class="inline-code">2</span>。</p><h4 id="衔接区-000B000F连续紧接配置区">衔接区 <span class="inline-code">000B</span>～<span class="inline-code">000F</span>（连续，紧接配置区）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>地址</th>
+<th>项</th>
+<th>编码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">000B</span></td>
 <td>控制</td>
 <td><span class="inline-code">0x0001</span> 立即上报；<span class="inline-code">0x0002</span> 重启（广播拒绝）</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0100</span>～<span class="inline-code">0x0112</span></td>
-<td>见射频表</td>
-<td><span class="inline-code">AT+LORA</span> / <span class="inline-code">EXLORA</span> 各段</td>
-<td>32 位字段须高低寄存器同一次写入</td>
+<td><span class="inline-code">000C</span></td>
+<td><span class="inline-code">AT+UNIT</span>（模拟量机）</td>
+<td>uint16，单位枚举（无则保留）</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0300</span> 起</td>
-<td>&mdash;</td>
-<td>只读</td>
-<td>固件标识、电量格、射频就绪、最近缓存等</td>
+<td><span class="inline-code">000D</span></td>
+<td><span class="inline-code">AT+RAN</span> 起始</td>
+<td>int16 / 按产品</td>
+</tr>
+<tr>
+<td><span class="inline-code">000E</span></td>
+<td><span class="inline-code">AT+RAN</span> 满量程</td>
+<td>int16 / 按产品</td>
+</tr>
+<tr>
+<td><span class="inline-code">000F</span></td>
+<td>保留</td>
+<td>写 0；占位保持连续</td>
 </tr>
 </tbody>
-</table></div><p><span class="inline-code">AT+IO</span> / <span class="inline-code">AT+PWR</span> / <span class="inline-code">AT+DOOR?</span> / <span class="inline-code">AT+INFO?</span> <strong>仅</strong>远程 AT 文本通路有，寄存器帧无对应项。</p><p>射频寄存器（可连续写一段）：</p><div class="table-wrap"><table>
+</table></div><p>门磁/水浸等无 <span class="inline-code">VAR</span>/<span class="inline-code">CAL</span>/<span class="inline-code">ZERO</span>/<span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span> 的型号：对应寄存器<strong>可不实现</strong>或写无效；以 <span class="inline-code">ATH</span> 为准。</p><h4 id="射频区从-0010-起连续对应-ATLORA--EXLORA">射频区从 <span class="inline-code">0010</span> 起（连续，对应 <span class="inline-code">AT+LORA</span> / <span class="inline-code">EXLORA</span>）</h4><p>32 位字段须<strong>高低两个寄存器同一次写入</strong>。</p><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>地址</th>
@@ -1351,77 +1389,115 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 </thead>
 <tbody>
 <tr>
-<td><span class="inline-code">0x0100</span></td>
+<td><span class="inline-code">0010</span></td>
 <td>网络号 net_id</td>
 <td>拒绝</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0101</span></td>
+<td><span class="inline-code">0011</span></td>
 <td>发送 SF</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0102</span></td>
+<td><span class="inline-code">0012</span></td>
 <td>接收 SF</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0103</span>～<span class="inline-code">0x0104</span></td>
+<td><span class="inline-code">0013</span>～<span class="inline-code">0014</span></td>
 <td>发送频点 Hz，uint32</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0105</span>～<span class="inline-code">0x0106</span></td>
+<td><span class="inline-code">0015</span>～<span class="inline-code">0016</span></td>
 <td>跳频步进 Hz，uint32</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0107</span></td>
+<td><span class="inline-code">0017</span></td>
 <td>信道个数</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0108</span></td>
+<td><span class="inline-code">0018</span></td>
 <td>跳频开关 0/1</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0109</span>～<span class="inline-code">0x010A</span></td>
+<td><span class="inline-code">0019</span>～<span class="inline-code">001A</span></td>
 <td>接收频点 Hz，uint32</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x010B</span> / <span class="inline-code">0x010C</span></td>
-<td>发送/接收极性</td>
+<td><span class="inline-code">001B</span></td>
+<td>发送极性 iq_tx</td>
 <td>拒绝</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x010D</span></td>
+<td><span class="inline-code">001C</span></td>
+<td>接收极性 iq_rx</td>
+<td>拒绝</td>
+</tr>
+<tr>
+<td><span class="inline-code">001D</span></td>
 <td>前导长度</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x010E</span></td>
+<td><span class="inline-code">001E</span></td>
 <td>编码率 1～4</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x010F</span></td>
+<td><span class="inline-code">001F</span></td>
 <td>发射功率 dBm，int16</td>
 <td>拒绝</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0110</span>～<span class="inline-code">0x0111</span></td>
+<td><span class="inline-code">0020</span>～<span class="inline-code">0021</span></td>
 <td>带宽 Hz，uint32</td>
 <td>允许</td>
 </tr>
 <tr>
-<td><span class="inline-code">0x0112</span></td>
+<td><span class="inline-code">0022</span></td>
 <td>接收轮询毫秒</td>
 <td>允许</td>
 </tr>
 </tbody>
-</table></div></section>
+</table></div><h4 id="只读区从-0023-起连续紧接射频">只读区从 <span class="inline-code">0023</span> 起（连续，紧接射频）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>地址</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0023</span>～<span class="inline-code">0024</span></td>
+<td>固件标识（固定示意值以产品为准）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0025</span></td>
+<td>电量格</td>
+</tr>
+<tr>
+<td><span class="inline-code">0026</span></td>
+<td>射频是否就绪</td>
+</tr>
+<tr>
+<td><span class="inline-code">0027</span>～<span class="inline-code">0028</span></td>
+<td>最近压力缓存（0.01 kPa；无则 0）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0029</span></td>
+<td>最近温度 0.01℃</td>
+</tr>
+<tr>
+<td><span class="inline-code">002A</span></td>
+<td>保留 / 0</td>
+</tr>
+</tbody>
+</table></div><p><span class="inline-code">AT+IO</span> / <span class="inline-code">AT+PWR</span> / <span class="inline-code">AT+DOOR?</span> / <span class="inline-code">AT+INFO?</span> <strong>仅</strong>远程 AT 文本通路有，寄存器帧无对应项。</p></section>
 <section class="section" id="s-5.4-LoRaWAN-下行--key--功能码"><h2>5.4 LoRaWAN 下行 &middot; key &harr; 功能码</h2><div class="table-wrap"><table>
 <thead>
 <tr>
@@ -2992,6 +3068,11 @@ ATO</div></section>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.15-LoRa</strong></td>
+<td><strong>Modbus 寄存器连续重排</strong>：配置区 <span class="inline-code">0001</span>～<span class="inline-code">000A</span>（PER/VAR/CAL/LOG/ACK/BATT 顺序占满）；<span class="inline-code">000B</span>～<span class="inline-code">000F</span> 控制/UNIT/RAN/保留；<strong>射频从 <span class="inline-code">0010</span> 起连续至 <span class="inline-code">0022</span></strong>；只读从 <span class="inline-code">0023</span> 起；废除旧 <span class="inline-code">000F</span>/<span class="inline-code">0015</span>/<span class="inline-code">00F0</span>/<span class="inline-code">0100</span>&hellip; 断号</td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.14-LoRa</strong></td>
