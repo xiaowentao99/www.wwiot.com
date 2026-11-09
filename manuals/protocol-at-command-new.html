@@ -1021,7 +1021,7 @@ AT+REPORT
       </table></div>
       <h3>13.5 远程配置（4G）</h3>
       <p>设备 TCP 上报成功后保持连接监听 5s，平台可下发一包 JSON（建议 ≤512B）完成参数配置与对时。含配置字段 → 写入 RAM 并落盘 UserCfg；含 "tt":&lt;unix秒&gt; → 校准设备时间。</p>
-      <div class="note">该部分内容已独立为 <a href="4g-remote-config.html">4G 远程配置</a> 文档，包含完整 JSON 字段表、配置示例与生效规则，请参见该文档。</div>
+      <div class="note">4G 远程配置的完整说明见 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>（V4.5-4G，含通用 key、按型号指令与 JSON 下发）。早期简版仍保留在 <a href="index.html#4g-remote-config.html" target="_top">4G 远程配置（简版）</a>。LoRa 空口为 TLV，见 <a href="index.html#at-remote-config-lora.html" target="_top">《AT 与远程配置（LoRa）》</a>。</div>
       <h3>13.6 实现注意</h3>
       <ol>
         <li>BLE 与 USB 调试共 UART：BLE 保持连接时，USB 串口可能被 CH9141 抢答。</li>

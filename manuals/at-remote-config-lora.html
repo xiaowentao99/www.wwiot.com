@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 指令与远程配置指导手册 V4.9-LoRa。空口上报唯一载体为 TLV-V1，无 JSON 上报。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="_doc.css">
+
+  <style>
+    .toc ol { columns: 1; }
+    .toc ol ol { margin: 2px 0 10px; padding-left: 18px; font-size: 14px; }
+    .toc li { margin: 3px 0; }
+    .table-wrap th, .table-wrap td { min-width: 6.5em; overflow-wrap: anywhere; }
+    .section h2.part-title {
+      background: #eff6ff; border: 1px solid #dbeafe; border-radius: 8px; padding: 10px 14px;
+    }
+    .section a, .note a { color: var(--primary); text-decoration: none; }
+    .section a:hover, .note a:hover { text-decoration: underline; }
+    .section ul, .section ol { margin: 8px 0 14px; padding-left: 1.35em; }
+    .section li { margin: 3px 0; }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="container breadcrumb"><a href="../index.html">首页</a><span>›</span><a href="index.html">文档中心</a><span>›</span><span>AT 与远程配置（LoRa）</span><a class="download" href="#" onclick="window.print();return false">下载 PDF</a></div></header>
+  <main class="container">
+    <section class="hero">
+      <span class="badge">LoRa · 空口 TLV</span>
+      <h1>AT 与远程配置（LoRa）</h1>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.9-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口 = TLV</strong>：设备侧上报唯一载体为官网 TLV-V1（V1.7.2）二进制帧，无 JSON 空口；平台若要扁平字段，由网关翻译。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.9-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+    </section>
+
+    <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
+
+    <div class="note"><strong>空口 = TLV。</strong>本分册 LoRa 设备不再发送 JSON 上报。帧结构、Type 与注册包 / 数据包设计见 §6；旧 JSON key 只在 §6.6.5 作为迁移对照。4G 分册仍为 JSON 上报。</div>
+
+    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27">3.2 门磁（SL210 / WW-27）</a></li><li><a href="#s-3.3-水浸SL200--WW-26与烟感WW-22L">3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置三种载体">第三部分 &middot; 远程配置（三种载体）</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-LoRaWAN-下行--key--功能码">5.2 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.3-私有协议寄存器--key--寄存器">5.3 私有协议寄存器 &middot; key &harr; 寄存器</a></li><li><a href="#s-5.4-可选私有编号--AT文本帧">5.4 可选：私有「编号 + AT」文本帧</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
+
+    <section class="section" id="overview"><h2>分册说明</h2><div class="note">
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.9-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
+</div><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>版本</td>
+<td><strong>V4.9-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+</tr>
+<tr>
+<td>依据</td>
+<td>《AT配置统一规范-LoRa》（2026-11-02）、各产品手册；空口上报对齐官网 <strong>TLV-V1（V1.7.2）</strong>（<strong>无 JSON 空口</strong>）；4G 分册仍为 JSON 上报</td>
+</tr>
+<tr>
+<td>适用</td>
+<td>万维 <strong>LoRa / LoRaWAN</strong> 系列：温湿度（WW-10/11/12L 等）、测温杆（WW-13L）、门磁（WW-SL210-LF / WW-27L）、水浸（WW-SL200-LF / WW-26）、烟感（WW-22L）及官网 L / LW / HW 族</td>
+</tr>
+<tr>
+<td>结构</td>
+<td><strong>第一部分 通用型</strong>：命令格式 + 通用/硬件/射频/系统 key<br/><strong>第二部分 传感器</strong>：&sect;3.0 型号速查 + 按类型矩阵<br/><strong>第三部分 远程配置</strong>：本地 AT &middot; LoRaWAN 下行 &middot; 私有寄存器（+ 可选「编号+AT」文本帧）<br/><strong>附录</strong>：&sect;6 上报报文（<strong>空口唯一 = TLV-V1</strong>；&sect;6.6 注册包/数据包设计）&middot; &sect;7 与 4G 差异 &middot; &sect;8 改动清单 &middot; &sect;9 自检 &middot; &sect;10 修订记录</td>
+</tr>
+<tr>
+<td>原则</td>
+<td>key 全小写 &le;4 字符；AT 侧大写同串；多段英文逗号；<strong>注册配置快照语义与 AT 同口径</strong>（空口用 TLV Type 承载，见 &sect;6.6）；不在能力集内回 <strong>ERR3</strong>（远程下发忽略）</td>
+</tr>
+<tr>
+<td>速查</td>
+<td>全部指令见 <strong>&sect;1.2</strong>；按型号查 AT 见 <strong>&sect;3.0.3</strong>；空口帧/Type 见 <strong>&sect;6.1～&sect;6.5</strong>；<strong>注册包/数据包设计</strong>见 <strong>&sect;6.6</strong>；按型号 Type 矩阵见 <strong>&sect;6.6.3</strong>；旧 JSON key&rarr;Type 迁移见 <strong>&sect;6.6.5</strong>；<strong>AES / DevEUI / 编号</strong>见 &sect;2.3；4G 见 <strong>4G 分册</strong></td>
+</tr>
+<tr>
+<td>与 4G 差异</td>
+<td><strong>上报载体</strong>：4G=JSON；LoRa 空口=<strong>TLV</strong>（平台若要扁平字段由网关翻译）。无 <span class="inline-code">server</span>/<span class="inline-code">mqtt</span>/<span class="inline-code">apn</span>/<span class="inline-code">4G?</span>/<span class="inline-code">rst</span>/<span class="inline-code">unit</span>/<span class="inline-code">ran</span>；<span class="inline-code">thre</span> <strong>预留</strong>（ERR3）；射频走 <span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">ack</span>/<span class="inline-code">batt</span>；另见 <strong>AES / DevEUI / 编号字节</strong>（&sect;2.3）；无 <span class="inline-code">iccid</span>/<span class="inline-code">imei</span>/<span class="inline-code">csq</span></td>
+</tr>
+</tbody>
+</table></div><p><strong>看图找命令</strong>：&sect;1.2 总表 &rarr; &sect;3.0 按型号 &rarr; &sect;3.1~ 类型细则 &rarr; 第三部分三种配置载体 &rarr; <strong>&sect;6 上报报文</strong>（<strong>仅 TLV</strong>）。</p></section>
+<section class="section" id="s-1-命令格式约定"><h2>1 命令格式约定</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>进命令态</td>
+<td>静默 &ge;1s &rarr; <span class="inline-code">+++</span> &rarr; 静默 &ge;1s &rarr; <span class="inline-code">OK</span>（默认空密码自动解锁）</td>
+</tr>
+<tr>
+<td>退命令态</td>
+<td><span class="inline-code">ATO</span> &rarr; <span class="inline-code">OK</span>，退回数据模式并上锁</td>
+</tr>
+<tr>
+<td>写</td>
+<td><span class="inline-code">AT+KEY=&lt;值&gt;</span> &rarr; <span class="inline-code">OK</span>；成功后落盘</td>
+</tr>
+<tr>
+<td>读</td>
+<td><span class="inline-code">AT+KEY?</span> &rarr; <span class="inline-code">AT+KEY=&lt;当前值&gt;</span> + <span class="inline-code">OK</span></td>
+</tr>
+<tr>
+<td>执行</td>
+<td><span class="inline-code">AT+XXX</span>（无参数）或只读查询如 <span class="inline-code">AT+DOOR?</span></td>
+</tr>
+<tr>
+<td>失败</td>
+<td>未知/越界/未解锁 &rarr; <span class="inline-code">ERROR</span>；<strong>不在本机能力集</strong> &rarr; <strong><span class="inline-code">ERR3</span></strong>（规范口径）</td>
+</tr>
+<tr>
+<td>分隔</td>
+<td>多段一律英文逗号 <span class="inline-code">,</span>；射频类空字段 = 不改该项</td>
+</tr>
+<tr>
+<td>通道</td>
+<td>第 N 段 = 第 N 路；<span class="inline-code">0</span> = 关该路；只写前 N 段 = 只改前 N 路</td>
+</tr>
+<tr>
+<td>串口</td>
+<td>LPUART0，115200 8N1，<span class="inline-code">\r\n</span> 或 <span class="inline-code">\n</span> 结尾</td>
+</tr>
+</tbody>
+</table></div><p><strong>生效时机</strong>：<span class="inline-code">立即</span> / <span class="inline-code">下周期</span> / <span class="inline-code">重启</span>（见各表「生效」列）。</p><p><strong>状态列</strong>：<strong>现行</strong> = 已发布固件；<strong>新增</strong> = 规范新增（旧固件可能 <span class="inline-code">ERROR</span>）；<strong>预留</strong> = 能力集未实现，回 <span class="inline-code">ERR3</span>。</p><h3 id="s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>key 全小写、不超过 4 字符；AT 侧大写同串（<span class="inline-code">AT+PER=</span> &harr; <span class="inline-code">"per"</span>）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>多段参数一律英文逗号；查询回显与写入格式一致</td>
+</tr>
+<tr>
+<td>3</td>
+<td>按通道的 key，value 为逗号列表，顺序 = CH1..CHN；0 = 关闭该路</td>
+</tr>
+<tr>
+<td>4</td>
+<td>只写前 N 段 = 只改前 N 路，后面保持不变</td>
+</tr>
+<tr>
+<td>5</td>
+<td>不在设备能力集内的 key：AT 回 <strong>ERR3</strong>；远程下发忽略</td>
+</tr>
+<tr>
+<td>6</td>
+<td>射频类 key（<span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">ack</span>/<span class="inline-code">batt</span>）为位置参数，空字段 = 不改该项；另见 <span class="inline-code">aes</span>（128-bit 密钥）、<span class="inline-code">eui</span>（DevEUI，LoRaWAN）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>注册包配置快照与 AT / 远程下发 <strong>同口径</strong>：AT/远程仍用 key 多段字符串；<strong>空口</strong>用既有 TLV Type（<span class="inline-code">0x81</span>/<span class="inline-code">0x10</span> 等）承载，见 <strong>&sect;6.6.1</strong>；<strong>勿发明新 Type</strong></td>
+</tr>
+</tbody>
+</table></div><h3 id="s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>AT 指令</th>
+<th>值说明</th>
+<th>示例 &amp; 默认值</th>
+<th>生效</th>
+<th>层</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>通用层 &middot; 采集</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+PER=</span></td>
+<td><span class="inline-code">检测秒,发送秒</span>；<span class="inline-code">0,0</span> 关周期</td>
+<td><span class="inline-code">AT+PER=60,600</span>；默认 <span class="inline-code">60,600</span></td>
+<td>下周期</td>
+<td>通用</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+VAR=</span></td>
+<td>按通道，0.01 单位；<span class="inline-code">0</span> 关该路</td>
+<td><span class="inline-code">AT+VAR=50,200</span></td>
+<td>下周期</td>
+<td>通用</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+CAL=</span></td>
+<td>按通道逗号序（预留对齐 LoRaWAN 0x13）</td>
+<td><span class="inline-code">AT+CAL=-30,150</span>；默认 <span class="inline-code">0</span></td>
+<td>立即</td>
+<td>通用&middot;新增</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+ZERO</span></td>
+<td>执行：以当前采样为新零点（写入偏移）；只执行</td>
+<td><span class="inline-code">AT+ZERO</span> &rarr; <span class="inline-code">OK</span></td>
+<td>立即</td>
+<td>通用&middot;新增</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+TUN=</span></td>
+<td><span class="inline-code">0</span>=℃ / <span class="inline-code">1</span>=℉（预留对齐 0x17）</td>
+<td><span class="inline-code">AT+TUN=0</span></td>
+<td>下周期</td>
+<td>通用&middot;新增</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+THRE=</span></td>
+<td>（<strong>预留</strong>）温度阈值 <span class="inline-code">hi,lo</span>；当前固件</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td><strong>预留&rarr;ERR3</strong></td>
+</tr>
+<tr>
+<td><strong>硬件层</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+DOOR?</span></td>
+<td>只读：两路门磁状态 <span class="inline-code">1</span>=吸合</td>
+<td><span class="inline-code">AT+DOOR?</span> &rarr; <span class="inline-code">AT+DOOR=1,0</span></td>
+<td>即时</td>
+<td>硬件</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+IO=</span></td>
+<td><span class="inline-code">0/1</span>，CN2 输出，高有效</td>
+<td><span class="inline-code">AT+IO=1</span></td>
+<td>立即</td>
+<td>硬件</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+PWR=</span></td>
+<td><span class="inline-code">预供电秒,采后保持秒</span>；<span class="inline-code">0,0</span>=采前&ge;15ms 采完即关</td>
+<td><span class="inline-code">AT+PWR=2,1</span></td>
+<td>下周期</td>
+<td>硬件</td>
+</tr>
+<tr>
+<td><strong>射频层（LoRa网络）</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+LORA=</span></td>
+<td><span class="inline-code">发频点,发SF,收频点,收SF,netid,功率,频宽,编码率</span></td>
+<td><span class="inline-code">AT+LORA=470300000,7,470300000,7,1,14,0,1</span></td>
+<td>立即</td>
+<td>射频</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+EXLORA=</span></td>
+<td><span class="inline-code">发极性,收极性,前导,跳频</span></td>
+<td><span class="inline-code">AT+EXLORA=0,0,8,0</span></td>
+<td>立即</td>
+<td>射频</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+ACK=</span></td>
+<td><span class="inline-code">0/1</span> 客户 ACK</td>
+<td><span class="inline-code">AT+ACK=1</span>；默认 <span class="inline-code">0</span></td>
+<td>立即</td>
+<td>射频</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+BATT=</span></td>
+<td><span class="inline-code">lo,hi</span>（mV）电量区间</td>
+<td><span class="inline-code">AT+BATT=2800,3600</span></td>
+<td>立即</td>
+<td>射频</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+AES=</span></td>
+<td>128-bit 密钥：16 字节十六进制（32 个 hex 字符，无空格）</td>
+<td><span class="inline-code">AT+AES=00112233445566778899AABBCCDDEEFF</span></td>
+<td>立即</td>
+<td>射频&middot;建议</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+EUI=</span></td>
+<td>LoRaWAN DevEUI，16 位十六进制（8 字节）= <strong>前缀 4B + 标号 4B</strong>；<span class="inline-code">ATH</span> 若列 <span class="inline-code">AT+DEVEUI</span> 同义</td>
+<td><span class="inline-code">AT+EUI=70B3D57ED0001234</span></td>
+<td>立即</td>
+<td>射频&middot;LoRaWAN</td>
+</tr>
+<tr>
+<td><strong>系统层</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+VER=</span></td>
+<td><span class="inline-code">型号,产品版本</span></td>
+<td><span class="inline-code">AT+VER=WW10L,1.0.0</span></td>
+<td>重启</td>
+<td>系统</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+LOG=</span></td>
+<td><span class="inline-code">0/1</span> 调试日志</td>
+<td><span class="inline-code">AT+LOG=0</span></td>
+<td>立即</td>
+<td>系统</td>
+</tr>
+<tr>
+<td><strong>监听（远程窗口）</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+LIS=</span></td>
+<td>上报后监听秒 <span class="inline-code">1~30</span>，<span class="inline-code">0</span> 关</td>
+<td><span class="inline-code">AT+LIS=3</span>；默认 <span class="inline-code">3</span></td>
+<td>立即</td>
+<td>共用</td>
+</tr>
+<tr>
+<td><strong>控制与查询</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">+++</span> / <span class="inline-code">AT</span> / <span class="inline-code">ATO</span> / <span class="inline-code">ATH</span> / <span class="inline-code">ATR</span></td>
+<td>进态 / 连通 / 回数据态 / 列指令 / 软重启</td>
+<td>同串口惯例</td>
+<td>即时</td>
+<td>控制</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+SER=</span></td>
+<td>解锁/改密 &le;16</td>
+<td><span class="inline-code">AT+SER=123456</span></td>
+<td>即时</td>
+<td>控制</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+INFO?</span> / <span class="inline-code">AT+DATA?</span></td>
+<td>状态 / 立即采样</td>
+<td>&mdash;</td>
+<td>即时</td>
+<td>控制</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+REPORT</span></td>
+<td>立即上报一次</td>
+<td>&mdash;</td>
+<td>即时</td>
+<td>控制</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+OTA=</span> / <span class="inline-code">AT+OTADATA=</span></td>
+<td>OTA 武装 / 分包</td>
+<td>视固件</td>
+<td>即时</td>
+<td>控制</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p><strong>4G 专属 key（LoRa 回 ERR3）</strong>：<span class="inline-code">unit</span> / <span class="inline-code">ran</span> / <span class="inline-code">thre</span>（预留）/ <span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">rst</span> / <span class="inline-code">tt</span>（JSON）。详见 &sect;4。</p>
+</div></section>
+<section class="section" id="第一部分--通用型"><h2 class="part-title">第一部分 &middot; 通用型</h2></section>
+<section class="section" id="s-2.1-通用层per--var--cal--tun"><h2>2.1 通用层（per / var / cal / tun）</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>AT 指令</th>
+<th>value 格式</th>
+<th>说明</th>
+<th>状态</th>
+<th>生效</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">per</span></td>
+<td><span class="inline-code">AT+PER=</span></td>
+<td><span class="inline-code">检测秒,发送秒</span>；<span class="inline-code">0,0</span>=关闭周期</td>
+<td>关闭后仅保留中断（门磁）、按键、<span class="inline-code">AT+REPORT</span></td>
+<td>现行</td>
+<td>下周期</td>
+</tr>
+<tr>
+<td><span class="inline-code">var</span></td>
+<td><span class="inline-code">AT+VAR=</span></td>
+<td>按通道逗号序，0.01 单位，<span class="inline-code">0</span>=关该路</td>
+<td>温度 0.01℃ / 湿度 0.01%RH；多路按路交替展开</td>
+<td>现行</td>
+<td>下周期</td>
+</tr>
+<tr>
+<td><span class="inline-code">cal</span></td>
+<td><span class="inline-code">AT+CAL=</span></td>
+<td>按通道逗号序</td>
+<td>校准（预留；对齐 LoRaWAN 0x13：温度 0.1℃、湿度 1%RH）</td>
+<td>新增</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">tun</span></td>
+<td><span class="inline-code">AT+TUN=</span></td>
+<td><span class="inline-code">0</span>=℃ / <span class="inline-code">1</span>=℉</td>
+<td>温标（预留；对齐 LoRaWAN 0x17）</td>
+<td>新增</td>
+<td>下周期</td>
+</tr>
+</tbody>
+</table></div><ul>
+<li><span class="inline-code">AT+ZERO</span>（执行）：以<strong>当前采样</strong>为新零点，自动写偏移使当前读数=0；与 <span class="inline-code">AT+CAL</span> 互补。只执行、不单独查询；偏移可读 <span class="inline-code">AT+CAL?</span>。开关量类不适用。</li>
+<li>门磁/水浸/烟感为开关量：<span class="inline-code">var</span> 语义弱化为「状态变化即上报」，主要靠 <span class="inline-code">per</span> 与中断。</li>
+</ul><div class="code">AT+PER=60,600
+AT+VAR=50,200
+AT+CAL=-30,150
+AT+TUN=0
+AT+ZERO
+AT+PER?  &rarr; AT+PER=60,600 + OK</div></section>
+<section class="section" id="s-2.2-硬件层door--io--pwr"><h2>2.2 硬件层（door / io / pwr）</h2><p>仅带相应硬件的型号支持；其他型号回 <span class="inline-code">ERR3</span>。</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>AT 指令</th>
+<th>value 格式</th>
+<th>说明</th>
+<th>状态</th>
+<th>生效</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">door</span></td>
+<td><span class="inline-code">AT+DOOR?</span></td>
+<td>只读</td>
+<td>两路门磁状态 <span class="inline-code">1</span>=吸合（CN4/PB01、CN3/PC02）</td>
+<td>现行</td>
+<td>即时</td>
+</tr>
+<tr>
+<td><span class="inline-code">io</span></td>
+<td><span class="inline-code">AT+IO=</span></td>
+<td><span class="inline-code">0/1</span></td>
+<td>CN2 输出，高有效</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">pwr</span></td>
+<td><span class="inline-code">AT+PWR=</span></td>
+<td><span class="inline-code">预供电秒,采后保持秒</span></td>
+<td>I2C 传感器供电；<span class="inline-code">0,0</span>=采前上电 &ge;15ms、采完即关</td>
+<td>现行</td>
+<td>下周期</td>
+</tr>
+</tbody>
+</table></div><div class="code">AT+DOOR?          &rarr; AT+DOOR=1,0 + OK
+AT+IO=1
+AT+PWR=2,1
+AT+PWR=0,0        # 最短上电采完即关</div></section>
+<section class="section" id="s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui"><h2>2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>AT 指令</th>
+<th>value 格式</th>
+<th>说明</th>
+<th>状态</th>
+<th>生效</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">lora</span></td>
+<td><span class="inline-code">AT+LORA=</span></td>
+<td><span class="inline-code">发频点,发SF,收频点,收SF,netid,功率,频宽,编码率</span></td>
+<td>8 段位置参数；频点约 400M~510M，SF7~12，功率约 -9~22 dBm</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">exlora</span></td>
+<td><span class="inline-code">AT+EXLORA=</span></td>
+<td><span class="inline-code">发极性,收极性,前导,跳频</span></td>
+<td>扩展射频</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">ack</span></td>
+<td><span class="inline-code">AT+ACK=</span></td>
+<td><span class="inline-code">0/1</span></td>
+<td>客户 ACK</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">batt</span></td>
+<td><span class="inline-code">AT+BATT=</span></td>
+<td><span class="inline-code">lo,hi</span>（mV）</td>
+<td>电量区间</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">aes</span></td>
+<td><span class="inline-code">AT+AES=</span></td>
+<td>128-bit 密钥，<strong>16 字节</strong>十六进制（共 <strong>32</strong> 个 hex 字符，无 <span class="inline-code">0x</span>、无空格、大小写均可）</td>
+<td><strong>私有 LoRa 空口 AES 密钥</strong>（不是开/关）。写入后按该密钥加解密载荷；远程「编号+AT」前缀仍为明文，<strong>不建议</strong>远程开放改 <span class="inline-code">aes</span></td>
+<td>建议项（<span class="inline-code">ATH</span> 列出则计入）</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">eui</span></td>
+<td><span class="inline-code">AT+EUI=</span>（<span class="inline-code">ATH</span> 若写 <span class="inline-code">AT+DEVEUI</span> 同义）</td>
+<td>16 位十六进制，无空格、大小写均可</td>
+<td><strong>LoRaWAN DevEUI</strong>，固定 <strong>8 字节</strong>；组成见下方备注</td>
+<td>LoRaWAN / HW 族</td>
+<td>立即</td>
+</tr>
+</tbody>
+</table></div><p>空字段 = 不改该项（位置参数，仅 <span class="inline-code">lora</span>/<span class="inline-code">exlora</span>）。</p><div class="code">AT+LORA=470300000,7,470300000,7,1,14,0,1
+AT+EXLORA=0,0,8,0
+AT+ACK=1
+AT+BATT=2800,3600
+AT+AES=00112233445566778899AABBCCDDEEFF
+AT+EUI=70B3D57ED0001234
+AT+LORA?
+AT+EXLORA?
+AT+BATT?
+AT+AES?
+AT+EUI?</div><h3 id="s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>口径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>私有 LoRa 设备编号</strong></td>
+<td><strong>4 字节</strong>（大端无符号整数）。串口 / 空口文本常写成 <strong>8 位十六进制</strong>，如 <span class="inline-code">00000135</span>、<span class="inline-code">12345678</span>；二进制帧 DevAddr 同为 4 字节。与 <span class="inline-code">AT+INFO?</span> 的编号字段对应。</td>
+</tr>
+<tr>
+<td><strong>LoRaWAN DevEUI</strong></td>
+<td><strong>8 字节</strong>（16 位十六进制）。<strong>DevEUI = 前缀（4 字节）+ 标号（4 字节）</strong>：前缀由产线/运营商分配；标号与私有侧 4 字节设备编号同一数值（即 DevEUI 的后 4 字节 = 设备编号）。例：前缀 <span class="inline-code">70B3D57E</span>、标号 <span class="inline-code">D0001234</span> &rarr; DevEUI <span class="inline-code">70B3D57ED0001234</span>，私有编号仍按 4 字节 <span class="inline-code">D0001234</span>（文本 <span class="inline-code">D0001234</span>）寻址。</td>
+</tr>
+<tr>
+<td><strong>配置入口</strong></td>
+<td>写/读 DevEUI：<span class="inline-code">AT+EUI=</span> / <span class="inline-code">AT+EUI?</span>（固件清单若为 <span class="inline-code">AT+DEVEUI</span>，按 <span class="inline-code">ATH</span> 实名）。改 DevEUI 后需与入网平台档案一致，否则 OTAA 失败。</td>
+</tr>
+<tr>
+<td><strong>AES</strong></td>
+<td>私有空口用 <span class="inline-code">AT+AES=</span> 写入 <strong>128-bit（16 字节）密钥</strong>，值是 32 个 hex 字符，例如 <span class="inline-code">AT+AES=00112233445566778899AABBCCDDEEFF</span>。<strong>不是</strong> <span class="inline-code">0/1</span> 开关。LoRaWAN 入网密钥（AppKey 等）走模组/LoRaWAN 栈，与本 key 不同；二者勿混。远程下发白名单建议排除 <span class="inline-code">aes</span>/<span class="inline-code">eui</span>/<span class="inline-code">ver</span>。</td>
+</tr>
+<tr>
+<td><strong>条数</strong></td>
+<td><span class="inline-code">aes</span>/<span class="inline-code">eui</span> 为建议/族相关项：<strong>不计入</strong> &sect;3.0.1 射频固定 4 条（<span class="inline-code">LORA</span>/<span class="inline-code">EXLORA</span>/<span class="inline-code">ACK</span>/<span class="inline-code">BATT</span>）；<span class="inline-code">ATH</span> 列出则以实机为准，产线对账时核对。</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>平台建档：私有网关按 <strong>4 字节编号</strong>；LoRaWAN 网络服务器按 <strong>8 字节 DevEUI</strong>，并用同一标号关联两套档案。</p>
+</div></section>
+<section class="section" id="s-2.4-系统层ver--log与监听"><h2>2.4 系统层（ver / log）与监听</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>AT 指令</th>
+<th>值</th>
+<th>说明</th>
+<th>状态</th>
+<th>生效</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">ver</span></td>
+<td><span class="inline-code">AT+VER=</span></td>
+<td><span class="inline-code">型号,产品版本</span></td>
+<td>与上报 model 同源；现场勿乱改型号串</td>
+<td>现行</td>
+<td>重启</td>
+</tr>
+<tr>
+<td><span class="inline-code">log</span></td>
+<td><span class="inline-code">AT+LOG=</span></td>
+<td><span class="inline-code">0/1</span></td>
+<td>串口调试日志</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+<tr>
+<td><span class="inline-code">lis</span></td>
+<td><span class="inline-code">AT+LIS=</span></td>
+<td><span class="inline-code">1~30</span> 秒，<span class="inline-code">0</span>=关</td>
+<td>上报后监听下行配置的时间窗（默认 3）</td>
+<td>现行</td>
+<td>立即</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>规范系统层仅 <span class="inline-code">ver</span>/<span class="inline-code">log</span>。<span class="inline-code">lis</span> 为远程窗口配套（与合并手册一致），便于空口收配置。</p>
+</div><div class="code">AT+VER=WW10L,1.0.0
+AT+LOG=0
+AT+LIS=3</div></section>
+<section class="section" id="s-2.5-控制与查询非-key"><h2>2.5 控制与查询（非 key）</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>形态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">+++</span></td>
+<td>执行</td>
+<td>进命令态</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT</span></td>
+<td>执行</td>
+<td>连通 &rarr; <span class="inline-code">OK</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">ATO</span></td>
+<td>执行</td>
+<td>回数据模式并上锁</td>
+</tr>
+<tr>
+<td><span class="inline-code">ATH</span></td>
+<td>查询</td>
+<td>列出本机支持的全部 AT 指令，一行一条，<span class="inline-code">OK</span> 收尾</td>
+</tr>
+<tr>
+<td><span class="inline-code">ATR</span> / <span class="inline-code">AT+R</span></td>
+<td>执行</td>
+<td>软重启</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+SER=</span></td>
+<td>写</td>
+<td>解锁 / 改密 / 置空，&le;16</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+INFO?</span></td>
+<td>查询</td>
+<td>设备状态</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+DATA?</span></td>
+<td>查询</td>
+<td>立即采样</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+REPORT</span></td>
+<td>执行</td>
+<td>立即上报</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+OTA=</span> / <span class="inline-code">AT+OTADATA=</span></td>
+<td>执行</td>
+<td>OTA（视固件）</td>
+</tr>
+</tbody>
+</table></div><p><strong><span class="inline-code">ATH</span> 示例（温湿度 LoRa）</strong></p><div class="code">ATH
+AT+PER
+AT+VAR
+AT+CAL
+AT+ZERO
+AT+TUN
+AT+LORA
+AT+EXLORA
+AT+ACK
+AT+BATT
+AT+VER
+AT+LOG
+AT+LIS
+AT+SER=
+AT+INFO?
+AT+DATA?
+AT+REPORT
+OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<span class="inline-code">AT+IO</span>；带 I2C 供电控制的会出现 <span class="inline-code">AT+PWR</span>。</p></section>
+<section class="section" id="第二部分--传感器"><h2 class="part-title">第二部分 &middot; 传感器</h2></section>
+<section class="section" id="s-3.0-型号--AT-指令对照表"><h2>3.0 型号 &times; AT 指令对照表</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>用途</td>
+<td>按型号查通用 / <strong>LoRa网络（射频）</strong> / 硬件特定；产线 <span class="inline-code">ATH</span> 对账</td>
+</tr>
+<tr>
+<td>权威性</td>
+<td>能力集以《AT配置统一规范-LoRa》为准；<strong>实机以 <span class="inline-code">ATH</span> 为准</strong></td>
+</tr>
+<tr>
+<td>对应 4G</td>
+<td>同系列 C 后缀见 4G 分册（如 <span class="inline-code">WW-10C</span> &harr; <span class="inline-code">WW-10L/LW/HW</span>）</td>
+</tr>
+</tbody>
+</table></div><h3 id="s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>块</th>
+<th>指令</th>
+<th>条数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>控制与查询</td>
+<td><span class="inline-code">+++</span> <span class="inline-code">AT</span> <span class="inline-code">ATH</span> <span class="inline-code">ATO</span> <span class="inline-code">ATR</span> <span class="inline-code">AT+SER</span> <span class="inline-code">AT+INFO?</span> <span class="inline-code">AT+DATA?</span> <span class="inline-code">AT+REPORT</span> <span class="inline-code">AT+OTA</span> <span class="inline-code">AT+OTADATA</span></td>
+<td><strong>11</strong></td>
+</tr>
+<tr>
+<td>通用层</td>
+<td><span class="inline-code">AT+PER</span> <span class="inline-code">AT+VAR</span> <span class="inline-code">AT+CAL</span> <span class="inline-code">AT+ZERO</span>（+ 温湿度类 <span class="inline-code">AT+TUN</span>）</td>
+<td><strong>4</strong>（+TUN 则 5）</td>
+</tr>
+<tr>
+<td>监听</td>
+<td><span class="inline-code">AT+LIS</span></td>
+<td><strong>1</strong></td>
+</tr>
+<tr>
+<td>系统层</td>
+<td><span class="inline-code">AT+VER</span> <span class="inline-code">AT+LOG</span></td>
+<td><strong>2</strong></td>
+</tr>
+<tr>
+<td><strong>LoRa网络（射频）</strong></td>
+<td><span class="inline-code">AT+LORA</span> <span class="inline-code">AT+EXLORA</span> <span class="inline-code">AT+ACK</span> <span class="inline-code">AT+BATT</span></td>
+<td><strong>4</strong></td>
+</tr>
+<tr>
+<td>硬件特定</td>
+<td><span class="inline-code">AT+DOOR?</span> / <span class="inline-code">AT+IO</span> / <span class="inline-code">AT+PWR</span>（按型号）</td>
+<td>0~3</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p><strong>基线 N₀（无 TUN、无硬件）</strong> = 11+4+1+2 = <strong>18</strong>，再加射频 <strong>4</strong> &rarr; 实机常见 <strong>22</strong>；温湿度再加 <span class="inline-code">TUN</span> &rarr; <strong>23</strong>；门磁再加 <span class="inline-code">DOOR?</span>+<span class="inline-code">IO</span> &rarr; <strong>24</strong> 等。</p>
+</div><h3 id="s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>有效 key（规范）</th>
+<th>硬件特定 AT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>温湿度（WW-10L/11L/12L）</td>
+<td><span class="inline-code">per, var, cal, tun, lora, exlora, ack, batt, ver, log</span></td>
+<td>&mdash;（+ 控制/LIS/ZERO）</td>
+</tr>
+<tr>
+<td>测温杆（WW-13L，多路温度）</td>
+<td>同上；<span class="inline-code">var</span> 按通道段序展开</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td>门磁（WW-SL210-LF 等 / WW-27L）</td>
+<td><span class="inline-code">per, door(读), io, var, lora, exlora, ack, batt, ver, log</span></td>
+<td><span class="inline-code">AT+DOOR?</span> <span class="inline-code">AT+IO</span></td>
+</tr>
+<tr>
+<td>水浸（WW-SL200-LF、WW-26）</td>
+<td><span class="inline-code">per, var(0/非0 开关量变化), lora, exlora, ack, batt, ver, log</span></td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td>烟感（WW-22L）</td>
+<td><span class="inline-code">per, lora, exlora, ack, batt, ver, log</span></td>
+<td>&mdash;（<span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">tun</span> 非矩阵核心）</td>
+</tr>
+</tbody>
+</table></div><p>注：开关量类主要靠 <span class="inline-code">per</span> 与中断；<span class="inline-code">var</span> 弱化为状态变化上报。</p><h3 id="s-3.0.3-按型号速查">3.0.3 按型号速查</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>型号</th>
+<th>AT指令数</th>
+<th>通用类</th>
+<th>LoRa网络（射频）</th>
+<th>硬件特定</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WW-10L / LW / HW</strong></td>
+<td>23</td>
+<td><span class="inline-code">+++</span>, <span class="inline-code">AT</span>, <span class="inline-code">ATH</span>, <span class="inline-code">ATO</span>, <span class="inline-code">ATR</span>, <span class="inline-code">AT+SER</span>, <span class="inline-code">AT+PER</span>, <span class="inline-code">AT+VAR</span>, <span class="inline-code">AT+CAL</span>, <span class="inline-code">AT+ZERO</span>, <span class="inline-code">AT+TUN</span>, <span class="inline-code">AT+LIS</span>, <span class="inline-code">AT+VER</span>, <span class="inline-code">AT+LOG</span>, <span class="inline-code">AT+INFO?</span>, <span class="inline-code">AT+DATA?</span>, <span class="inline-code">AT+REPORT</span>, <span class="inline-code">AT+OTA</span>, <span class="inline-code">AT+OTADATA</span></td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>温湿度；对应 4G：<span class="inline-code">WW-10C</span></td>
+</tr>
+<tr>
+<td><strong>WW-11L / LW / HW</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>对应 <span class="inline-code">WW-11C</span></td>
+</tr>
+<tr>
+<td><strong>WW-12L / LW / HW</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>对应 <span class="inline-code">WW-12C</span></td>
+</tr>
+<tr>
+<td><strong>WW-13L / LW / HW</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>测温杆；<span class="inline-code">var</span> 多通道</td>
+</tr>
+<tr>
+<td><strong>WW-15L-K</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>热电偶</td>
+</tr>
+<tr>
+<td><strong>WW-16L</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>无线红外母线测温</td>
+</tr>
+<tr>
+<td><strong>WW-SL210-LF / WW-27L / LW / HW</strong></td>
+<td>24</td>
+<td><span class="inline-code">+++</span>, <span class="inline-code">AT</span>, <span class="inline-code">ATH</span>, <span class="inline-code">ATO</span>, <span class="inline-code">ATR</span>, <span class="inline-code">AT+SER</span>, <span class="inline-code">AT+PER</span>, <span class="inline-code">AT+VAR</span>, <span class="inline-code">AT+CAL</span>, <span class="inline-code">AT+ZERO</span>, <span class="inline-code">AT+LIS</span>, <span class="inline-code">AT+VER</span>, <span class="inline-code">AT+LOG</span>, <span class="inline-code">AT+INFO?</span>, <span class="inline-code">AT+DATA?</span>, <span class="inline-code">AT+REPORT</span>, <span class="inline-code">AT+OTA</span>, <span class="inline-code">AT+OTADATA</span></td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+DOOR?</span>, <span class="inline-code">AT+IO</span></td>
+<td>门磁；规范名 SL210；无 <span class="inline-code">TUN</span></td>
+</tr>
+<tr>
+<td><strong>WW-SL200-LF / WW-26L / LW / HW</strong></td>
+<td>22</td>
+<td>同上（无 TUN；含 PER/VAR/CAL/ZERO/LIS/VER/LOG + 控制 11）</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>水浸；<span class="inline-code">var</span> 开关量语义</td>
+</tr>
+<tr>
+<td><strong>WW-20L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>水浸/门磁探头族</td>
+</tr>
+<tr>
+<td><strong>WW-21L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>人体</td>
+</tr>
+<tr>
+<td><strong>WW-22L / LW / HW</strong></td>
+<td>21</td>
+<td><span class="inline-code">+++</span>, <span class="inline-code">AT</span>, <span class="inline-code">ATH</span>, <span class="inline-code">ATO</span>, <span class="inline-code">ATR</span>, <span class="inline-code">AT+SER</span>, <span class="inline-code">AT+PER</span>, <span class="inline-code">AT+LIS</span>, <span class="inline-code">AT+VER</span>, <span class="inline-code">AT+LOG</span>, <span class="inline-code">AT+INFO?</span>, <span class="inline-code">AT+DATA?</span>, <span class="inline-code">AT+REPORT</span>, <span class="inline-code">AT+OTA</span>, <span class="inline-code">AT+OTADATA</span></td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>烟感；规范矩阵无 var/cal/tun（有则 ATH 为准）</td>
+</tr>
+<tr>
+<td><strong>WW-28L / H</strong></td>
+<td>22</td>
+<td>同水浸基线</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>SOS；<span class="inline-code">H</span>=LoRaWAN</td>
+</tr>
+<tr>
+<td><strong>WW-30L-CO2 / O2</strong></td>
+<td>22</td>
+<td>同水浸基线 + 可用 <span class="inline-code">VAR</span>/<span class="inline-code">CAL</span>（浓度）</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>气体；无 unit/ran</td>
+</tr>
+<tr>
+<td><strong>WW-50L / LW / HW</strong></td>
+<td>22</td>
+<td>同水浸基线</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>倾角；<span class="inline-code">acc</span> 预留</td>
+</tr>
+<tr>
+<td><strong>WW-51L</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>振动</td>
+</tr>
+<tr>
+<td><strong>WW-70L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>压力；<strong>无</strong> <span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span>（规范：走私有寄存器）</td>
+</tr>
+<tr>
+<td><strong>WW-71L-P1 / LW / HW</strong></td>
+<td>23</td>
+<td>同上 + <span class="inline-code">AT+TUN</span></td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>温压一体（压力量程走私有寄存器）</td>
+</tr>
+<tr>
+<td><strong>WW-72L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>迷你压力；无 4G</td>
+</tr>
+<tr>
+<td><strong>WW-73L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>液位</td>
+</tr>
+<tr>
+<td><strong>WW-74L</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>拉力（仅 LoRa）</td>
+</tr>
+<tr>
+<td><strong>WW-78L / LW / HW</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>拉力</td>
+</tr>
+<tr>
+<td><strong>WW-60L</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>电流采集</td>
+</tr>
+<tr>
+<td><strong>WW-61L</strong></td>
+<td>22</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>电压/电表</td>
+</tr>
+<tr>
+<td><strong>WW-D1L / LW / HW</strong></td>
+<td>23</td>
+<td>同上 + 控制</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+PWR</span></td>
+<td>采集器；可另有 <span class="inline-code">AT+DLY</span>（若 ATH 列出）</td>
+</tr>
+<tr>
+<td><strong>WW-D2L / LW / HW</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+PWR</span></td>
+<td>采集器（电池）</td>
+</tr>
+<tr>
+<td><strong>WW-D3L / LW / HW</strong></td>
+<td>23</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+PWR</span></td>
+<td>采集器（太阳能）</td>
+</tr>
+<tr>
+<td><strong>WW-C10L ~ C17L</strong></td>
+<td>25</td>
+<td>通用基线</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+IO</span>（及若固件有 <span class="inline-code">OMD</span>/<span class="inline-code">PLS</span>）</td>
+<td>控制类；以 ATH 为准</td>
+</tr>
+<tr>
+<td><strong>WW-C18L / LW / HW</strong></td>
+<td>25</td>
+<td>同上</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td><span class="inline-code">AT+IO</span> &hellip;</td>
+<td>声光；2 路输出</td>
+</tr>
+<tr>
+<td><strong>WW-G0-RJ / RS &middot; M0-1302</strong></td>
+<td>19</td>
+<td>网关子集（无 VAR/CAL/ZERO/TUN）</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
+<td>&mdash;</td>
+<td>LoRa 网关/模组</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p><strong>LoRa网络（射频）列必须四条齐全</strong>：<span class="inline-code">AT+LORA</span> &middot; <span class="inline-code">AT+EXLORA</span> &middot; <span class="inline-code">AT+ACK</span> &middot; <span class="inline-code">AT+BATT</span>；<span class="inline-code">AT+AES</span> / <span class="inline-code">AT+EUI</span>（DevEUI）为建议/LoRaWAN 项，见 &sect;2.3.1，不顶替这四条。<br/>
+「同上」= 与首行同结构的通用类（是否含 <span class="inline-code">TUN</span> 以该行备注为准）。<br/>
+条数为文档整理值；<strong>产线以 <span class="inline-code">ATH</span> 对账</strong>，缺项提缺陷、多项先补文档。</p>
+</div><h3 id="s-3.0.4-产线对账">3.0.4 产线对账</h3><div class="code">+++
+AT
+ATH          # 必须含 LORA / EXLORA / ACK / BATT；门磁含 DOOR? / IO
+AT+VER?
+AT+LORA?
+AT+EXLORA?
+AT+BATT?
+ATO</div></section>
+<section class="section" id="s-3.1-温湿度--测温杆"><h2>3.1 温湿度 / 测温杆</h2><p><strong>有效 key</strong>：<span class="inline-code">per, var, cal, tun, lora, exlora, ack, batt, ver, log</span>（+ 控制 / LIS / ZERO）</p><div class="code">AT+TUN=0
+AT+CAL=-30,150
+AT+VAR=50,200
+AT+PER=60,600
+AT+LORA=470300000,7,470300000,7,1,14,0,1</div></section>
+<section class="section" id="s-3.2-门磁SL210--WW-27"><h2>3.2 门磁（SL210 / WW-27）</h2><p><strong>有效 key</strong>：<span class="inline-code">per, door, io, var, lora, exlora, ack, batt, ver, log</span></p><div class="code">AT+DOOR?
+AT+IO=0
+AT+PER=60,3600
+AT+VAR=1</div></section>
+<section class="section" id="s-3.3-水浸SL200--WW-26与烟感WW-22L"><h2>3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</h2><p>水浸：<span class="inline-code">per, var, lora, exlora, ack, batt, ver, log</span><br/>
+烟感：<span class="inline-code">per, lora, exlora, ack, batt, ver, log</span>（更精简）</p><div class="code">AT+PER=60,3600
+AT+VAR=1          # 水浸：状态变化即报</div></section>
+<section class="section" id="s-3.4-其他-L-族压力--运动--采集器--控制"><h2>3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</h2><ul>
+<li><strong>压力类</strong>：规范明确 <strong>不支持</strong> <span class="inline-code">unit</span>/<span class="inline-code">ran</span>（旧压力机走私有寄存器）；AT 侧勿按 4G 分册下发这两项。  </li>
+<li><strong>运动类</strong>：<span class="inline-code">acc</span> 预留（ERR3）。  </li>
+<li><strong>采集器</strong>：<span class="inline-code">pwr</span> 属硬件层。  </li>
+<li><strong>控制类</strong>：<span class="inline-code">io</span>（及固件若实现的 <span class="inline-code">omd</span>/<span class="inline-code">pls</span>）以 <span class="inline-code">ATH</span> 为准。</li>
+</ul></section>
+<section class="section" id="s-4-LoRa-回-ERR3--不适用的-key"><h2>4 LoRa 回 ERR3 / 不适用的 key</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>原因</th>
+<th>应答</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">server</span> <span class="inline-code">mqtt</span> <span class="inline-code">apn</span> / <span class="inline-code">AT+4G?</span></td>
+<td>4G 专属</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">rst</span> <span class="inline-code">tt</span></td>
+<td>4G 专属（对时改走 LoRaWAN 下行时间功能码）</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">unit</span> <span class="inline-code">ran</span></td>
+<td>压力类 LoRa 不支持（走私有寄存器）</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">thre</span></td>
+<td><strong>预留</strong>（当前固件未实现）</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">acc</span></td>
+<td>运动类预留</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td>非本机硬件的 <span class="inline-code">door</span>/<span class="inline-code">io</span>/<span class="inline-code">pwr</span></td>
+<td>能力集外</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+</tbody>
+</table></div><p>平台下发前先跑 <span class="inline-code">ATH</span>，清单外不下发。</p></section>
+<section class="section" id="第三部分--远程配置三种载体"><h2 class="part-title">第三部分 &middot; 远程配置（三种载体）</h2><p>同一张 key 表，三种通道落地；平台按设备在线状态选择。</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>载体</th>
+<th>场景</th>
+<th>格式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>本地 AT</strong></td>
+<td>产测 / 现场串口 / BLE</td>
+<td><span class="inline-code">AT+KEY=value</span>（本文表）</td>
+</tr>
+<tr>
+<td><strong>LoRaWAN 下行</strong></td>
+<td>设备入网后远程配置</td>
+<td>Type <span class="inline-code">0x01</span>+<span class="inline-code">0x81</span> 读；Type <span class="inline-code">0x02</span>+功能码写</td>
+</tr>
+<tr>
+<td><strong>私有协议寄存器</strong></td>
+<td>万维协议 / 网关透传</td>
+<td>Modbus 风格：地址 + 读03/写10 + 寄存器 + CRC16</td>
+</tr>
+</tbody>
+</table></div><p>另：<strong>私有「编号+AT」文本帧</strong>（合并手册 &sect;5.7）适用于部分私有空口网关透传场景，见 &sect;5.4（与上表第三种可并存，按项目选用）。</p></section>
+<section class="section" id="s-5.1-本地-AT"><h2>5.1 本地 AT</h2><p>同第一部分；上报后可用 <span class="inline-code">AT+LIS</span> 留监听窗收后续下行（私有文本帧或网关透传）。</p></section>
+<section class="section" id="s-5.2-LoRaWAN-下行--key--功能码"><h2>5.2 LoRaWAN 下行 &middot; key &harr; 功能码</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>写功能码</th>
+<th>载荷</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">per</span>（上报段）</td>
+<td><span class="inline-code">0x11</span></td>
+<td>uint16，秒</td>
+<td>LFT</td>
+</tr>
+<tr>
+<td><span class="inline-code">per</span>（检测段）</td>
+<td><span class="inline-code">0x12</span></td>
+<td>uint16，秒</td>
+<td>LCP</td>
+</tr>
+<tr>
+<td><span class="inline-code">cal</span></td>
+<td><span class="inline-code">0x13</span></td>
+<td>4 字节</td>
+<td>字节1 温度 0.1℃、字节2 湿度 1%RH、后 2 字节填 0</td>
+</tr>
+<tr>
+<td><span class="inline-code">var</span>（温度）</td>
+<td><span class="inline-code">0x14</span></td>
+<td>uint8</td>
+<td>温度变化量</td>
+</tr>
+<tr>
+<td><span class="inline-code">var</span>（湿度）</td>
+<td><span class="inline-code">0x15</span></td>
+<td>uint8</td>
+<td>湿度变化量</td>
+</tr>
+<tr>
+<td><span class="inline-code">tun</span></td>
+<td><span class="inline-code">0x17</span></td>
+<td>uint8</td>
+<td>温标 0=℃ / 1=℉</td>
+</tr>
+</tbody>
+</table></div><p>读：Type <span class="inline-code">0x01</span> + Value <span class="inline-code">0x81</span> &rarr; 回 <span class="inline-code">0x81</span> + Length + 按序 value（Length 自适应，只回已实现项）。</p><p>对时：下行 <span class="inline-code">0x02</span>+<span class="inline-code">0x00</span>+<span class="inline-code">YYMMDDhhmmss</span>（无 4G 的 JSON <span class="inline-code">tt</span>）。</p></section>
+<section class="section" id="s-5.3-私有协议寄存器--key--寄存器"><h2>5.3 私有协议寄存器 &middot; key &harr; 寄存器</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>key</th>
+<th>寄存器</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">per</span></td>
+<td><span class="inline-code">0x0001</span> 起 4 寄存器</td>
+<td>检测秒、上报秒（uint32 &times;2）</td>
+</tr>
+<tr>
+<td><span class="inline-code">ack</span></td>
+<td><span class="inline-code">0x0015</span></td>
+<td>写 0/1</td>
+</tr>
+<tr>
+<td><span class="inline-code">lora</span> / <span class="inline-code">exlora</span> 各段</td>
+<td><span class="inline-code">0x0100</span>~<span class="inline-code">0x0112</span></td>
+<td>网络号、SF、频点、跳频、极性、前导、编码率、带宽、轮询毫秒；极性/功率只读</td>
+</tr>
+<tr>
+<td>&mdash;（只读）</td>
+<td><span class="inline-code">0x0300</span> 起</td>
+<td>固件标识、电量格、射频就绪、最近缓存数据</td>
+</tr>
+</tbody>
+</table></div><p>写周期示例（设备 <span class="inline-code">00000135</span>，检测 60s / 上报 600s）：</p><div class="code">00 00 01 35 10 00 01 00 04 08 00 00 00 3C 00 00 02 58 35 E6</div></section>
+<section class="section" id="s-5.4-可选私有编号--AT文本帧"><h2>5.4 可选：私有「编号 + AT」文本帧</h2><p>适用：万维私有空口、网关把 AT 文本透传到节点（<strong>非</strong>标准 LoRaWAN 功能码）。与 4G JSON 无关。</p><div class="code">&lt;no&gt;AT+KEY=&lt;值&gt;</div><ul>
+<li><span class="inline-code">&lt;no&gt;</span>：纯设备编号，<strong>不带型号</strong>；私有 LoRa 为 <strong>4 字节</strong>（常写作 8 位十六进制，如 <span class="inline-code">00000135</span>），与 <span class="inline-code">AT+</span> 之间无空格。  </li>
+<li><strong>LoRaWAN 不用本帧寻址 DevEUI</strong>：DevEUI 为 <strong>8 字节</strong>（前缀 4B + 标号 4B），入网后走 &sect;5.2 功能码；本「编号+AT」仅私有空口。  </li>
+<li>设备只处理编号匹配的帧，不匹配<strong>不应答</strong>（防同频广播风暴）。  </li>
+<li>一帧一条；批量按「发&rarr;等应答&rarr;再发」，间隔参考 <span class="inline-code">lis</span>（默认 3 s；SF12 建议 5~8）。  </li>
+<li>例：<span class="inline-code">00000135AT+PER=30,50</span> &rarr; 应答 <span class="inline-code">00000135OK</span> </li>
+<li>私有空口部署时应配置 <span class="inline-code">AT+AES=&lt;32hex&gt;</span>（128-bit 密钥）；<span class="inline-code">aes</span>/<span class="inline-code">eui</span>/<span class="inline-code">ver</span> 不建议远程开放。  </li>
+<li>超长查询不宜走此空口；优先 LoRaWAN 功能码或寄存器。</li>
+</ul></section>
+<section class="section" id="s-5.5-监听窗口-lis"><h2>5.5 监听窗口 <span class="inline-code">lis</span></h2><p>每次上报后保持接收 <span class="inline-code">lis</span> 秒（默认 3）。<span class="inline-code">0</span>=不留窗。取值 1~30。</p></section>
+<section class="section" id="附录"><h2 class="part-title">附录</h2></section>
+<section class="section" id="s-6-上报报文"><h2>6 上报报文</h2><div class="note">
+<p><strong>空口唯一载体 = 官网 TLV-V1 二进制帧；LoRa 设备侧不再发送 JSON 上报报文。</strong><br/>
+私有 LoRa 空口以官网《<strong>万维终端传感器协议（TLV-V1）</strong>》为准（修订至 <strong>V1.7.2</strong>）：<br/>
+<a href="index.html#protocol-tlv.html" target="_top">https://www.wwiot.com/manuals/protocol-tlv.html</a><br/>
+本节 <strong>&sect;6.1～&sect;6.5</strong> 定义帧与 Type 目录；<strong>&sect;6.6</strong> 定义 <strong>注册包 / 数据包</strong> 的 Body 组成、型号 Type 矩阵与完整示例；<strong>&sect;6.7</strong> 为下行 Type。<br/>
+平台若需要扁平字段，由<strong>网关/平台从 TLV 翻译</strong>；手册仅在 <strong>&sect;6.6.5</strong> 给「旧 JSON key &rarr; Type」迁移对照，<strong>不再</strong>给 LoRa JSON 上报示例作主口径。  </p>
+<p><strong>产品差异</strong>：现网 <strong>WW-27L</strong> 实现与官网有多处关键冲突（首字节、CRC、TEMP/HUMI 精度、<span class="inline-code">0x00</span>/<span class="inline-code">0x09</span>、额外 <span class="inline-code">0x0D</span>），见 <strong>&sect;6.4</strong>。解析前须确认产品走官网 TLV-V1 还是 WW-27L 实现。  </p>
+<p><strong>配置快照口径</strong>：注册包建议携带的配置项，语义与 AT / 远程下发一致；空口用已有 Type（<span class="inline-code">0x81</span> 用户参数、<span class="inline-code">0x10</span> 通信参数等）编码，<strong>勿发明新 Type</strong>。字段顺序与 AT key 对照见 &sect;6.6.1。  </p>
+<p><strong>电量</strong>：官网 <span class="inline-code">0x00</span> 设备信息用电压档位（低 5 bit）；WW-27L <span class="inline-code">0x00</span> HB 为首字节电量%。原平台字段 <span class="inline-code">bat</span>=<span class="inline-code">电量%,毫伏</span> 仅作迁移对照，<strong>不是</strong>空口字段。  </p>
+<p>设备串口 <span class="inline-code">AT+DATA?</span> 第二行（若有）常为上行帧十六进制，可与网关收到字节对照。</p>
+</div><h3 id="s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</h3><p>来源：官网 TLV-V1（至 V1.7.2）。编码：<strong>大端（BE）</strong>；<strong>无 SOF</strong>。</p><div class="code">Header(1) | DevAddr(4 BE) | FCtrl(1) | SeqNo(2 BE) | Data1&hellip;DataN (TLV&hellip;) | CRC(2 BE)</div><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>偏移</th>
+<th>长度</th>
+<th>字段</th>
+<th>解析（官网）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td><strong>Header</strong></td>
+<td>高 3 bit = <strong>MType</strong>（预留）；低 5 bit = <strong>Protocol Version</strong>，当前 <strong><span class="inline-code">0x03</span></strong></td>
+</tr>
+<tr>
+<td>1</td>
+<td>4</td>
+<td><strong>DevAddr</strong></td>
+<td>设备 ADDR，大端；对应 <span class="inline-code">AT+ADDR?</span> / 私有编号 4 字节</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1</td>
+<td><strong>FCtrl</strong></td>
+<td>控制字，见下</td>
+</tr>
+<tr>
+<td>6</td>
+<td>2</td>
+<td><strong>SeqNo</strong></td>
+<td>主动上报时序号自增</td>
+</tr>
+<tr>
+<td>8</td>
+<td>N</td>
+<td><strong>Message Body</strong></td>
+<td>若干 TLV；部分类型省略 Length，见 &sect;6.2</td>
+</tr>
+<tr>
+<td>8+N</td>
+<td>2</td>
+<td><strong>CRC</strong></td>
+<td>公司自定义 CRC16，覆盖 Header&hellip;Body；见 &sect;6.5</td>
+</tr>
+</tbody>
+</table></div><p>要点：Body 为「类似 TLV」&mdash;&mdash;基础类型多为 <strong>T+V（省略 Length）</strong>；<span class="inline-code">0x10+</span> 为 <strong>T+L+V</strong>。无整帧 PayloadLen；解析靠 Type 表直到只剩末尾 2 字节 CRC。</p><h4 id="s-6.1.1-Header-位域">6.1.1 Header 位域</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>位</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7:5</td>
+<td>MType</td>
+<td><span class="inline-code">0xx</span> / <span class="inline-code">1xx</span> TBD，预留</td>
+</tr>
+<tr>
+<td>4:0</td>
+<td>Protocol Version</td>
+<td>当前 <strong><span class="inline-code">0x03</span></strong></td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>MType=0 且 Version=<span class="inline-code">0x03</span> 时，Header 整字节为 <strong><span class="inline-code">0x03</span></strong>。</p>
+</div><h4 id="s-6.1.2-FCtrl控制字">6.1.2 FCtrl（控制字）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>位</th>
+<th>名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7:6</td>
+<td>Reserve</td>
+<td>保留</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>ACKReq</strong></td>
+<td>1 = 请求下行应答（与 <span class="inline-code">AT+ACK</span> 相关）</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Trigger</strong></td>
+<td><span class="inline-code">0</span> = 定时；<span class="inline-code">1</span> = 触发（变化）</td>
+</tr>
+<tr>
+<td>3:0</td>
+<td><strong>Mark</strong></td>
+<td>官网写明：<strong><span class="inline-code">1</span> = 开机</strong>（其余取值未逐一枚举）</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>WW-27L 把同一字节解为「计时事件」（事件码 <span class="inline-code">0/1/2/4/5/A</span> + TRIG/ACK），见 <strong>&sect;6.4</strong>，<strong>不可与官网 Mark 表混用</strong>。</p>
+</div><h3 id="s-6.2-Type-范围与总表">6.2 Type 范围与总表</h3><h4 id="s-6.2.1-Length-模式">6.2.1 Length 模式</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type 范围</th>
+<th>Length 模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><span class="inline-code">0x00</span>~<span class="inline-code">0x0F</span></strong> 与 <strong><span class="inline-code">0xFF</span></strong></td>
+<td><strong>T+V</strong>（省略 Length）</td>
+<td>基础传感器类型，值长度由 Type 表固定</td>
+</tr>
+<tr>
+<td><strong><span class="inline-code">0x10</span>~<span class="inline-code">0x1F</span></strong></td>
+<td><strong>T+L+V</strong></td>
+<td>通用类型</td>
+</tr>
+<tr>
+<td><strong><span class="inline-code">0x20</span>~<span class="inline-code">0x7F</span></strong></td>
+<td><strong>T+L+V</strong></td>
+<td>定制化项目</td>
+</tr>
+<tr>
+<td><strong><span class="inline-code">0x80</span>~</strong></td>
+<td><strong>T+L+V</strong></td>
+<td>用户参数配置查询</td>
+</tr>
+</tbody>
+</table></div><p>解析：读 Type &rarr; T+V 查定长前进；T+L+V 再读 1 字节 Length 再读 Value。未知 Type：T+V 区间<strong>无法安全跳过</strong>（须字典同步）；T+L+V 可按 Length 跳过。</p><h4 id="s-6.2.2-基础传感器类型TV">6.2.2 基础传感器类型（T+V）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>名称</th>
+<th>Value 长度</th>
+<th>编码</th>
+<th>单位 / 语义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0xFF</span></td>
+<td>应答 ACK</td>
+<td>2</td>
+<td>第 1 字节=对应下行指令类型；第 2 字节=结果</td>
+<td>上行应答</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x00</span></td>
+<td>设备信息</td>
+<td>2</td>
+<td>位域，见 &sect;6.3.1</td>
+<td>版本 / 电压档 / 异常 / devType</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x01</span></td>
+<td>加速度</td>
+<td>8</td>
+<td>Event(1) + X/Y/Z 各 int16 + Reserve(1)</td>
+<td>震动/撞击</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x02</span></td>
+<td>地理坐标</td>
+<td>8</td>
+<td>经度 float32 + 纬度 float32</td>
+<td>按项目</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x03</span></td>
+<td>采样数据</td>
+<td>2</td>
+<td>uint16</td>
+<td>项目定制</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x04</span></td>
+<td>温度</td>
+<td>2</td>
+<td>int16</td>
+<td><strong>默认 0.1 ℃</strong></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x05</span></td>
+<td>湿度</td>
+<td>1</td>
+<td>uint8</td>
+<td><strong>1 %RH</strong></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x06</span></td>
+<td>含量</td>
+<td>1</td>
+<td>uint8</td>
+<td>百分比，项目定制</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x07</span></td>
+<td>压/拉力</td>
+<td>4</td>
+<td>int32</td>
+<td>默认 Pa；拉力为 N</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x08</span></td>
+<td>传感值</td>
+<td>4</td>
+<td>float32</td>
+<td>项目定制</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x09</span></td>
+<td>开关量</td>
+<td>1</td>
+<td>bit 图，最多 8 路</td>
+<td>阀门/水浸/烟感等</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>⚠ WW-27L 另有 <strong><span class="inline-code">0x0D</span> IO（1B）</strong>（官网基础表未收录）；且 <span class="inline-code">00/04/05/09</span> 编码见 &sect;6.4。</p>
+</div><h4 id="s-6.2.3-定制化类型TLV">6.2.3 定制化类型（T+L+V）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>名称</th>
+<th>Length 约定</th>
+<th>Value 描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x10</span></td>
+<td>通信参数</td>
+<td>N</td>
+<td>TFREQ(u32)+LCP(u16)+RPREM(u16)+LFT(u16)+TSF(u8)</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x11</span></td>
+<td>多轴倾角</td>
+<td>N&times;4</td>
+<td>每轴 int32，<strong>0.001&deg;</strong>；N=1/2/3 &rarr; X / XY / XYZ</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x12</span></td>
+<td>多路温湿度</td>
+<td>N&times;4</td>
+<td>每路：温度 int16 + 湿度 uint16，分辨率 <strong>0.1</strong></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x13</span></td>
+<td>多路采样</td>
+<td>N&times;2</td>
+<td>N 组 uint16</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x14</span></td>
+<td>多路温度</td>
+<td>N&times;2</td>
+<td>N 组 int16</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x15</span></td>
+<td>多路湿度</td>
+<td>N</td>
+<td>N 组 uint8</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x17</span></td>
+<td>多路压/拉力</td>
+<td>N&times;4</td>
+<td>N 组压/拉力</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x18</span></td>
+<td>多路传感值</td>
+<td>N&times;4</td>
+<td>N 组传感数据</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x1A</span></td>
+<td>电流电压</td>
+<td>2 或 4</td>
+<td>L=2：仅电流 mA；L=4：电流 + 电压（<strong>0.1 V</strong>）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x1B</span></td>
+<td>功率电能</td>
+<td>4（常见）</td>
+<td>有功功率 P，单位 <strong>W</strong></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x20</span></td>
+<td>仪表地址</td>
+<td>N</td>
+<td>从机/仪表地址（表计常见 7/14）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x21</span></td>
+<td>业务数据</td>
+<td>N</td>
+<td>外接原始；部分项目首字节区分业务</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x22</span></td>
+<td>阀门响应</td>
+<td>N</td>
+<td>项目定制</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x24</span></td>
+<td>Modbus 数据</td>
+<td>N</td>
+<td>从机主动上报的 Modbus 内容</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x25</span></td>
+<td>用户命令数据</td>
+<td>N</td>
+<td>前 1 字节命令序号（从 0）+ 用户内容</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x30</span></td>
+<td>混合气体</td>
+<td>常 5</td>
+<td>气体类型(1) + int32（分辨率 <strong>0.01</strong>）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x38</span></td>
+<td>带单位传感值</td>
+<td><strong>5</strong></td>
+<td>单位类型(1) + float32(4)</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x40</span></td>
+<td>存储记录</td>
+<td>常 12</td>
+<td>RecordID(u32)+YYMMDDhhmmss(6)+Status(2)</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x80</span></td>
+<td>公共配置</td>
+<td>N</td>
+<td>如 4G：服务器,端口,方式；MQTT 附加用户名等</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x81</span></td>
+<td>用户参数</td>
+<td>N</td>
+<td>上报/检测周期、校准、变量&hellip;</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>官网定制表<strong>无 <span class="inline-code">0x16</span> 数据类型</strong>（<span class="inline-code">0x16</span> 仅出现在 <strong>devType</strong>=红外温度）。本文<strong>不发明</strong>未在官网列出的 Type 码。</p>
+</div><h3 id="s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</h3><h4 id="s-6.3.1-0xFF-通用应答上行">6.3.1 <span class="inline-code">0xFF</span> 通用应答（上行）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>长度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td>1</td>
+<td><span class="inline-code">0xFF</span></td>
+</tr>
+<tr>
+<td>响应命令类型</td>
+<td>1</td>
+<td>对应下行指令 Type</td>
+</tr>
+<tr>
+<td>响应结果</td>
+<td>1</td>
+<td>按项目约定</td>
+</tr>
+</tbody>
+</table></div><h4 id="s-6.3.2-0x00-设备信息">6.3.2 <span class="inline-code">0x00</span> 设备信息</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>字节</th>
+<th>位域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 字节</td>
+<td><strong>Version</strong>（高 3 bit）| <strong>Voltage Level</strong>（低 5 bit，0~31；默认按 3.0V~3.6V 分级）</td>
+</tr>
+<tr>
+<td>第 2 字节</td>
+<td><strong>异常</strong>（高 1 bit：0 正常 / 1 异常）| <strong>devType</strong>（低 7 bit）</td>
+</tr>
+</tbody>
+</table></div><p><strong>devType 表（官网）</strong></p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>devType</th>
+<th>含义</th>
+<th>devType</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x00</span></td>
+<td>RFU</td>
+<td><span class="inline-code">0x16</span></td>
+<td>红外温度</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x01</span></td>
+<td>DTU</td>
+<td><span class="inline-code">0x20</span></td>
+<td>水浸</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x02</span></td>
+<td>定位</td>
+<td><span class="inline-code">0x21</span></td>
+<td>门磁（开关）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x03</span></td>
+<td>4~20mA</td>
+<td><span class="inline-code">0x22</span></td>
+<td>红外感应</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x04</span></td>
+<td>双路电机</td>
+<td><span class="inline-code">0x23</span></td>
+<td>烟感</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x07</span></td>
+<td>压力</td>
+<td><span class="inline-code">0x24</span></td>
+<td>4 合 1</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x08</span></td>
+<td>压力（带单位）</td>
+<td><span class="inline-code">0x25</span></td>
+<td>灯带（16 路）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x09</span></td>
+<td>控制器（功率）</td>
+<td><span class="inline-code">0x34</span></td>
+<td>CO2</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0A</span></td>
+<td>位移</td>
+<td><span class="inline-code">0x36</span></td>
+<td>O2</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0B</span></td>
+<td>测距</td>
+<td><span class="inline-code">0x50</span></td>
+<td>震动</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x0C</span></td>
+<td>多路控制器</td>
+<td><span class="inline-code">0x51</span></td>
+<td>倾角</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x10</span></td>
+<td>温湿度</td>
+<td><span class="inline-code">0x52</span></td>
+<td>震动倾角</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x11</span></td>
+<td>温度</td>
+<td><span class="inline-code">0x70</span></td>
+<td>大气压</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x13</span></td>
+<td>红外温度水浸</td>
+<td><span class="inline-code">0x71</span></td>
+<td>水位</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td><span class="inline-code">0x72</span></td>
+<td>拉力</td>
+</tr>
+</tbody>
+</table></div><h4 id="s-6.3.3-0x01-加速度计">6.3.3 <span class="inline-code">0x01</span> 加速度计</h4><p>Event(1)：<span class="inline-code">0x00</span> 正常 / <span class="inline-code">0x01</span> 震动 / <span class="inline-code">0x04</span> 撞击；随后 X/Y/Z 各 int16 BE；Reserve(1)。</p><h4 id="s-6.3.4-0x02--0x03--0x06--0x07--0x08">6.3.4 <span class="inline-code">0x02</span> / <span class="inline-code">0x03</span> / <span class="inline-code">0x06</span> / <span class="inline-code">0x07</span> / <span class="inline-code">0x08</span></h4><ul>
+<li><strong><span class="inline-code">0x02</span> 地理坐标</strong>：经度 float32 + 纬度 float32。  </li>
+<li><strong><span class="inline-code">0x03</span> 采样</strong>：uint16，项目定制。  </li>
+<li><strong><span class="inline-code">0x06</span> 含量</strong>：uint8 %。  </li>
+<li><strong><span class="inline-code">0x07</span> 压/拉力</strong>：int32；压力默认 Pa，拉力 N。  </li>
+<li><strong><span class="inline-code">0x08</span> 传感值</strong>：float32，项目定制。</li>
+</ul><h4 id="s-6.3.5-0x04-温度--0x05-湿度">6.3.5 <span class="inline-code">0x04</span> 温度 / <span class="inline-code">0x05</span> 湿度</h4><ul>
+<li><strong>温度</strong>：int16，官网默认 <strong>0.1 ℃</strong>（201 &rarr; 20.1℃）。  </li>
+<li><strong>湿度</strong>：uint8，<strong>1 字节</strong>，单位 <strong>1 %RH</strong>。  </li>
+<li>⚠ WW-27L 为 0.01 ℃ / 2B&middot;0.01 %RH，见 &sect;6.4。</li>
+</ul><h4 id="s-6.3.6-0x09-通用开关量">6.3.6 <span class="inline-code">0x09</span> 通用开关量</h4><p>最多 8 路，一般 <strong>1 bit = 1 路</strong>。阀门：<span class="inline-code">0x01</span> 开 / <span class="inline-code">0x00</span> 关；水浸：<span class="inline-code">0x01</span> 有水 / <span class="inline-code">0x00</span> 无水。</p><p><strong>烟雾报警器 bit 图（官网）</strong></p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>bit</th>
+<th>7</th>
+<th>6</th>
+<th>5</th>
+<th>4</th>
+<th>3</th>
+<th>2</th>
+<th>1</th>
+<th>0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>含义</td>
+<td>开机</td>
+<td>激活</td>
+<td>拆除</td>
+<td>保留</td>
+<td>测试</td>
+<td>电量</td>
+<td>故障</td>
+<td>报警</td>
+</tr>
+<tr>
+<td>0 / 1</td>
+<td>正常/开机</td>
+<td>正常/激活</td>
+<td>正常/拆除</td>
+<td>默认</td>
+<td>正常/测试</td>
+<td>正常/低电</td>
+<td>正常/故障</td>
+<td>正常/报警</td>
+</tr>
+</tbody>
+</table></div><h4 id="s-6.3.7-定制-Type-摘要0x100x81">6.3.7 定制 Type 摘要（<span class="inline-code">0x10</span>～<span class="inline-code">0x81</span>）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x10</span></td>
+<td>旧版 LoRa 配置回读：TFREQ&rarr;LCP&rarr;RPREM&rarr;LFT&rarr;TSF</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x11</span></td>
+<td>倾角：每轴 int32，<strong>0.001&deg;</strong>；Length/4 = 轴数</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x12</span></td>
+<td>多路温湿度：每路 int16 温 + uint16 湿，<strong>0.1</strong></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x13</span>/<span class="inline-code">0x14</span>/<span class="inline-code">0x15</span></td>
+<td>多路采样 / 温度 / 湿度</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x17</span>/<span class="inline-code">0x18</span></td>
+<td>多路压拉力 / 多路传感值</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x1A</span></td>
+<td>L=2 仅电流 mA；L=4 电流 + 电压 0.1 V</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x1B</span></td>
+<td>有功功率 W（常见 L=4）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x20</span></td>
+<td>仪表地址</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x21</span></td>
+<td>业务数据；首字节可区分：<span class="inline-code">00</span> 灯控 / <span class="inline-code">01</span> 网关电能 / <span class="inline-code">02</span> 热表 / <span class="inline-code">03</span> 特殊气体 / <span class="inline-code">04</span> 接地环流 / <span class="inline-code">05</span> 测控仪表</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x22</span></td>
+<td>阀门响应（项目定制）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x24</span></td>
+<td>Modbus 从机上报内容</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x25</span></td>
+<td>命令序号(1) + 用户内容</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x30</span></td>
+<td>气体类型(1)+int32(0.01)：<span class="inline-code">01</span> CH4 / <span class="inline-code">02</span> CO / <span class="inline-code">03</span> H2S / <span class="inline-code">04</span> CO2 / <span class="inline-code">05</span> NH3</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x38</span></td>
+<td>单位码(1)+float32；单位：0 Pa &middot; 1 hPa &middot; 2 kPa &middot; 3 MPa(默认) &middot; 4 PSI &middot; 5 PSF &middot; 6 kg/cm&sup2; &middot; 7 mH2O &middot; 8 mmH2O &middot; 9 bar &middot; 10 mbar &middot; 11 mmHg &middot; 12 inHg &middot; 13 atm</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x40</span></td>
+<td>RecordID(u32)+YYMMDDhhmmss(6)+Status(2)，常 12B</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x80</span></td>
+<td>公共配置字符串（4G/MQTT 等）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x81</span></td>
+<td>顺序：上报周期 u16、检测周期 u16、校准 int32、变量 1~3 u8；用 Length 裁剪</td>
+</tr>
+</tbody>
+</table></div><h3 id="s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>官网 TLV-V1</th>
+<th>WW-27L 产品手册</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>首字节</td>
+<td>Version 低 5 位 = <strong><span class="inline-code">0x03</span></strong>（整字节常 <span class="inline-code">0x03</span>）</td>
+<td>固定写作 <strong><span class="inline-code">0x10</span>（Ver）</strong></td>
+</tr>
+<tr>
+<td>控制字</td>
+<td><strong>FCtrl</strong>：ACKReq / Trigger / Mark</td>
+<td><strong>计时事件</strong>：ACK / TRIG + 事件低 4 位（<span class="inline-code">0/1/2/3/4/5/A</span>）</td>
+</tr>
+<tr>
+<td>Type <span class="inline-code">0x00</span></td>
+<td>设备信息位域</td>
+<td><strong>HB</strong>：电量% + 类型码 <strong>27</strong></td>
+</tr>
+<tr>
+<td>Type <span class="inline-code">0x04</span></td>
+<td><strong>0.1 ℃</strong></td>
+<td><strong>0.01 ℃</strong></td>
+</tr>
+<tr>
+<td>Type <span class="inline-code">0x05</span></td>
+<td><strong>1 字节 / 1 %RH</strong></td>
+<td><strong>2 字节 / 0.01 %RH</strong></td>
+</tr>
+<tr>
+<td>Type <span class="inline-code">0x09</span></td>
+<td>通用开关 / 烟感 bit 图</td>
+<td><strong>DOOR</strong> bit0/bit1，<strong>1=吸合</strong></td>
+</tr>
+<tr>
+<td>Type <span class="inline-code">0x0D</span></td>
+<td><strong>未列出</strong></td>
+<td><strong>IO</strong>（CN2 输出 0/1）</td>
+</tr>
+<tr>
+<td>CRC</td>
+<td>自定义，<strong>init=<span class="inline-code">0xFFFF</span></strong></td>
+<td>材料称 <strong>XMODEM</strong>，<strong>init=<span class="inline-code">0</span></strong></td>
+</tr>
+</tbody>
+</table></div><p><strong>WW-27L Type 子集与拼接顺序</strong>：<span class="inline-code">HB(00)</span> &rarr;（可选）<span class="inline-code">TEMP(04)</span> &rarr;（可选）<span class="inline-code">HUMI(05)</span> &rarr; <span class="inline-code">DOOR(09)</span> &rarr; <span class="inline-code">IO(0D)</span>。SHT40 失败则省略 TEMP/HUMI。</p><p><strong>WW-27L 计时事件（低 4 位）</strong></p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>低 4 位</th>
+<th>名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0x0</span></td>
+<td>心跳</td>
+<td><span class="inline-code">AT+PER</span> 周期到</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x1</span></td>
+<td>检测</td>
+<td>门磁边沿 / 超 <span class="inline-code">AT+VAR</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x2</span></td>
+<td>按键</td>
+<td>短按或 <span class="inline-code">AT+REPORT</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">0x3</span></td>
+<td>预警</td>
+<td>本产品保留</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x4</span></td>
+<td>关机</td>
+<td>长按满 5 秒休眠前</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x5</span></td>
+<td>开机</td>
+<td>关机态长按满 5 秒（<strong>非</strong>注册）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0xA</span></td>
+<td>注册</td>
+<td>上电首包，同时 TRIG=1</td>
+</tr>
+</tbody>
+</table></div><p>常见整字节：<span class="inline-code">0x1A</span> 注册；<span class="inline-code">0x04</span>/<span class="inline-code">0x24</span> 关机；<span class="inline-code">0x05</span>/<span class="inline-code">0x25</span> 开机。与官网 FCtrl / 迁移对照见 <strong>&sect;6.6.2</strong>、<strong>&sect;6.6.5</strong>（<span class="inline-code">0&rarr;周期</span>、<span class="inline-code">1&rarr;变化</span>、<span class="inline-code">2&rarr;按键</span>、<span class="inline-code">A&rarr;注册</span>）；关机/开机正式 Mark 取值待与官网对齐。</p><p><strong>WW-27L 示例 hex</strong>（DevAddr=<span class="inline-code">12345678</span>，Seq=42，电量 85%/类型 27，27.00℃，55.00%RH，门磁 bit0=1，IO=0；CRC 按 XMODEM init=0）：</p><p>心跳：</p><div class="code">10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02</div><p>注册（<span class="inline-code">0x1A</span>，Seq=1 示意；注册包 Seq <strong>不递增</strong>）：</p><div class="code">10 12 34 56 78 1A 00 01 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 8A E3</div><div class="note">
+<p><strong>不可</strong>与官网默认精度（温度 <span class="inline-code">01 0E</span>=27.0&times;10、湿度 1B <span class="inline-code">37</span>、Header=<span class="inline-code">0x03</span>、CRC init FFFF）混用同一解析器。</p>
+</div><h3 id="s-6.5-CRC">6.5 CRC</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>官网 TLV-V1</th>
+<th>WW-27L 材料</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>算法</td>
+<td>公司自定义（见官网附录）</td>
+<td>称 <strong>CRC-16/XMODEM</strong></td>
+</tr>
+<tr>
+<td>初值</td>
+<td><strong><span class="inline-code">0xFFFF</span></strong></td>
+<td><strong><span class="inline-code">0</span></strong></td>
+</tr>
+<tr>
+<td>覆盖</td>
+<td>Header&hellip;Body（CRC 前全部字节）</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>字节序</td>
+<td>大端 2 字节帧尾</td>
+<td>大端</td>
+</tr>
+</tbody>
+</table></div><p>官网算法要点：对每个输入字节做 <span class="inline-code">swap &rarr; ^= in &rarr; ^= (low&gt;&gt;4) &rarr; ^= (crc&lt;&lt;12) &rarr; ^= ((low)&lt;&lt;5)</span>，自 init=<span class="inline-code">0xFFFF</span> 循环。<br/>
+⚠ 初值不同 &rarr; 同一明文 CRC <strong>不同</strong>；产品须标明走哪套。</p><h3 id="s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</h3><div class="note">
+<p><strong>规范建议</strong>（新固件 / 新对接以本节为准）。现网 <strong>WW-27L</strong> 仍可能只发测量子集、无配置快照 Type，见 &sect;6.4；产品迁移时按矩阵补齐。</p>
+</div><p>公共帧外形（同 &sect;6.1）：</p><div class="code">Header | DevAddr(4) | FCtrl(1) | SeqNo(2) | TLV&hellip; | CRC(2)</div><h4 id="s-6.6.1-注册包入网--上电首包">6.6.1 注册包（入网 / 上电首包）</h4><p><strong>用途</strong>：标识设备 + 基线配置快照 +（建议）本型测量快照，便于平台建档。</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>规范建议</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header</td>
+<td><span class="inline-code">0x03</span>（官网 Version）</td>
+<td>WW-27L 现网写作 <span class="inline-code">0x10</span>，见 &sect;6.4</td>
+</tr>
+<tr>
+<td>FCtrl</td>
+<td><strong>Trigger=1</strong>（bit4）</td>
+<td>官网触发；WW-27L 现网常用整字节 <strong><span class="inline-code">0x1A</span></strong>（TRIG + 事件 <span class="inline-code">0xA</span>）</td>
+</tr>
+<tr>
+<td>SeqNo</td>
+<td><strong>不递增</strong>（可用固定值，如 <span class="inline-code">0001</span>）</td>
+<td>与 WW-27L 产品约定一致；其余包再自增</td>
+</tr>
+<tr>
+<td>Body 顺序（建议）</td>
+<td>① <span class="inline-code">0x00</span> &rarr; ② 配置 Type &rarr; ③ 本型测量 Type</td>
+<td>见下</td>
+</tr>
+</tbody>
+</table></div><p><strong>Body 组成</strong></p><ol>
+<li><strong>必选</strong> <span class="inline-code">0x00</span> 设备信息（官网位域：Version / 电压档 / 异常 / <strong>devType</strong>）。  </li>
+<li><strong>建议配置快照</strong>（只用已有 Type，语义对齐 AT）：<br/>
+   - <strong><span class="inline-code">0x81</span> 用户参数</strong>（T+L+V）：周期 / 校准 / 变量<br/>
+   - <strong><span class="inline-code">0x10</span> 通信参数</strong>（T+L+V）：私有 LoRa 射频关键段（旧版回读布局）  </li>
+<li><strong>建议</strong> 本型测量 Type（与 &sect;6.6.2 / &sect;6.6.3 相同子集，便于首包即有状态）。</li>
+</ol><p><strong><span class="inline-code">0x81</span> 用户参数 &harr; AT 对照</strong></p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th><span class="inline-code">0x81</span> Value 顺序</th>
+<th>类型</th>
+<th>对应 AT</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. 上报周期</td>
+<td>uint16 BE</td>
+<td><span class="inline-code">AT+PER=</span> 的<strong>发送秒</strong>（第 2 段）</td>
+<td></td>
+</tr>
+<tr>
+<td>2. 检测周期</td>
+<td>uint16 BE</td>
+<td><span class="inline-code">AT+PER=</span> 的<strong>检测秒</strong>（第 1 段）</td>
+<td>与 AT 字符串段序<strong>相反</strong></td>
+</tr>
+<tr>
+<td>3. 校准值</td>
+<td>int32 BE</td>
+<td><span class="inline-code">AT+CAL=</span>（单值/首路；多路产品另议）</td>
+<td>Length 不够则省略</td>
+</tr>
+<tr>
+<td>4~6. 变量 1~3</td>
+<td>uint8</td>
+<td><span class="inline-code">AT+VAR=</span> 相关（按产品裁剪）</td>
+<td>用 Length 裁剪</td>
+</tr>
+</tbody>
+</table></div><p>例：<span class="inline-code">AT+PER=60,600</span> &rarr; Value 前 4 字节 = <span class="inline-code">02 58 00 3C</span>（上报 600、检测 60）；Length=<span class="inline-code">0x04</span> 时仅两周期。</p><p><strong><span class="inline-code">0x10</span> 通信参数 &harr; AT 对照（私有 LoRa 关键段）</strong></p><p>官网 Value 顺序（用 Length 自适应，满长 11 字节）：</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>字段</th>
+<th>类型</th>
+<th>建议对照</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>TFREQ</td>
+<td>uint32 BE</td>
+<td><span class="inline-code">AT+LORA</span> <strong>发频点</strong>（Hz）</td>
+<td>例 <span class="inline-code">470300000</span> &rarr; <span class="inline-code">1C 07 F7 B0</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>LCP</td>
+<td>uint16 BE</td>
+<td>遗留字段；建议填 <strong>发 SF</strong> 或产品定义常量</td>
+<td>非完整 8 段 <span class="inline-code">lora</span> 串</td>
+</tr>
+<tr>
+<td>3</td>
+<td>RPREM</td>
+<td>uint16 BE</td>
+<td><span class="inline-code">AT+EXLORA</span> <strong>前导</strong></td>
+<td>例前导 8 &rarr; <span class="inline-code">00 08</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td>LFT</td>
+<td>uint16 BE</td>
+<td>遗留 / 产品定义（可 <span class="inline-code">00 00</span>）</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>TSF</td>
+<td>uint8</td>
+<td>建议 <strong>发 SF</strong></td>
+<td>与 <span class="inline-code">AT+LORA</span> 发 SF 同值</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p><span class="inline-code">0x10</span> <strong>不能</strong>一次装下完整 <span class="inline-code">lora</span> 8 段 + <span class="inline-code">exlora</span> 4 段。完整射频仍以 AT / 寄存器 / 下行 Write 为准；注册包 <span class="inline-code">0x10</span> 仅作<strong>关键快照</strong>。<span class="inline-code">batt</span>/<span class="inline-code">ack</span>/<span class="inline-code">aes</span>/<span class="inline-code">eui</span> <strong>无</strong>对应上行 Type（勿发明）；需查配置走下行 Read（&sect;6.7）或 AT。</p>
+</div><p><strong>WW-27L 现网</strong>：注册包多为测量子集（<span class="inline-code">00</span> HB + 可选温湿度 + <span class="inline-code">09</span> + <span class="inline-code">0D</span>），<strong>未必</strong>带 <span class="inline-code">0x81</span>/<span class="inline-code">0x10</span>；新规范建议补齐配置快照。</p><h4 id="s-6.6.2-数据包周期--变化--按键等">6.6.2 数据包（周期 / 变化 / 按键等）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>规范建议</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header</td>
+<td><span class="inline-code">0x03</span></td>
+<td>同注册</td>
+</tr>
+<tr>
+<td>FCtrl</td>
+<td><strong>定时</strong> Trigger=<span class="inline-code">0</span>；<strong>变化/触发</strong> Trigger=<span class="inline-code">1</span></td>
+<td>ACKReq 随 <span class="inline-code">AT+ACK</span></td>
+</tr>
+<tr>
+<td>SeqNo</td>
+<td>主动上报<strong>自增</strong></td>
+<td>注册包除外</td>
+</tr>
+<tr>
+<td>Body</td>
+<td><strong>必选</strong> <span class="inline-code">0x00</span> + <strong>本型测量 Type</strong></td>
+<td>一般<strong>不带</strong>配置快照（<span class="inline-code">0x81</span>/<span class="inline-code">0x10</span>）</td>
+</tr>
+</tbody>
+</table></div><p><strong>官网 FCtrl vs WW-27L 事件码（产品附录）</strong></p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>官网 FCtrl（建议）</th>
+<th>WW-27L 计时事件整字节（现网）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>周期 / 心跳</td>
+<td>Trigger=0（如 <span class="inline-code">0x00</span>）</td>
+<td>低 4 位 <span class="inline-code">0x0</span>（如 <span class="inline-code">0x00</span>）</td>
+</tr>
+<tr>
+<td>变化 / 检测</td>
+<td>Trigger=1（如 <span class="inline-code">0x10</span>）</td>
+<td>低 4 位 <span class="inline-code">0x1</span></td>
+</tr>
+<tr>
+<td>按键 / 手动</td>
+<td>Trigger=1</td>
+<td>低 4 位 <span class="inline-code">0x2</span></td>
+</tr>
+<tr>
+<td>注册</td>
+<td>Trigger=1</td>
+<td><strong><span class="inline-code">0x1A</span></strong></td>
+</tr>
+<tr>
+<td>关机 / 开机</td>
+<td>Mark 等（官网仅明确 Mark=<span class="inline-code">1</span> 开机）</td>
+<td><span class="inline-code">0x04</span>/<span class="inline-code">0x24</span>；<span class="inline-code">0x05</span>/<span class="inline-code">0x25</span></td>
+</tr>
+</tbody>
+</table></div><p>测量 Type 失败或传感器异常：该项可整项省略；<span class="inline-code">0x00</span> 异常位置 1（官网）。</p><h4 id="s-6.6.3-按型号-Type-矩阵">6.6.3 按型号 Type 矩阵</h4><p>与 <strong>&sect;3.0.3</strong> 同款按型号排列。下表只列<strong>本型测量 Type</strong>（注册包测量快照与数据包相同）。精度默认走<strong>官网</strong>；WW-27L 特例见 &sect;6.4。</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>型号 / 类型</th>
+<th>本型测量 Type</th>
+<th>编码要点</th>
+<th>原平台字段（迁移）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WW-10L / 11L</strong> 温湿度</td>
+<td><span class="inline-code">0x04</span> + <span class="inline-code">0x05</span></td>
+<td>温 int16 <strong>0.1℃</strong>；湿 uint8 <strong>1%RH</strong></td>
+<td><span class="inline-code">t</span> <span class="inline-code">rh</span></td>
+</tr>
+<tr>
+<td><strong>WW-12L</strong> 多路温湿度</td>
+<td><span class="inline-code">0x12</span>（或重复 <span class="inline-code">04</span>/<span class="inline-code">05</span>）</td>
+<td>每路 int16 温 + uint16 湿，<strong>0.1</strong></td>
+<td><span class="inline-code">t1</span> <span class="inline-code">rh1</span> &hellip;</td>
+</tr>
+<tr>
+<td><strong>WW-13L</strong> 测温杆</td>
+<td><span class="inline-code">0x14</span></td>
+<td>N&times;int16</td>
+<td><span class="inline-code">t1</span> <span class="inline-code">t2</span> &hellip;</td>
+</tr>
+<tr>
+<td><strong>WW-15L-K</strong> 热电偶</td>
+<td><span class="inline-code">0x14</span> 或双 <span class="inline-code">0x04</span></td>
+<td>热端/冷端</td>
+<td><span class="inline-code">t</span> <span class="inline-code">tc</span></td>
+</tr>
+<tr>
+<td><strong>WW-16L</strong> 红外温度</td>
+<td><span class="inline-code">0x04</span>（devType=<span class="inline-code">0x16</span>）</td>
+<td>以产品手册为准</td>
+<td><span class="inline-code">t</span> &hellip;</td>
+</tr>
+<tr>
+<td><strong>WW-SL210 / WW-27L</strong> 门磁</td>
+<td><span class="inline-code">0x09</span>（+ WW-27L <span class="inline-code">0x0D</span> IO）</td>
+<td>bit 门磁；WW-27L：1=吸合</td>
+<td><span class="inline-code">door</span></td>
+</tr>
+<tr>
+<td><strong>WW-SL200 / WW-26</strong> 水浸</td>
+<td><span class="inline-code">0x09</span></td>
+<td>有水=<span class="inline-code">1</span> / 无水=<span class="inline-code">0</span></td>
+<td><span class="inline-code">water</span></td>
+</tr>
+<tr>
+<td><strong>WW-21L</strong> 人体</td>
+<td><span class="inline-code">0x09</span></td>
+<td>0/1</td>
+<td><span class="inline-code">pir</span></td>
+</tr>
+<tr>
+<td><strong>WW-22L</strong> 烟感</td>
+<td><span class="inline-code">0x09</span></td>
+<td>烟感 bit 图（&sect;6.3.6）</td>
+<td><span class="inline-code">d</span></td>
+</tr>
+<tr>
+<td><strong>WW-28L</strong> SOS</td>
+<td><span class="inline-code">0x09</span></td>
+<td>0/1</td>
+<td><span class="inline-code">d</span></td>
+</tr>
+<tr>
+<td><strong>WW-30L-CO2 / O2</strong></td>
+<td><span class="inline-code">0x30</span>（+可选 <span class="inline-code">04</span>/<span class="inline-code">05</span>）</td>
+<td>气体类型 + int32(0.01)</td>
+<td><span class="inline-code">g</span>（+<span class="inline-code">t</span>/<span class="inline-code">rh</span>）</td>
+</tr>
+<tr>
+<td><strong>WW-50L</strong> 倾角</td>
+<td><span class="inline-code">0x11</span></td>
+<td>每轴 int32 <strong>0.001&deg;</strong></td>
+<td><span class="inline-code">x</span> <span class="inline-code">y</span> <span class="inline-code">z</span></td>
+</tr>
+<tr>
+<td><strong>WW-51L</strong> 振动</td>
+<td><span class="inline-code">0x01</span></td>
+<td>Event + XYZ</td>
+<td><span class="inline-code">acc</span></td>
+</tr>
+<tr>
+<td><strong>WW-70L / 72L</strong> 压力</td>
+<td><span class="inline-code">0x07</span> 或 <span class="inline-code">0x38</span></td>
+<td>Pa/N 或 单位码+float</td>
+<td><span class="inline-code">p</span>（+<span class="inline-code">u</span>）</td>
+</tr>
+<tr>
+<td><strong>WW-71L</strong> 温压</td>
+<td><span class="inline-code">0x04</span> + <span class="inline-code">0x07</span>/<span class="inline-code">0x38</span></td>
+<td></td>
+<td><span class="inline-code">t</span> <span class="inline-code">p</span></td>
+</tr>
+<tr>
+<td><strong>WW-73L</strong> 液位</td>
+<td><span class="inline-code">0x08</span> 或 <span class="inline-code">0x38</span></td>
+<td>按产品</td>
+<td><span class="inline-code">l</span>（兼容 <span class="inline-code">p</span>）</td>
+</tr>
+<tr>
+<td><strong>WW-74L / 78L</strong> 拉力</td>
+<td><span class="inline-code">0x07</span></td>
+<td>N</td>
+<td><span class="inline-code">p</span></td>
+</tr>
+<tr>
+<td><strong>WW-60L</strong> 电流</td>
+<td><span class="inline-code">0x1A</span></td>
+<td>mA（L=2）</td>
+<td><span class="inline-code">i</span> / <span class="inline-code">ch*</span></td>
+</tr>
+<tr>
+<td><strong>WW-61L</strong> 电参</td>
+<td><span class="inline-code">0x1A</span> + <span class="inline-code">0x1B</span></td>
+<td>电流电压 + 功率 W</td>
+<td><span class="inline-code">v</span> <span class="inline-code">i</span> <span class="inline-code">w</span></td>
+</tr>
+<tr>
+<td><strong>WW-D1L/D2L/D3L</strong></td>
+<td><span class="inline-code">0x21</span> / <span class="inline-code">0x24</span> 等</td>
+<td>外接/Modbus</td>
+<td><span class="inline-code">ch*</span> / <span class="inline-code">t</span>/<span class="inline-code">rh</span></td>
+</tr>
+<tr>
+<td><strong>WW-C10L~C18L</strong></td>
+<td><span class="inline-code">0x09</span> / <span class="inline-code">0x21</span> 等</td>
+<td>DI/控制；以产品为准</td>
+<td><span class="inline-code">di</span> <span class="inline-code">rly</span> <span class="inline-code">pwr</span></td>
+</tr>
+<tr>
+<td><strong>网关/模组</strong></td>
+<td>&mdash;</td>
+<td>无测量 Type</td>
+<td>&mdash;</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p>上报里的门磁/水浸状态走 <strong><span class="inline-code">0x09</span></strong>；配置侧 <span class="inline-code">AT+DOOR?</span> 仍是硬件只读查询，通道不同。</p>
+</div><h4 id="s-6.6.4-完整示例官网-TLV-V1-精度基线">6.6.4 完整示例（官网 TLV-V1 精度基线）</h4><p>参数约定：DevAddr=<span class="inline-code">12 34 56 78</span>；CRC 为官网算法（init=<span class="inline-code">0xFFFF</span>，见 &sect;6.5）。温度 <strong>0.1℃</strong>、湿度 <strong>1B&middot;1%RH</strong>（<strong>不是</strong> WW-27L 的 0.01 精度）。</p><p><strong>① 注册包（温湿度 WW-10L 示意）</strong><br/>
+FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inline-code">00 01</span>（不递增）；Body：<span class="inline-code">0x00</span> 设备信息（电压档示意、devType=<span class="inline-code">0x10</span> 温湿度）+ <span class="inline-code">0x81</span>（上报 600s / 检测 60s）+ <span class="inline-code">0x10</span>（TFREQ=470300000、LCP=7、RPREM=8、LFT=0、TSF=7）+ <span class="inline-code">0x04</span>/<span class="inline-code">0x05</span>（23.5℃ / 55%RH）。</p><div class="code">03 12 34 56 78 10 00 01 00 14 10 81 04 02 58 00 3C 10 0B 1C 07 F7 B0 00 07 00 08 00 00 07 04 00 EB 05 37 A8 91</div><p><strong>② 心跳 / 周期数据包（同上测量）</strong><br/>
+FCtrl=<span class="inline-code">0x00</span>；Seq=<span class="inline-code">00 2A</span>；Body：<span class="inline-code">0x00</span> + <span class="inline-code">0x04</span> + <span class="inline-code">0x05</span>。</p><div class="code">03 12 34 56 78 00 00 2A 00 14 10 04 00 EB 05 37 BF 44</div><p><strong>③ 门磁变化包</strong><br/>
+FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inline-code">00 05</span>；devType=<span class="inline-code">0x21</span>；<span class="inline-code">0x09</span>=<span class="inline-code">01</span>（有状态/打开，按产品极性）。</p><div class="code">03 12 34 56 78 10 00 05 00 14 21 09 01 DB A8</div><p><strong>WW-27L 现网对照示例</strong>（Header=<span class="inline-code">0x10</span>、TEMP/HUMI 为 <strong>0.01</strong> 精度、CRC init=<span class="inline-code">0</span>；见 &sect;6.4，<strong>不可</strong>与上列官网示例混用同一解析器）：</p><div class="code">心跳：10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02
+注册：10 12 34 56 78 1A 00 01 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 8A E3</div><h4 id="s-6.6.5-原-JSON-key--Type-迁移对照">6.6.5 原 JSON key &rarr; Type 迁移对照</h4><div class="note">
+<p>仅供从旧「平台扁平 JSON」口径迁移。<strong>LoRa 空口不再发送这些 JSON 字段</strong>；网关可按左列语义从右列 Type 译出。</p>
+</div><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>旧 JSON key / 概念</th>
+<th>TLV 落点</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">no</span></td>
+<td>帧头 <strong>DevAddr(4)</strong></td>
+<td>私有 4 字节编号；非字符串 <span class="inline-code">WWxxL&hellip;</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">model</span></td>
+<td>（无直接 Type）</td>
+<td>型号/版本走 <span class="inline-code">AT+VER</span> / 平台建档；<span class="inline-code">0x00</span>.devType 仅类型码</td>
+</tr>
+<tr>
+<td><span class="inline-code">evt</span></td>
+<td><strong>FCtrl</strong>（Trigger/Mark）或 WW-27L 事件字节</td>
+<td>见 &sect;6.6.2</td>
+</tr>
+<tr>
+<td><span class="inline-code">seq</span></td>
+<td><strong>SeqNo</strong></td>
+<td>注册包不递增</td>
+</tr>
+<tr>
+<td><span class="inline-code">ok</span></td>
+<td><span class="inline-code">0x00</span> 异常位；或测量 Type 是否出现</td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">bat</span></td>
+<td><span class="inline-code">0x00</span> 电压档；WW-27L=<span class="inline-code">0x00</span> HB 电量%</td>
+<td>毫伏<strong>无</strong>独立 Type</td>
+</tr>
+<tr>
+<td><span class="inline-code">ts</span></td>
+<td>（上行常无）</td>
+<td>平台收包时戳；存储记录见 <span class="inline-code">0x40</span></td>
+</tr>
+<tr>
+<td><span class="inline-code">per</span></td>
+<td><strong><span class="inline-code">0x81</span></strong> 前两字段</td>
+<td>注意与 AT 段序相反</td>
+</tr>
+<tr>
+<td><span class="inline-code">var</span> / <span class="inline-code">cal</span></td>
+<td><strong><span class="inline-code">0x81</span></strong> 后续字段</td>
+<td>Length 裁剪</td>
+</tr>
+<tr>
+<td><span class="inline-code">lora</span> / <span class="inline-code">exlora</span> 关键</td>
+<td><strong><span class="inline-code">0x10</span></strong></td>
+<td>非完整 8+4 段</td>
+</tr>
+<tr>
+<td><span class="inline-code">batt</span> / <span class="inline-code">ack</span> / <span class="inline-code">lis</span> / <span class="inline-code">aes</span> / <span class="inline-code">eui</span></td>
+<td><strong>无上行 Type</strong></td>
+<td>配置通道：AT / 下行 / 寄存器</td>
+</tr>
+<tr>
+<td><span class="inline-code">t</span> / <span class="inline-code">rh</span></td>
+<td><span class="inline-code">0x04</span> / <span class="inline-code">0x05</span></td>
+<td>官网 0.1℃ / 1%RH</td>
+</tr>
+<tr>
+<td><span class="inline-code">t1</span>&hellip; / <span class="inline-code">rh1</span>&hellip;</td>
+<td><span class="inline-code">0x14</span> / <span class="inline-code">0x12</span> / <span class="inline-code">0x15</span></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">door</span> / <span class="inline-code">water</span> / <span class="inline-code">pir</span> / <span class="inline-code">d</span></td>
+<td><strong><span class="inline-code">0x09</span></strong></td>
+<td>烟感用 bit 图</td>
+</tr>
+<tr>
+<td><span class="inline-code">g</span></td>
+<td><strong><span class="inline-code">0x30</span></strong></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">x</span> <span class="inline-code">y</span> <span class="inline-code">z</span></td>
+<td><strong><span class="inline-code">0x11</span></strong></td>
+<td>0.001&deg;</td>
+</tr>
+<tr>
+<td><span class="inline-code">acc</span></td>
+<td><strong><span class="inline-code">0x01</span></strong></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">p</span> / <span class="inline-code">u</span></td>
+<td><span class="inline-code">0x07</span> / <span class="inline-code">0x38</span></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">l</span></td>
+<td><span class="inline-code">0x08</span> / <span class="inline-code">0x38</span>（按产品）</td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">v</span> <span class="inline-code">i</span> <span class="inline-code">w</span></td>
+<td><span class="inline-code">0x1A</span> / <span class="inline-code">0x1B</span></td>
+<td></td>
+</tr>
+<tr>
+<td><span class="inline-code">iccid</span>/<span class="inline-code">imei</span>/<span class="inline-code">csq</span>/<span class="inline-code">thre</span>/<span class="inline-code">server</span>&hellip;</td>
+<td><strong>不适用</strong></td>
+<td>4G 字段；LoRa 不上报</td>
+</tr>
+</tbody>
+</table></div><h3 id="s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</h3><p>下行帧外形与上行一致。完整寄存器映射仍见 <strong>&sect;5.2 / &sect;5.3</strong>；此处仅列官网 TLV 下行 Type，便于与空口对照。</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>名称</th>
+<th>Value</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">0xFF</span></td>
+<td>ACK</td>
+<td>2B</td>
+<td>第 1 字节备用；第 2 字节：<span class="inline-code">0</span> 失败 / <span class="inline-code">1</span> 成功</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x00</span></td>
+<td>PWR</td>
+<td>1B</td>
+<td><span class="inline-code">2</span> = 重启</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x01</span></td>
+<td>Read</td>
+<td>1B</td>
+<td><span class="inline-code">10</span> 读配置 &middot; <span class="inline-code">20</span> 读地址 &middot; <span class="inline-code">21</span> 读业务 &middot; <span class="inline-code">81</span> 读用户配置</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x02</span></td>
+<td>Write</td>
+<td>1+N</td>
+<td>首字节写子类型：时间/地址/频点/扩频/周期/校准/AppKey&hellip;</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x21</span></td>
+<td>Acquire</td>
+<td>1+N</td>
+<td>用户命令透传</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x22</span></td>
+<td>Switch</td>
+<td>1B</td>
+<td>开关（<span class="inline-code">01</span> 开 / <span class="inline-code">00</span> 关）</td>
+</tr>
+<tr>
+<td><span class="inline-code">0x23</span></td>
+<td>Multiway</td>
+<td>2B</td>
+<td>掩码 + 动作（最多 8 路）</td>
+</tr>
+</tbody>
+</table></div><p><strong>Write（<span class="inline-code">0x02</span>）子类型摘要</strong>：<span class="inline-code">00</span> 时间 YYMMDDhhmmss &middot; <span class="inline-code">01</span>/<span class="inline-code">02</span> 单播/组播地址 &middot; <span class="inline-code">03</span>/<span class="inline-code">04</span> 发频点/扩频 &middot; <span class="inline-code">05</span> 收前导 &middot; <span class="inline-code">11</span>/<span class="inline-code">12</span> 上报/检测周期 &middot; <span class="inline-code">13</span> 校准 &middot; <span class="inline-code">14</span>~<span class="inline-code">17</span> 变量 &middot; <span class="inline-code">40</span> AppKey(16B) &middot; <span class="inline-code">41</span> AppEUI(8B)。</p></section>
+<section class="section" id="s-7-与-4G-分册差异摘要"><h2>7 与 4G 分册差异摘要</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>差异点</th>
+<th>4G 分册</th>
+<th>本 LoRa 分册</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>上报载体</strong></td>
+<td>设备侧 <strong>JSON</strong> 报文</td>
+<td>空口 <strong>仅 TLV-V1</strong>（&sect;6）；平台扁平字段由网关翻译（&sect;6.6.5）</td>
+</tr>
+<tr>
+<td>网络配置</td>
+<td><span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">apn</span> / <span class="inline-code">4G?</span></td>
+<td><span class="inline-code">lora</span> / <span class="inline-code">exlora</span> / <span class="inline-code">ack</span> / <span class="inline-code">batt</span></td>
+</tr>
+<tr>
+<td>注册快照</td>
+<td>JSON：<span class="inline-code">per</span> / <span class="inline-code">thre</span> / <span class="inline-code">server</span>&hellip;</td>
+<td>TLV：<span class="inline-code">0x00</span> + 建议 <span class="inline-code">0x81</span>/<span class="inline-code">0x10</span> + 测量 Type（&sect;6.6.1）；<strong>无 <span class="inline-code">thre</span>/<span class="inline-code">server</span></strong></td>
+</tr>
+<tr>
+<td>上报蜂窝字段</td>
+<td><span class="inline-code">iccid</span> / <span class="inline-code">imei</span> / <span class="inline-code">csq</span></td>
+<td><strong>无</strong>（可选网关附加 RSSI/SNR）</td>
+</tr>
+<tr>
+<td>对时</td>
+<td>JSON <span class="inline-code">tt</span></td>
+<td>下行 <span class="inline-code">0x02+0x00+YYMMDDhhmmss</span></td>
+</tr>
+<tr>
+<td>阈值</td>
+<td><span class="inline-code">thre</span> 可用</td>
+<td><strong>预留</strong>（ERR3）</td>
+</tr>
+<tr>
+<td>硬件层</td>
+<td>无 door 配置；io/pwr 按类型</td>
+<td><span class="inline-code">door</span> / <span class="inline-code">io</span> / <span class="inline-code">pwr</span></td>
+</tr>
+<tr>
+<td>压力</td>
+<td><span class="inline-code">unit</span> / <span class="inline-code">ran</span></td>
+<td>不支持（走私有寄存器）</td>
+</tr>
+<tr>
+<td>配置载体</td>
+<td>AT + TCP/UDP/MQTT JSON</td>
+<td>AT + LoRaWAN 下行 + 私有寄存器（+ 可选编号+AT）</td>
+</tr>
+<tr>
+<td>电量</td>
+<td>JSON <span class="inline-code">bat</span></td>
+<td>TLV <span class="inline-code">0x00</span> 电压档（WW-27L：HB 电量%）；配置仍用 <span class="inline-code">AT+BATT</span>/<span class="inline-code">batt</span></td>
+</tr>
+<tr>
+<td>设备标识</td>
+<td><span class="inline-code">no</span> 字符串（型号+序号等）</td>
+<td>帧内 <strong>DevAddr 4 字节</strong>；<strong>LoRaWAN DevEUI 8 字节</strong> = 前缀 + 标号（&sect;2.3.1）</td>
+</tr>
+<tr>
+<td>空口加密</td>
+<td>TLS/MQTT 等上层</td>
+<td>私有：<span class="inline-code">AT+AES</span> 配 128-bit 密钥（16 字节 hex）；LoRaWAN：入网密钥（AppKey 等，非本 <span class="inline-code">aes</span>）</td>
+</tr>
+</tbody>
+</table></div></section>
+<section class="section" id="s-8-规范改动清单对现有-LoRa"><h2>8 规范改动清单（对现有 LoRa）</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>内容</th>
+<th>兼容性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>保留</td>
+<td><span class="inline-code">per</span>/<span class="inline-code">var</span>/<span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">ack</span>/<span class="inline-code">batt</span>/<span class="inline-code">ver</span>/<span class="inline-code">log</span></td>
+<td>现有固件与 SensorTool 无需变更</td>
+</tr>
+<tr>
+<td>新增</td>
+<td><span class="inline-code">cal</span>、<span class="inline-code">tun</span>（先在已有 0x13/0x17 的产品上补 AT）</td>
+<td>旧固件回 ERROR</td>
+</tr>
+<tr>
+<td>预留</td>
+<td><span class="inline-code">thre</span>、<span class="inline-code">acc</span></td>
+<td>能力集外 &rarr; ERR3</td>
+</tr>
+<tr>
+<td>明确</td>
+<td><span class="inline-code">door</span>/<span class="inline-code">io</span>/<span class="inline-code">pwr</span> 归硬件层</td>
+<td>与现状一致</td>
+</tr>
+<tr>
+<td>上报口径（文档）</td>
+<td><strong>LoRa 空口仅 TLV</strong>；&sect;6.6 重做注册包/数据包设计；删除 JSON 上报示例；保留 &sect;6.6.5 迁移对照；WW-27L 差异见 &sect;6.4</td>
+<td>新对接按 &sect;6.6；现网 WW-27L 仍可能测量子集（&sect;6.4）</td>
+</tr>
+<tr>
+<td>明确（文档）</td>
+<td><span class="inline-code">aes</span>（私有 <strong>128-bit 密钥</strong>，非开关）、<span class="inline-code">eui</span>/DevEUI（8 字节=前缀+标号）；私有编号 4 字节</td>
+<td>以 <span class="inline-code">ATH</span> 为准；不计入射频固定 4 条</td>
+</tr>
+</tbody>
+</table></div></section>
+<section class="section" id="s-9-自检脚本"><h2>9 自检脚本</h2><div class="code">+++
+AT
+ATH
+AT+VER?
+AT+PER?
+AT+LORA?
+AT+EXLORA?
+AT+ACK?
+AT+BATT?
+AT+AES?           # 私有加密；ATH 有则测
+AT+EUI?           # LoRaWAN DevEUI；或 AT+DEVEUI?
+AT+LIS?
+AT+DOOR?          # 仅门磁
+AT+INFO?
+AT+REPORT
+ATO</div></section>
+<section class="section" id="s-10-修订记录"><h2>10 修订记录</h2><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>日期</th>
+<th>版本</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.9-LoRa</strong></td>
+<td><strong>去掉 LoRa JSON 上报主口径</strong>：&sect;6.6 改为注册包/数据包 TLV 设计（配置快照 <span class="inline-code">0x81</span>/<span class="inline-code">0x10</span>、型号 Type 矩阵、完整 hex 示例、旧 JSON key&rarr;Type 迁移对照）；元信息/&sect;7/&sect;8 同步；4G 仍为 JSON</td>
+</tr>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.8-LoRa</strong></td>
+<td><strong>空口 TLV 并入手册</strong>：&sect;6 重排为 TLV 主定义（帧 / Type 全表 / 详解 / WW-27L 差异 / CRC / 下行 Type）+ 当时保留 &sect;6.6 平台 JSON；来源官网 TLV-V1 V1.7.2</td>
+</tr>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.7-LoRa</strong></td>
+<td>更正：<span class="inline-code">AT+AES</span> 为 <strong>128-bit 密钥配置</strong>（16 字节 / 32 个 hex 字符），<strong>不是</strong> <span class="inline-code">0/1</span> 开关；&sect;1.2 / &sect;2.3 / &sect;2.3.1 / &sect;5.4 / &sect;7~&sect;8 同步</td>
+</tr>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.6-LoRa</strong></td>
+<td>备注补齐：<strong>AES</strong>、<strong>DevEUI</strong>（<span class="inline-code">AT+EUI</span>/<span class="inline-code">AT+DEVEUI</span>，8 字节=前缀 4B + 标号 4B）；明确私有设备编号 <strong>4 字节</strong>、LoRaWAN <strong>8 字节</strong>；&sect;2.3.1 / &sect;5.4 / &sect;7~&sect;9 同步</td>
+</tr>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.5-LoRa</strong></td>
+<td><strong>对齐 4G V4.5 上报口径</strong>：<span class="inline-code">bat</span> 合并为 <span class="inline-code">"电量%,毫伏"</span>；注册配置快照与 AT 同名同值不拆段（<span class="inline-code">per</span>/<span class="inline-code">lora</span>/<span class="inline-code">exlora</span>/<span class="inline-code">batt</span>，示例不含 <span class="inline-code">thre</span>/<span class="inline-code">server</span>）；新增 &sect;6 上报报文（&sect;6.3.0 按型号速查、&sect;6.3.2 注册+数据成对 JSON）；附录重排为 &sect;6~&sect;10；区分上报 <span class="inline-code">bat</span> 与配置 <span class="inline-code">batt</span></td>
+</tr>
+<tr>
+<td>2026-11-07</td>
+<td><strong>V4.0-LoRa</strong></td>
+<td><strong>拆出 LoRa 分册</strong>：以《AT配置统一规范-LoRa》为权威，正式写入 <span class="inline-code">AT+EXLORA</span>/<span class="inline-code">AT+BATT</span>/<span class="inline-code">AT+DOOR?</span>；&sect;3.0.3 仅「LoRa网络（射频）」列；三种配置载体与功能码/寄存器映射；类型矩阵对齐 SL210/SL200/WW-22L 等</td>
+</tr>
+<tr>
+<td>2026-11-02</td>
+<td>规范初稿</td>
+<td>《AT配置统一规范-LoRa》：key 表、类型矩阵、三种载体与映射、改动清单</td>
+</tr>
+</tbody>
+</table></div></section>
+  </main>
+  <footer>万维物联网（南京）有限公司 · AT 与远程配置（LoRa）</footer>
+  <script src="manual-sidebar.js"></script>
+</body>
+</html>
