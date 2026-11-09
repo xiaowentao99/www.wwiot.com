@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.15-LoRa。Modbus 寄存器从 0001 起连续编排，射频从 0010 起，只读从 0023 起。">
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.16-LoRa。门磁水浸只用 WW-27L / WW-27L-D / WW-26L。新增 WW-D5-L RS485 Modbus 采集指令。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,18 @@
     <section class="hero">
       <span class="badge">LoRa · 空口 TLV</span>
       <h1>AT 与远程配置（LoRa）</h1>
-      <p>协议：LoRa / LoRaWAN · 版本 V4.15-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>。V4.15 起 Modbus 寄存器<strong>连续编号、中间不留空号</strong>：配置区 <span class="inline-code">0001</span>–<span class="inline-code">000A</span>（PER、VAR、CAL、LOG、ACK、BATT），衔接区 <span class="inline-code">000B</span>–<span class="inline-code">000F</span>，射频 <span class="inline-code">0010</span>–<span class="inline-code">0022</span>，只读从 <span class="inline-code">0023</span> 起。旧断号地址作废。写 PER 仍是起始 <span class="inline-code">0001</span>、个数 2，CRC <span class="inline-code">86 3F</span>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
-      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.15-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.16-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>。门磁为 <strong>WW-27L / WW-27L-D</strong>，水浸为 <strong>WW-26L</strong>（不再使用 SL 型号名）。新增 <strong>WW-D5-L</strong>：RS485 Modbus 采集，指令 <span class="inline-code">AT+MBUART</span> / <span class="inline-code">MBMODE</span> / <span class="inline-code">MBCMD</span> / <span class="inline-code">MBSCAN</span> / <span class="inline-code">MBRAW</span>，结果经 TLV <span class="inline-code">0x24</span> 上报。广播禁止 <span class="inline-code">AT+MBRAW</span>。详见 §3.5。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.16-LoRa</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <div class="note"><strong>V4.15 · Modbus 寄存器连续重排。</strong>配置区 <span class="inline-code">0001</span>–<span class="inline-code">0002</span> PER，<span class="inline-code">0003</span>–<span class="inline-code">0004</span> VAR，<span class="inline-code">0005</span>–<span class="inline-code">0006</span> CAL，<span class="inline-code">0007</span> LOG，<span class="inline-code">0008</span> ACK，<span class="inline-code">0009</span>–<span class="inline-code">000A</span> BATT（0.1 V）。衔接区 <span class="inline-code">000B</span> 控制、<span class="inline-code">000C</span> UNIT、<span class="inline-code">000D</span>–<span class="inline-code">000E</span> RAN、<span class="inline-code">000F</span> 保留。射频从 <span class="inline-code">0010</span> 连续到 <span class="inline-code">0022</span>；只读从 <span class="inline-code">0023</span> 起。旧地址 <span class="inline-code">000F</span> / <span class="inline-code">0015</span> / <span class="inline-code">00F0</span> / <span class="inline-code">0100</span> 等断号作废。PER 写示例不变：<span class="inline-code">12 34 56 78 10 00 01 00 02 04 00 00 00 0A 86 3F</span>。全文见 §5.3.3。</div>
+    <div class="note"><strong>V4.16 · WW-D5-L 与型号名。</strong>门磁只写 WW-27L、WW-27L-D，水浸只写 WW-26L，不再使用旧的 SL 别名。<strong>WW-D5-L</strong> 为 RS485 Modbus 采集器，支持 <span class="inline-code">AT+MBUART</span>、<span class="inline-code">AT+MBMODE</span>、<span class="inline-code">AT+MBCMD</span>、<span class="inline-code">AT+MBSCAN</span>、<span class="inline-code">AT+MBRAW</span>，以及 <span class="inline-code">PWR</span> / <span class="inline-code">PER</span> / <span class="inline-code">LORA</span> / <span class="inline-code">ACK</span> / <span class="inline-code">BATT</span>。采集结果走 TLV <span class="inline-code">0x24</span>。广播禁止 MBRAW。本机 <span class="inline-code">UNIT</span> / <span class="inline-code">RAN</span> / <span class="inline-code">VAR</span> / <span class="inline-code">ZERO</span> / <span class="inline-code">THRE</span> / <span class="inline-code">RST</span> / <span class="inline-code">SERVER</span> / <span class="inline-code">MQTT</span> / <span class="inline-code">MBPOLL</span> 回 ERR3。RS485 参数优先远程 AT，不另造 MB 寄存器地址。§5.3.3 连续寄存器表不变。详见 §3.5。</div>
 
-    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27L与双门磁WW-27L-D">3.2 门磁（SL210 / WW-27L）与双门磁（WW-27L-D）</a></li><li><a href="#s-3.3-水浸SL200--WW-26L与烟感WW-22L">3.3 水浸（SL200 / WW-26L）与烟感（WW-22L）</a></li><li><a href="#s-3.3.1-人体感应WW-21L">3.3.1 人体感应（WW-21L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器连续编号写入须按组一次写齐">5.3.3 key &harr; 寄存器（连续编号；写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
+    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁WW-27L与双门磁WW-27L-D">3.2 门磁（WW-27L）与双门磁（WW-27L-D）</a></li><li><a href="#s-3.3-水浸WW-26L与烟感WW-22L">3.3 水浸（WW-26L）与烟感（WW-22L）</a></li><li><a href="#s-3.3.1-人体感应WW-21L">3.3.1 人体感应（WW-21L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-3.5-WW-D5-LRS485-Modbus-采集">3.5 WW-D5-L（RS485 Modbus 采集）</a><ol><li><a href="#s-3.5.1-能力集与-ERR3">3.5.1 能力集与 ERR3</a></li><li><a href="#s-3.5.2-指令表">3.5.2 指令表</a></li><li><a href="#s-3.5.3-示例">3.5.3 示例</a></li><li><a href="#s-3.5.4-采集与空口上报">3.5.4 采集与空口上报</a></li></ol></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器连续编号写入须按组一次写齐">5.3.3 key &harr; 寄存器（连续编号；写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.15-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.16-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
 4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -53,7 +53,7 @@
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.15-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+<td><strong>V4.16-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 <td>适用</td>
-<td>万维 <strong>LoRa / LoRaWAN</strong> 系列：温湿度（WW-10/11/12L 等）、测温杆（WW-13L）、门磁（WW-SL210-LF / WW-27L / <strong>WW-27L-D 双门磁</strong>）、水浸（WW-SL200-LF / WW-26L）、人体感应（WW-21L，含光照/温湿度等）、烟感（WW-22L）及官网 L / LW / HW 族</td>
+<td>万维 <strong>LoRa / LoRaWAN</strong> 系列：温湿度（WW-10/11/12L 等）、测温杆（WW-13L）、门磁（<strong>WW-27L</strong> / <strong>WW-27L-D 双门磁</strong>）、水浸（<strong>WW-26L</strong>）、人体感应（WW-21L，含光照/温湿度等）、烟感（WW-22L）、<strong>RS485 采集器（WW-D5-L 等）</strong>及官网 L / LW / HW 族</td>
 </tr>
 <tr>
 <td>结构</td>
@@ -322,6 +322,48 @@
 <td>射频&middot;LoRaWAN</td>
 </tr>
 <tr>
+<td><strong>RS485 / Modbus 采集（WW-D5-L 等）</strong></td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+<td>&mdash;</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBUART=</span></td>
+<td><span class="inline-code">波特率,校验,停止位</span>；校验 <span class="inline-code">0</span>=N / <span class="inline-code">1</span>=E / <span class="inline-code">2</span>=O（硬件常按 8N1）</td>
+<td><span class="inline-code">AT+MBUART=9600,0,1</span></td>
+<td>立即</td>
+<td>采集&middot;D5L</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBMODE=</span></td>
+<td><span class="inline-code">0</span>=指令表 / <span class="inline-code">1</span>=地址轮询 / <span class="inline-code">2</span>=两者</td>
+<td><span class="inline-code">AT+MBMODE=0</span></td>
+<td>立即</td>
+<td>采集&middot;D5L</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBCMD=</span></td>
+<td><span class="inline-code">idx,en,slave,fc,reg,qty</span>；最多 10 条，<span class="inline-code">idx</span>=<span class="inline-code">0..9</span></td>
+<td><span class="inline-code">AT+MBCMD=0,1,1,0x03,0,2</span></td>
+<td>立即</td>
+<td>采集&middot;D5L</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBSCAN=</span></td>
+<td><span class="inline-code">en,start,end,fc,reg,qty</span>；地址轮询 <span class="inline-code">1~247</span></td>
+<td><span class="inline-code">AT+MBSCAN=1,1,10,0x03,0,1</span></td>
+<td>立即</td>
+<td>采集&middot;D5L</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBRAW=</span></td>
+<td>完整 Modbus RTU hex（含 CRC）&rarr; RS485；应答经 TLV <strong><span class="inline-code">0x24</span></strong></td>
+<td><span class="inline-code">AT+MBRAW=010300000002C40B</span></td>
+<td>即时</td>
+<td>采集&middot;D5L</td>
+</tr>
+<tr>
 <td><strong>系统层</strong></td>
 <td>&mdash;</td>
 <td>&mdash;</td>
@@ -401,7 +443,8 @@
 </tbody>
 </table></div><div class="note">
 <p><strong>模拟量量产</strong>：同款 0&ndash;3V ADC 前端、不同工程量程 SKU（如 1/2/3 MPa）用 <span class="inline-code">AT+UNIT=</span> + <span class="inline-code">AT+RAN=</span> 标定；例 <span class="inline-code">AT+UNIT=2</span> + <span class="inline-code">AT+RAN=0,3</span> &rarr; 0~3 MPa。<br/>
-<strong>4G 专属 key（LoRa 回 ERR3）</strong>：<span class="inline-code">thre</span>（预留）/ <span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">rst</span> / <span class="inline-code">tt</span>（JSON）。详见 &sect;4。</p>
+<strong>4G 专属 key（LoRa 回 ERR3）</strong>：<span class="inline-code">thre</span>（预留）/ <span class="inline-code">server</span> / <span class="inline-code">mqtt</span> / <span class="inline-code">rst</span> / <span class="inline-code">tt</span>（JSON）。详见 &sect;4。<br/>
+<strong>WW-D5-L RS485 采集</strong>：<span class="inline-code">MBUART</span>/<span class="inline-code">MBMODE</span>/<span class="inline-code">MBCMD</span>/<span class="inline-code">MBSCAN</span>/<span class="inline-code">MBRAW</span>（+ <span class="inline-code">PWR</span>/<span class="inline-code">PER</span>/<span class="inline-code">LORA</span>/<span class="inline-code">ACK</span>/<span class="inline-code">BATT</span>/<span class="inline-code">LOG</span>/<span class="inline-code">REPORT</span>）；细则见 <strong>&sect;3.5</strong>。<span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span>/<span class="inline-code">VAR</span>/<span class="inline-code">ZERO</span>/<span class="inline-code">THRE</span>/<span class="inline-code">RST</span>/<span class="inline-code">SERVER</span>/<span class="inline-code">MQTT</span>/<span class="inline-code">MBPOLL</span> &rarr; <strong>ERR3</strong>。</p>
 </div></section>
 <section class="section" id="第一部分--通用型"><h2 class="part-title">第一部分 &middot; 通用型</h2></section>
 <section class="section" id="s-2.1-通用层per--var--cal--tun"><h2>2.1 通用层（per / var / cal / tun）</h2><div class="table-wrap"><table>
@@ -492,7 +535,7 @@ AT+PER?  &rarr; AT+PER=60,600 + OK</div></section>
 <td><span class="inline-code">pwr</span></td>
 <td><span class="inline-code">AT+PWR=</span></td>
 <td><span class="inline-code">预供电秒,采后保持秒</span></td>
-<td>I2C 传感器供电；<span class="inline-code">0,0</span>=采前上电 &ge;15ms、采完即关</td>
+<td>外设/传感器供电；<span class="inline-code">0,0</span>=采前上电 &ge;15ms、采完即关。<strong>采集器</strong>（含 <strong>WW-D5-L</strong>）适用；D5L 外供电脚为 <strong>PC09</strong>（高有效，空闲默认关断）</td>
 <td>现行</td>
 <td>下周期</td>
 </tr>
@@ -500,7 +543,8 @@ AT+PER?  &rarr; AT+PER=60,600 + OK</div></section>
 </table></div><div class="code">AT+DOOR?          &rarr; AT+DOOR=1,0 + OK
 AT+IO=1
 AT+PWR=2,1
-AT+PWR=0,0        # 最短上电采完即关</div></section>
+AT+PWR=0,0        # 最短上电采完即关
+AT+PWR=3,1        # WW-D5-L 示例：预供电 3s，采后保持 1s</div></section>
 <section class="section" id="s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui"><h2>2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</h2><div class="table-wrap"><table>
 <thead>
 <tr>
@@ -813,7 +857,7 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td>&mdash;（+ 控制/LIS/<strong>ZERO</strong>；含光照/温湿度等传感）</td>
 </tr>
 <tr>
-<td><strong>门磁（WW-SL210-LF / WW-27L）</strong></td>
+<td><strong>门磁（WW-27L）</strong></td>
 <td><span class="inline-code">per, door(读), io, lora, exlora, ack, batt, ver, log</span></td>
 <td><span class="inline-code">AT+DOOR?</span> <span class="inline-code">AT+IO</span>；<strong>无</strong> <span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">zero</span></td>
 </tr>
@@ -823,9 +867,14 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td><span class="inline-code">AT+DOOR?</span>（两路）<span class="inline-code">AT+IO</span>；<strong>无</strong> <span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">zero</span></td>
 </tr>
 <tr>
-<td><strong>水浸（WW-SL200-LF / WW-26L）</strong></td>
+<td><strong>水浸（WW-26L）</strong></td>
 <td><span class="inline-code">per, lora, exlora, ack, batt, ver, log</span></td>
 <td>&mdash;；<strong>无</strong> <span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">zero</span></td>
+</tr>
+<tr>
+<td><strong>RS485 采集器（WW-D5-L）</strong></td>
+<td><span class="inline-code">per, pwr, lora, ack, batt, ver, log</span> + <span class="inline-code">mbuart</span>/<span class="inline-code">mbmode</span>/<span class="inline-code">mbcmd</span>/<span class="inline-code">mbscan</span>/<span class="inline-code">mbraw</span></td>
+<td><span class="inline-code">AT+PWR</span> + MB*；产品页列 <span class="inline-code">AT+LORA</span>（<span class="inline-code">EXLORA</span> 以 <span class="inline-code">ATH</span> 为准）；见 <strong>&sect;3.5</strong></td>
 </tr>
 <tr>
 <td>烟感（WW-22L）</td>
@@ -894,7 +943,7 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td>无线红外母线测温</td>
 </tr>
 <tr>
-<td><strong>WW-SL210-LF / WW-27L / LW / HW</strong></td>
+<td><strong>WW-27L / LW / HW</strong></td>
 <td><strong>21</strong></td>
 <td><span class="inline-code">+++</span>, <span class="inline-code">AT</span>, <span class="inline-code">ATH</span>, <span class="inline-code">ATO</span>, <span class="inline-code">ATR</span>, <span class="inline-code">AT+SER</span>, <span class="inline-code">AT+PER</span>, <span class="inline-code">AT+LIS</span>, <span class="inline-code">AT+VER</span>, <span class="inline-code">AT+LOG</span>, <span class="inline-code">AT+INFO?</span>, <span class="inline-code">AT+DATA?</span>, <span class="inline-code">AT+REPORT</span>, <span class="inline-code">AT+OTA</span>, <span class="inline-code">AT+OTADATA</span></td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
@@ -910,7 +959,7 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td><strong>双门磁</strong>；<span class="inline-code">AT+DOOR?</span> 回两路；无 VAR/CAL/ZERO</td>
 </tr>
 <tr>
-<td><strong>WW-SL200-LF / WW-26L / LW / HW</strong></td>
+<td><strong>WW-26L / LW / HW</strong></td>
 <td><strong>19</strong></td>
 <td>同门磁通用类（无 VAR/CAL/ZERO/TUN；无 DOOR/IO）</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
@@ -1043,7 +1092,7 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td>同上 + 控制</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
 <td><span class="inline-code">AT+PWR</span></td>
-<td>采集器；可另有 <span class="inline-code">AT+DLY</span>（若 ATH 列出）</td>
+<td>采集器；可另有 <span class="inline-code">AT+DLY</span>（若 ATH 列出）；<strong>RS485 Modbus 采集指令见 &sect;3.5 / 以 ATH 为准</strong></td>
 </tr>
 <tr>
 <td><strong>WW-D2L / LW / HW</strong></td>
@@ -1051,7 +1100,7 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
 <td><span class="inline-code">AT+PWR</span></td>
-<td>采集器（电池）</td>
+<td>采集器（电池）；RS485 Modbus 见 &sect;3.5 / ATH</td>
 </tr>
 <tr>
 <td><strong>WW-D3L / LW / HW</strong></td>
@@ -1059,7 +1108,15 @@ OK</div><p>门磁机还会出现 <span class="inline-code">AT+DOOR?</span>、<sp
 <td>同上</td>
 <td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+EXLORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span></td>
 <td><span class="inline-code">AT+PWR</span></td>
-<td>采集器（太阳能）</td>
+<td>采集器（太阳能）；RS485 Modbus 见 &sect;3.5 / ATH</td>
+</tr>
+<tr>
+<td><strong>WW-D5-L</strong></td>
+<td><strong>约 24+</strong></td>
+<td><span class="inline-code">+++</span>, <span class="inline-code">AT</span>, <span class="inline-code">ATH</span>, <span class="inline-code">ATO</span>, <span class="inline-code">ATR</span>, <span class="inline-code">AT+SER</span>, <span class="inline-code">AT+PER</span>, <span class="inline-code">AT+VER</span>, <span class="inline-code">AT+LOG</span>, <span class="inline-code">AT+INFO?</span>, <span class="inline-code">AT+DATA?</span>, <span class="inline-code">AT+REPORT</span>, <span class="inline-code">AT+OTA</span>, <span class="inline-code">AT+OTADATA</span>（及若 ATH 列 <span class="inline-code">AIRLISTEN</span>/<span class="inline-code">SLEEP</span>）</td>
+<td><span class="inline-code">AT+LORA</span>, <span class="inline-code">AT+ACK</span>, <span class="inline-code">AT+BATT</span>（产品页列 <span class="inline-code">LORA</span>；<strong><span class="inline-code">EXLORA</span> 以 ATH 为准</strong>）</td>
+<td><span class="inline-code">AT+PWR</span>, <span class="inline-code">AT+MBUART</span>, <span class="inline-code">AT+MBMODE</span>, <span class="inline-code">AT+MBCMD</span>, <span class="inline-code">AT+MBSCAN</span>, <span class="inline-code">AT+MBRAW</span></td>
+<td><strong>RS485 Modbus 采集&rarr;LoRa TLV</strong>；细则 <strong>&sect;3.5</strong>；<span class="inline-code">UNIT</span>/<span class="inline-code">RAN</span>/<span class="inline-code">VAR</span>/<span class="inline-code">ZERO</span>/<span class="inline-code">THRE</span>/<span class="inline-code">RST</span>/<span class="inline-code">SERVER</span>/<span class="inline-code">MQTT</span>/<span class="inline-code">MBPOLL</span>&rarr;ERR3</td>
 </tr>
 <tr>
 <td><strong>WW-C10L ~ C17L</strong></td>
@@ -1103,11 +1160,11 @@ AT+CAL=-30,150
 AT+VAR=50,200
 AT+PER=60,600
 AT+LORA=470300000,7,470300000,7,1,14,0,1</div></section>
-<section class="section" id="s-3.2-门磁SL210--WW-27L与双门磁WW-27L-D"><h2>3.2 门磁（SL210 / WW-27L）与双门磁（WW-27L-D）</h2><p><strong>有效 key</strong>：<span class="inline-code">per, door, io, lora, exlora, ack, batt, ver, log</span><br/>
+<section class="section" id="s-3.2-门磁WW-27L与双门磁WW-27L-D"><h2>3.2 门磁（WW-27L）与双门磁（WW-27L-D）</h2><p><strong>有效 key</strong>：<span class="inline-code">per, door, io, lora, exlora, ack, batt, ver, log</span><br/>
 <strong>无</strong> <span class="inline-code">var</span> / <span class="inline-code">cal</span> / <span class="inline-code">zero</span>（下发回 <strong>ERR3</strong>）。WW-27L-D 为<strong>双门磁</strong>，<span class="inline-code">AT+DOOR?</span> 回两路状态（如 <span class="inline-code">AT+DOOR=1,0</span>）。</p><div class="code">AT+DOOR?
 AT+IO=0
 AT+PER=60,3600</div></section>
-<section class="section" id="s-3.3-水浸SL200--WW-26L与烟感WW-22L"><h2>3.3 水浸（SL200 / WW-26L）与烟感（WW-22L）</h2><p>水浸：<span class="inline-code">per, lora, exlora, ack, batt, ver, log</span>（<strong>无</strong> <span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">zero</span>）<br/>
+<section class="section" id="s-3.3-水浸WW-26L与烟感WW-22L"><h2>3.3 水浸（WW-26L）与烟感（WW-22L）</h2><p>水浸：<span class="inline-code">per, lora, exlora, ack, batt, ver, log</span>（<strong>无</strong> <span class="inline-code">var</span>/<span class="inline-code">cal</span>/<span class="inline-code">zero</span>）<br/>
 烟感：<span class="inline-code">per, lora, exlora, ack, batt, ver, log</span>（更精简）</p><div class="code">AT+PER=60,3600</div></section>
 <section class="section" id="s-3.3.1-人体感应WW-21L"><h2>3.3.1 人体感应（WW-21L）</h2><p>带<strong>光照、温湿度</strong>等传感，配置侧需要模拟量指令：</p><p><strong>有效 key</strong>：<span class="inline-code">per, var, cal, tun, lora, exlora, ack, batt, ver, log</span>（+ 控制 / LIS / <strong>ZERO</strong>）</p><div class="code">AT+TUN=0
 AT+CAL=-30,150
@@ -1125,9 +1182,151 @@ AT+RAN=0,3
 AT+UNIT?
 AT+RAN?</div><ul>
 <li><strong>运动类</strong>：<span class="inline-code">acc</span> 预留（ERR3）。  </li>
-<li><strong>采集器</strong>：<span class="inline-code">pwr</span> 属硬件层。  </li>
+<li><strong>采集器</strong>：<span class="inline-code">pwr</span> 属硬件层；<strong>WW-D5-L RS485/Modbus 采集</strong>见 <strong>&sect;3.5</strong>（D1L/D2L/D3L 若 ATH 列 MB* 亦同口径）。  </li>
 <li><strong>控制类</strong>：<span class="inline-code">io</span>（及固件若实现的 <span class="inline-code">omd</span>/<span class="inline-code">pls</span>）以 <span class="inline-code">ATH</span> 为准。</li>
 </ul></section>
+<section class="section" id="s-3.5-WW-D5-LRS485-Modbus-采集"><h2>3.5 WW-D5-L（RS485 Modbus 采集）</h2><p>权威来源：官网产品 AT 页 <strong>WW-D5-L / FW 1.5.0</strong>（<span class="inline-code">protocol-at-command-new.html</span>）。功能定位：<strong>RS485 Modbus 采集 &rarr; LoRa 私有网 TLV 转发</strong>（无 4G、无 JSON 空口）。</p><h3 id="s-3.5.1-能力集与-ERR3">3.5.1 能力集与 ERR3</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>支持（产品页）</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">AT+PER</span> / <span class="inline-code">AT+PWR</span> / <span class="inline-code">AT+LORA</span> / <span class="inline-code">AT+ACK</span> / <span class="inline-code">AT+BATT</span> / <span class="inline-code">AT+LOG</span> / <span class="inline-code">AT+REPORT</span></td>
+<td>周期、外供电、射频、ACK、电量区间、日志、立即上报</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBUART</span> / <span class="inline-code">AT+MBMODE</span> / <span class="inline-code">AT+MBCMD</span> / <span class="inline-code">AT+MBSCAN</span> / <span class="inline-code">AT+MBRAW</span></td>
+<td>RS485 口参数与 Modbus 采集/透传</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+AIRLISTEN</span>（可选）</td>
+<td>空中听 <span class="inline-code">0/1</span>；上电默认 <span class="inline-code">0</span>、<strong>不落盘</strong>；打开后静态电流升至数 mA</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+VER</span> / <span class="inline-code">AT+INFO?</span> / <span class="inline-code">AT+DATA?</span> / <span class="inline-code">+++</span>/<span class="inline-code">AT</span>/<span class="inline-code">ATO</span>/<span class="inline-code">ATH</span>/<span class="inline-code">ATR</span>/<span class="inline-code">AT+SER</span> / OTA</td>
+<td>同通用控制</td>
+</tr>
+</tbody>
+</table></div><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>本机 &rarr; <strong>ERR3</strong></th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">AT+UNIT</span> / <span class="inline-code">AT+RAN</span> / <span class="inline-code">AT+VAR</span> / <span class="inline-code">AT+ZERO</span> / <span class="inline-code">AT+THRE</span></td>
+<td>压力机/模拟量类，非 D5L 能力集</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+RST</span> / <span class="inline-code">AT+SERVER</span> / <span class="inline-code">AT+MQTT</span></td>
+<td>4G 专属</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBPOLL</span></td>
+<td>空闲轮询周期与 <span class="inline-code">PER</span> 发送周期重叠；应答超时固定 <strong>500 ms</strong>（产品页）</td>
+</tr>
+</tbody>
+</table></div><div class="note">
+<p><strong>射频</strong>：产品页列出 <span class="inline-code">AT+LORA</span>（参数段可能含扩展项，以 ATH/产品页为准）；<strong>未列 <span class="inline-code">AT+EXLORA</span></strong> &rarr; 若本机 <span class="inline-code">ATH</span> 无此项，下发回 <strong>ERR3</strong>。<br/>
+<strong>寄存器</strong>：RS485 采集参数（MBUART/MBMODE/MBCMD/MBSCAN）<strong>优先远程 AT</strong> 配置；空口 Modbus 寄存器区仍以 <strong>&sect;5.3.3 通用表</strong>为准。D5L 产品页<strong>未</strong>单独定义 MB* 保持寄存器块（该页压力寄存器属 WW75L），<strong>勿臆造</strong> MB 寄存器地址。</p>
+</div><h3 id="s-3.5.2-指令表">3.5.2 指令表</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>AT</th>
+<th>格式 / 含义</th>
+<th>示例</th>
+<th>生效</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="inline-code">AT+MBUART=</span></td>
+<td><span class="inline-code">波特率,校验,停止位</span>；校验 <span class="inline-code">0</span>=N / <span class="inline-code">1</span>=E / <span class="inline-code">2</span>=O（硬件常按 <strong>8N1</strong>）</td>
+<td><span class="inline-code">AT+MBUART=9600,0,1</span></td>
+<td>立即&middot;落盘</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBMODE=</span></td>
+<td><span class="inline-code">0</span>=指令表 / <span class="inline-code">1</span>=地址轮询 / <span class="inline-code">2</span>=两者</td>
+<td><span class="inline-code">AT+MBMODE=0</span></td>
+<td>立即&middot;落盘</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBCMD=</span></td>
+<td><span class="inline-code">idx,en,slave,fc,reg,qty</span>；最多 <strong>10</strong> 条，<span class="inline-code">idx</span>=<span class="inline-code">0..9</span></td>
+<td><span class="inline-code">AT+MBCMD=0,1,1,0x03,0,2</span></td>
+<td>立即&middot;落盘</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBSCAN=</span></td>
+<td><span class="inline-code">en,start,end,fc,reg,qty</span>；从站地址轮询 <strong>1~247</strong></td>
+<td><span class="inline-code">AT+MBSCAN=1,1,10,0x03,0,1</span></td>
+<td>立即&middot;落盘</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+MBRAW=</span></td>
+<td>完整 <strong>Modbus RTU hex（含 CRC）</strong> 透传至 RS485；<strong>不落盘</strong></td>
+<td><span class="inline-code">AT+MBRAW=010300000002C40B</span></td>
+<td>即时</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+PWR=</span></td>
+<td><span class="inline-code">预供电秒,采后保持秒</span>；外供电 <strong>PC09</strong>（高有效）</td>
+<td><span class="inline-code">AT+PWR=3,1</span></td>
+<td>下周期&middot;落盘</td>
+</tr>
+<tr>
+<td><span class="inline-code">AT+PER=</span></td>
+<td><span class="inline-code">检测秒,发送秒</span>；<strong>采集节奏由发送秒驱动</strong></td>
+<td><span class="inline-code">AT+PER=10,20</span></td>
+<td>下周期&middot;落盘</td>
+</tr>
+</tbody>
+</table></div><h3 id="s-3.5.3-示例">3.5.3 示例</h3><div class="code">AT+MBUART=9600,0,1
+AT+MBMODE=0
+AT+MBCMD=0,1,1,0x03,0,2
+AT+MBSCAN=1,1,10,0x03,0,1
+AT+MBRAW=010300000002C40B
+AT+PWR=3,1
+AT+PER=10,20</div><h3 id="s-3.5.4-采集与空口上报">3.5.4 采集与空口上报</h3><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>项</th>
+<th>口径</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>采集节奏</td>
+<td>由 <strong><span class="inline-code">PER</span> 发送秒</strong>驱动周期采集</td>
+</tr>
+<tr>
+<td>应答超时</td>
+<td>固定 <strong>500 ms</strong>（产品页；<span class="inline-code">MBPOLL</span>&rarr;ERR3）</td>
+</tr>
+<tr>
+<td>成功上报</td>
+<td>经 LoRa TLV Type <strong><span class="inline-code">0x24</span></strong>（Modbus 数据）</td>
+</tr>
+<tr>
+<td>远程 AT</td>
+<td><span class="inline-code">设备编号</span> + AT（同 &sect;5.2）；<strong>广播 <span class="inline-code">FFFFFFFF</span> 禁止 <span class="inline-code">MBRAW</span></strong></td>
+</tr>
+<tr>
+<td>单播应答</td>
+<td><strong><span class="inline-code">MBRAW</span> 应答走 TLV <span class="inline-code">0x24</span></strong>；其它查询/配置文本应答可走 TLV <strong><span class="inline-code">0x25</span></strong></td>
+</tr>
+<tr>
+<td>落盘</td>
+<td><span class="inline-code">PER</span>/<span class="inline-code">PWR</span>/<span class="inline-code">VER</span>/<span class="inline-code">LOG</span>/<span class="inline-code">ACK</span>/<span class="inline-code">BATT</span>/<span class="inline-code">LORA</span>/<span class="inline-code">MBUART</span>/<span class="inline-code">MBMODE</span>/<span class="inline-code">MBCMD</span>/<span class="inline-code">MBSCAN</span>/<span class="inline-code">SER</span> 等写入类成功后落盘；<span class="inline-code">MBRAW</span>/<span class="inline-code">AIRLISTEN</span>/<span class="inline-code">REPORT</span> 等不落盘</td>
+</tr>
+</tbody>
+</table></div></section>
 <section class="section" id="s-4-LoRa-回-ERR3--不适用的-key"><h2>4 LoRa 回 ERR3 / 不适用的 key</h2><div class="table-wrap"><table>
 <thead>
 <tr>
@@ -1159,6 +1358,16 @@ AT+RAN?</div><ul>
 </tr>
 <tr>
 <td>非本机硬件的 <span class="inline-code">door</span>/<span class="inline-code">io</span>/<span class="inline-code">pwr</span></td>
+<td>能力集外</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td><strong>WW-D5-L</strong> 上的 <span class="inline-code">unit</span>/<span class="inline-code">ran</span>/<span class="inline-code">var</span>/<span class="inline-code">zero</span>/<span class="inline-code">thre</span>/<span class="inline-code">rst</span>/<span class="inline-code">server</span>/<span class="inline-code">mqtt</span>/<span class="inline-code">mbpoll</span></td>
+<td>非本机能力集（产品页）</td>
+<td><span class="inline-code">ERR3</span></td>
+</tr>
+<tr>
+<td>非 D5L（或 ATH 未列）的 <span class="inline-code">mbuart</span>/<span class="inline-code">mbmode</span>/<span class="inline-code">mbcmd</span>/<span class="inline-code">mbscan</span>/<span class="inline-code">mbraw</span></td>
 <td>能力集外</td>
 <td><span class="inline-code">ERR3</span></td>
 </tr>
@@ -1216,7 +1425,7 @@ AT+RAN?</div><ul>
 </tr>
 <tr>
 <td>广播</td>
-<td>编号 <span class="inline-code">FFFFFFFF</span> + <strong>写指令</strong>（含 <span class="inline-code">=</span>、不含 <span class="inline-code">?</span>）时，在听设备都执行且<strong>不回包</strong>；查询 / <span class="inline-code">AT+REPORT</span> / <span class="inline-code">ATR</span> 丢弃</td>
+<td>编号 <span class="inline-code">FFFFFFFF</span> + <strong>写指令</strong>（含 <span class="inline-code">=</span>、不含 <span class="inline-code">?</span>）时，在听设备都执行且<strong>不回包</strong>；查询 / <span class="inline-code">AT+REPORT</span> / <span class="inline-code">ATR</span> 丢弃；<strong>禁止广播 <span class="inline-code">AT+MBRAW</span></strong>（WW-D5-L）</td>
 </tr>
 <tr>
 <td>单播应答</td>
@@ -2640,13 +2849,13 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 <td><span class="inline-code">t</span> &hellip;</td>
 </tr>
 <tr>
-<td><strong>WW-SL210 / WW-27L</strong> 门磁</td>
+<td><strong>WW-27L</strong> 门磁</td>
 <td><span class="inline-code">0x09</span>（+ WW-27L <span class="inline-code">0x0D</span> IO）</td>
 <td>bit 门磁；WW-27L：1=吸合</td>
 <td><span class="inline-code">door</span></td>
 </tr>
 <tr>
-<td><strong>WW-SL200 / WW-26</strong> 水浸</td>
+<td><strong>WW-26L</strong> 水浸</td>
 <td><span class="inline-code">0x09</span></td>
 <td>有水=<span class="inline-code">1</span> / 无水=<span class="inline-code">0</span></td>
 <td><span class="inline-code">water</span></td>
@@ -2728,6 +2937,12 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 <td><span class="inline-code">0x21</span> / <span class="inline-code">0x24</span> 等</td>
 <td>外接/Modbus</td>
 <td><span class="inline-code">ch*</span> / <span class="inline-code">t</span>/<span class="inline-code">rh</span></td>
+</tr>
+<tr>
+<td><strong>WW-D5-L</strong> RS485 采集</td>
+<td><strong><span class="inline-code">0x24</span></strong>（主）</td>
+<td>Modbus 采集/透传结果；远程其它应答可走 <span class="inline-code">0x25</span></td>
+<td>Modbus 载荷</td>
 </tr>
 <tr>
 <td><strong>WW-C10L~C18L</strong></td>
@@ -3039,6 +3254,11 @@ FCtrl=<span class="inline-code">0x01</span>（私有：事件=值变化 <span cl
 <td><span class="inline-code">aes</span>（私有 <strong>128-bit 密钥</strong>，非开关）、<span class="inline-code">eui</span>/DevEUI（8 字节=前缀+标号）；私有编号 4 字节</td>
 <td>以 <span class="inline-code">ATH</span> 为准；不计入射频固定 4 条</td>
 </tr>
+<tr>
+<td>明确（文档）</td>
+<td><strong>去掉 SL 别名</strong>（门磁/水浸现用 <strong>WW-27L / WW-26L</strong>）；新增 <strong>WW-D5-L</strong> RS485/Modbus AT（<span class="inline-code">MBUART</span>/<span class="inline-code">MBMODE</span>/<span class="inline-code">MBCMD</span>/<span class="inline-code">MBSCAN</span>/<span class="inline-code">MBRAW</span>）与 TLV <strong><span class="inline-code">0x24</span></strong></td>
+<td>以产品页/ATH 为准；MB 参数优先远程 AT，勿臆造寄存器</td>
+</tr>
 </tbody>
 </table></div></section>
 <section class="section" id="s-9-自检脚本"><h2>9 自检脚本</h2><div class="code">+++
@@ -3056,6 +3276,11 @@ AT+LIS?
 AT+DOOR?          # 仅门磁
 AT+UNIT?          # 压力/液位/拉力等模拟量
 AT+RAN?           # 同上
+AT+PWR?           # 采集器 / WW-D5-L
+AT+MBUART?        # WW-D5-L
+AT+MBMODE?
+AT+MBCMD?
+AT+MBSCAN?
 AT+INFO?
 AT+REPORT
 ATO</div></section>
@@ -3068,6 +3293,11 @@ ATO</div></section>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.16-LoRa</strong></td>
+<td><strong>去掉 SL 传感器命名</strong>（门磁/水浸统一为 <strong>WW-27L / WW-26L / WW-27L-D</strong>）；新增 <strong>WW-D5-L RS485/Modbus 采集</strong> AT：<span class="inline-code">MBUART</span>/<span class="inline-code">MBMODE</span>/<span class="inline-code">MBCMD</span>/<span class="inline-code">MBSCAN</span>/<span class="inline-code">MBRAW</span>（+ <span class="inline-code">PWR</span>/<span class="inline-code">PER</span>/<span class="inline-code">LORA</span>/<span class="inline-code">ACK</span>/<span class="inline-code">BATT</span> 等），&sect;1.2 / &sect;3.0 / <strong>&sect;3.5</strong> / &sect;4 / &sect;6.6.3 同步；采集成功走 TLV <strong><span class="inline-code">0x24</span></strong>；RS485 参数优先远程 AT，不臆造 MB 寄存器</td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.15-LoRa</strong></td>
@@ -3126,7 +3356,7 @@ ATO</div></section>
 <tr>
 <td>2026-11-07</td>
 <td><strong>V4.0-LoRa</strong></td>
-<td><strong>拆出 LoRa 分册</strong>：以《AT配置统一规范-LoRa》为权威，正式写入 <span class="inline-code">AT+EXLORA</span>/<span class="inline-code">AT+BATT</span>/<span class="inline-code">AT+DOOR?</span>；&sect;3.0.3 仅「LoRa网络（射频）」列；三种配置载体与功能码/寄存器映射；类型矩阵对齐 SL210/SL200/WW-22L 等</td>
+<td><strong>拆出 LoRa 分册</strong>：以《AT配置统一规范-LoRa》为权威，正式写入 <span class="inline-code">AT+EXLORA</span>/<span class="inline-code">AT+BATT</span>/<span class="inline-code">AT+DOOR?</span>；&sect;3.0.3 仅「LoRa网络（射频）」列；三种配置载体与功能码/寄存器映射；类型矩阵对齐 WW-27L/WW-26L/WW-22L 等</td>
 </tr>
 <tr>
 <td>2026-11-02</td>
