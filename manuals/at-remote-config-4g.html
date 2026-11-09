@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（4G）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 4G（C 后缀）无线系列 AT 指令与远程配置指导手册 V4.5-4G：通用 key、按型号指令，以及 TCP / UDP / MQTT JSON 下发。">
+  <meta name="description" content="万维 4G（C 后缀）无线系列 AT 指令与远程配置指导手册 V4.6-4G：通用 key、按型号指令、TCP / UDP / MQTT JSON 下发，以及 WW-25C 人体存在/跌倒上报 key。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,16 +30,16 @@
     <section class="hero">
       <span class="badge">4G · AT 与远程配置</span>
       <h1>AT 与远程配置（4G）</h1>
-      <p>协议：4G · 版本 V4.5-4G · 由合并手册 V3.4 拆出的 4G 分册。一条 key 一套语法：<span class="inline-code">AT+KEY=&lt;值&gt;</span> 写、<span class="inline-code">AT+KEY?</span> 读，远程 JSON 使用同一个 key。LoRa / LoRaWAN 请看 <a href="index.html#at-remote-config-lora.html" target="_top">《AT 与远程配置（LoRa）》</a>。</p>
-      <div class="meta"><span>适用：万维 4G（C 后缀）无线系列</span><span class="version">V4.5-4G</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：4G · 版本 V4.6-4G · 由合并手册 V3.4 拆出的 4G 分册。一条 key 一套语法：<span class="inline-code">AT+KEY=&lt;值&gt;</span> 写、<span class="inline-code">AT+KEY?</span> 读，远程 JSON 使用同一个 key。V4.6 新增 WW-25C 人体存在/跌倒多传感，上报 key 为 <span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span>。LoRa / LoRaWAN 请看 <a href="index.html#at-remote-config-lora.html" target="_top">《AT 与远程配置（LoRa）》</a>。</p>
+      <div class="meta"><span>适用：万维 4G（C 后缀）无线系列</span><span class="version">V4.6-4G</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-字段长度约定全部字符串字段">1.1 字段长度约定（全部字符串字段）</a></li><li><a href="#s-1.2-分隔符与转义">1.2 分隔符与转义</a></li><li><a href="#s-1.3-AT-指令总表全量速查">1.3 AT 指令总表（全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-采集与判定6-key--ATZERO-执行">2.1 采集与判定（6 key + AT+ZERO 执行）</a><ol><li><a href="#cal-分段含义按类型区分">cal 分段含义（按类型区分）</a></li></ol></li><li><a href="#s-2.2-4G网络与监听">2.2 4G网络与监听</a><ol><li><a href="#s-2.2.1-4G网络">2.2.1 4G网络</a></li><li><a href="#s-2.2.2-监听窗口-ATLIS">2.2.2 监听窗口 AT+LIS</a></li></ol></li><li><a href="#s-2.3-系统4">2.3 系统（4）</a></li><li><a href="#s-2.4-控制与查询类指令非-key">2.4 控制与查询类指令（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-通用指令协议无关基线-22-条">3.0.1 通用指令（协议无关基线 22 条）</a></li><li><a href="#s-3.0.2-传感器特定指令">3.0.2 传感器特定指令</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-差异速查">3.0.4 差异速查</a></li><li><a href="#s-3.0.5-有线--蓝牙--RS485不在本-AT-表">3.0.5 有线 / 蓝牙 / RS485（不在本 AT 表）</a></li><li><a href="#s-3.0.6-产线--平台对账">3.0.6 产线 / 平台对账</a></li></ol></li><li><a href="#s-3.1-温湿度类">3.1 温湿度类</a></li><li><a href="#s-3.2-IO-类">3.2 IO 类</a></li><li><a href="#s-3.3-气体类">3.3 气体类</a></li><li><a href="#s-3.4-运动类加速度角度">3.4 运动类（加速度、角度）</a></li><li><a href="#s-3.5-压力类">3.5 压力类</a></li><li><a href="#s-3.6-计量计数类">3.6 计量计数类</a></li><li><a href="#s-3.7-控制类">3.7 控制类</a></li><li><a href="#s-3.8-网关类">3.8 网关类</a></li><li><a href="#s-4-本分册不适用--会回-ERROR-的-key">4 本分册不适用 / 会回 ERROR 的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-一条链路收发">5.1 一条链路收发</a></li><li><a href="#s-5.2-监听窗口lis">5.2 监听窗口（lis）</a></li><li><a href="#s-5.3-配置包格式">5.3 配置包格式</a></li><li><a href="#s-5.4-处理时序与应答">5.4 处理时序与应答</a></li><li><a href="#s-5.5-分类型下发示例">5.5 分类型下发示例</a></li><li><a href="#s-5.6-平台侧对接要点">5.6 平台侧对接要点</a></li><li><a href="#s-5.7-LoRa-链路见分册">5.7 LoRa 链路（见分册）</a></li><li><a href="#s-5.8-配置生效时机">5.8 配置生效时机</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-注册包evt10联网后首包">6.1 注册包（evt=10，联网后首包）</a></li><li><a href="#s-6.2-数据包evt012345678">6.2 数据包（evt=0/1/2/3/4/5/6/7/8）</a></li><li><a href="#s-6.3-分类型数据-key">6.3 分类型数据 key</a></li><li><a href="#s-6.4-报文字段长度">6.4 报文字段长度</a></li></ol></li><li><a href="#s-7-兼容与迁移">7 兼容与迁移</a></li><li><a href="#s-8-自检脚本">8 自检脚本</a></li><li><a href="#s-9-修订记录">9 修订记录</a></li></ol></nav>
+    <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-字段长度约定全部字符串字段">1.1 字段长度约定（全部字符串字段）</a></li><li><a href="#s-1.2-分隔符与转义">1.2 分隔符与转义</a></li><li><a href="#s-1.3-AT-指令总表全量速查">1.3 AT 指令总表（全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-采集与判定6-key--ATZERO-执行">2.1 采集与判定（6 key + AT+ZERO 执行）</a><ol><li><a href="#cal-分段含义按类型区分">cal 分段含义（按类型区分）</a></li></ol></li><li><a href="#s-2.2-4G网络与监听">2.2 4G网络与监听</a><ol><li><a href="#s-2.2.1-4G网络">2.2.1 4G网络</a></li><li><a href="#s-2.2.2-监听窗口-ATLIS">2.2.2 监听窗口 AT+LIS</a></li></ol></li><li><a href="#s-2.3-系统4">2.3 系统（4）</a></li><li><a href="#s-2.4-控制与查询类指令非-key">2.4 控制与查询类指令（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-通用指令协议无关基线-22-条">3.0.1 通用指令（协议无关基线 22 条）</a></li><li><a href="#s-3.0.2-传感器特定指令">3.0.2 传感器特定指令</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-差异速查">3.0.4 差异速查</a></li><li><a href="#s-3.0.5-有线--蓝牙--RS485不在本-AT-表">3.0.5 有线 / 蓝牙 / RS485（不在本 AT 表）</a></li><li><a href="#s-3.0.6-产线--平台对账">3.0.6 产线 / 平台对账</a></li></ol></li><li><a href="#s-3.1-温湿度类">3.1 温湿度类</a></li><li><a href="#s-3.2-IO-类">3.2 IO 类</a><ol><li><a href="#s-3.2.1-人体存在--跌倒多传感WW-25C">3.2.1 人体存在 / 跌倒多传感（WW-25C）</a></li></ol></li><li><a href="#s-3.3-气体类">3.3 气体类</a></li><li><a href="#s-3.4-运动类加速度角度">3.4 运动类（加速度、角度）</a></li><li><a href="#s-3.5-压力类">3.5 压力类</a></li><li><a href="#s-3.6-计量计数类">3.6 计量计数类</a></li><li><a href="#s-3.7-控制类">3.7 控制类</a></li><li><a href="#s-3.8-网关类">3.8 网关类</a></li><li><a href="#s-4-本分册不适用--会回-ERROR-的-key">4 本分册不适用 / 会回 ERROR 的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-一条链路收发">5.1 一条链路收发</a></li><li><a href="#s-5.2-监听窗口lis">5.2 监听窗口（lis）</a></li><li><a href="#s-5.3-配置包格式">5.3 配置包格式</a></li><li><a href="#s-5.4-处理时序与应答">5.4 处理时序与应答</a></li><li><a href="#s-5.5-分类型下发示例">5.5 分类型下发示例</a></li><li><a href="#s-5.6-平台侧对接要点">5.6 平台侧对接要点</a></li><li><a href="#s-5.7-LoRa-链路见分册">5.7 LoRa 链路（见分册）</a></li><li><a href="#s-5.8-配置生效时机">5.8 配置生效时机</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-注册包evt10联网后首包">6.1 注册包（evt=10，联网后首包）</a></li><li><a href="#s-6.2-数据包evt012345678">6.2 数据包（evt=0/1/2/3/4/5/6/7/8）</a></li><li><a href="#s-6.3-分类型数据-key">6.3 分类型数据 key</a></li><li><a href="#s-6.4-报文字段长度">6.4 报文字段长度</a></li></ol></li><li><a href="#s-7-兼容与迁移">7 兼容与迁移</a></li><li><a href="#s-8-自检脚本">8 自检脚本</a></li><li><a href="#s-9-修订记录">9 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：4G</strong> &middot; 版本 <strong>V4.5-4G</strong> &middot; 由合并手册 V3.4 拆出的 <strong>4G 分册</strong><br/>
+<p><strong>协议：4G</strong> &middot; 版本 <strong>V4.6-4G</strong> &middot; 由合并手册 V3.4 拆出的 <strong>4G 分册</strong><br/>
 LoRa / LoRaWAN 请改看 <a href="index.html#at-remote-config-lora.html" target="_top">《AT 与远程配置（LoRa）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -51,7 +51,7 @@ LoRa / LoRaWAN 请改看 <a href="index.html#at-remote-config-lora.html" target=
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.5-4G</strong>（协议：4G）</td>
+<td><strong>V4.6-4G</strong>（协议：4G）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -1440,9 +1440,9 @@ OK</div><p><strong>怎么用 <span class="inline-code">ATH</span> 判断能力</
 <tbody>
 <tr>
 <td>IO 类</td>
-<td><span class="inline-code">WW-20/21/22/26/27/28</span> 的 <strong>C</strong></td>
+<td><span class="inline-code">WW-20/21/22/26/27/28</span> 的 <strong>C</strong>；多传感见 <span class="inline-code">WW-25C</span></td>
 <td><strong>26</strong></td>
-<td>仅通用 + 4G网络；<span class="inline-code">AT+THRE</span> 必须显式 <span class="inline-code">OFF</span></td>
+<td>纯 IO：<span class="inline-code">AT+THRE</span> 须显式 <span class="inline-code">OFF</span>；<strong>WW-25C</strong> 用 <span class="inline-code">THRE</span> 做温度阈值（见 &sect;3.2.1）</td>
 </tr>
 <tr>
 <td>运动类</td>
@@ -1538,6 +1538,14 @@ OK</div><p><strong>怎么用 <span class="inline-code">ATH</span> 判断能力</
 <td><span class="inline-code">AT+SERVER</span>, <span class="inline-code">AT+MQTT</span>, <span class="inline-code">AT+APN</span>, <span class="inline-code">AT+4G?</span></td>
 <td>&mdash;</td>
 <td>烟感；<span class="inline-code">AT+THRE</span> 须显式 <span class="inline-code">OFF</span></td>
+</tr>
+<tr>
+<td><strong>WW-25C</strong></td>
+<td>26</td>
+<td>同上</td>
+<td><span class="inline-code">AT+SERVER</span>, <span class="inline-code">AT+MQTT</span>, <span class="inline-code">AT+APN</span>, <span class="inline-code">AT+4G?</span></td>
+<td>&mdash;</td>
+<td><strong>人体存在 / 跌倒多传感</strong>（SHT40+BH1750+PIR+LD6003C）；<span class="inline-code">AT+THRE</span> 管温度阈值；<span class="inline-code">AT+VAR</span> 管温湿变化；跌倒/驻留上升沿 <span class="inline-code">evt=3</span>；调试另有 <span class="inline-code">AT+I2C?</span>/<span class="inline-code">AT+RAD?</span>（可不计入主表条数）</td>
 </tr>
 <tr>
 <td><strong>WW-26C</strong></td>
@@ -1785,7 +1793,7 @@ AT+THRE=8000,-2000,6000,0,OFF,OFF    # CH1/CH2 有阈值，CH3/CH4 关</div><ul>
 <li>湿度目前只参与 <span class="inline-code">var</span> 变化上报，<span class="inline-code">thre</span> 不判湿度。</li>
 <li>热电偶额外上报冷端 <span class="inline-code">tc</span>，阈值仍走 <span class="inline-code">thre</span>。</li>
 </ul></section>
-<section class="section" id="s-3.2-IO-类"><h2>3.2 IO 类</h2><p><strong>可用</strong>：通用型全部，<strong>无专属 key</strong></p><p><strong>成员（本分册）</strong>：水浸 <span class="inline-code">WW-20C</span>/<span class="inline-code">26C</span>、门磁 <span class="inline-code">WW-27C</span> / 双门磁 <span class="inline-code">WW-27C-D</span>、人体 <span class="inline-code">WW-21C</span>、烟感 <span class="inline-code">WW-22C</span>、SOS <span class="inline-code">WW-28C</span>（LoRa / SL 系列见 LoRa 分册）</p><ul>
+<section class="section" id="s-3.2-IO-类"><h2>3.2 IO 类</h2><p><strong>可用</strong>：通用型全部，<strong>无专属 key</strong></p><p><strong>成员（本分册）</strong>：水浸 <span class="inline-code">WW-20C</span>/<span class="inline-code">26C</span>、门磁 <span class="inline-code">WW-27C</span> / 双门磁 <span class="inline-code">WW-27C-D</span>、人体感应 <span class="inline-code">WW-21C</span>、<strong>人体存在/跌倒多传感 <span class="inline-code">WW-25C</span></strong>、烟感 <span class="inline-code">WW-22C</span>、SOS <span class="inline-code">WW-28C</span>（LoRa / SL 系列见 LoRa 分册）</p><ul>
 <li><span class="inline-code">var</span> 的 0.01 数值无物理意义，语义为「状态变化即报」：写 <span class="inline-code">1</span> 触发上报，写 <span class="inline-code">0</span> 关该路。</li>
 <li><span class="inline-code">thre</span> 不适用，<strong>必须显式写 <span class="inline-code">AT+THRE=OFF</span></strong>，否则继承默认的 8000/-2000 会误判报警。</li>
 <li><span class="inline-code">cal</span> 不适用：数字量没有偏移概念，写 <span class="inline-code">AT+CAL=0</span> 即可，勿写非 0 值。</li>
@@ -1793,7 +1801,14 @@ AT+THRE=8000,-2000,6000,0,OFF,OFF    # CH1/CH2 有阈值，CH3/CH4 关</div><ul>
 </ul><div class="code">AT+THRE=OFF
 AT+CAL=0
 AT+VAR=1,1
-AT+PER=60,3600</div></section>
+AT+PER=60,3600</div><h3 id="s-3.2.1-人体存在--跌倒多传感WW-25C">3.2.1 人体存在 / 跌倒多传感（WW-25C）</h3><p><strong>型号串</strong>：<span class="inline-code">WW25C</span>（<span class="inline-code">AT+VER=WW25C,200</span> 等）。传感器：SHT40 温湿度 &middot; BH1750 光照 &middot; P824M 红外 &middot; LD6003C 跌倒雷达。</p><p>与纯 IO 的 <span class="inline-code">WW-21C</span>（仅 <span class="inline-code">pir</span>）不同，本款<strong>同时</strong>上报环境量与人体/跌倒状态，配置侧：</p><ul>
+<li><span class="inline-code">AT+PER=&lt;检测秒&gt;,&lt;上报秒&gt;</span>：检测采温湿/光照/PIR/雷达；上报周期到发心跳</li>
+<li><span class="inline-code">AT+VAR=&lt;&Delta;T&gt;,&lt;&Delta;RH&gt;</span>：温湿相对上次成功上报基准的变化量（0.01 ℃ / 0.01 %RH）</li>
+<li><span class="inline-code">AT+THRE=&lt;hi&gt;,&lt;lo&gt;</span>：<strong>温度阈值</strong>（0.01 ℃），可 <span class="inline-code">OFF</span>；<strong>不要</strong>像纯 IO 那样一律强制 <span class="inline-code">OFF</span>（除非现场不需要温限）</li>
+<li>跌倒 / 驻留<strong>上升沿</strong>优先报 <span class="inline-code">evt=3</span>（告警），高于温湿变化 <span class="inline-code">evt=1</span></li>
+<li>4G 网络：<span class="inline-code">AT+SERVER</span> / <span class="inline-code">AT+MQTT</span> / <span class="inline-code">AT+APN</span> / <span class="inline-code">AT+4G?</span> 同其它 C 款</li>
+<li>调试（可选）：<span class="inline-code">AT+I2C?</span>、<span class="inline-code">AT+RAD?</span>（产品手册）</li>
+</ul><p>上报本型 key 见 <strong>&sect;6.3.0 / &sect;6.3.2</strong>：<span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span>。</p></section>
 <section class="section" id="s-3.3-气体类"><h2>3.3 气体类</h2><p><strong>可用</strong>：通用型全部，<strong>无专属 key</strong></p><p><strong>成员</strong>：本分册暂无 4G 气体款；<span class="inline-code">WW-30L-CO2</span> / <span class="inline-code">WW-30L-O2</span> 见 LoRa 分册（能力集可参考本节 <span class="inline-code">cal</span>/<span class="inline-code">thre</span>/<span class="inline-code">var</span> 语义）</p><ul>
 <li><span class="inline-code">cal</span> 段序 = <span class="inline-code">浓度</span>，只有一段，单位 ppm，偏移量加在原始浓度上。</li>
 <li><span class="inline-code">thre</span> 按浓度上下限判，<span class="inline-code">var</span> 按浓度变化量报。</li>
@@ -2254,6 +2269,12 @@ AT+LIS=0      # 不留窗口，纯单向上报（最省电，配置只能下次�
 <td>烟感；<span class="inline-code">0</span>/<span class="inline-code">1</span></td>
 </tr>
 <tr>
+<td><strong>WW-25C</strong></td>
+<td><span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span></td>
+<td>同左</td>
+<td><strong>人体存在/跌倒多传感</strong>；<span class="inline-code">t</span>/<span class="inline-code">rh</span> 0.01；<span class="inline-code">lux</span> 光照；<span class="inline-code">pir</span> 红外有人；<span class="inline-code">pres</span> 雷达有人；<span class="inline-code">fall</span> 跌倒；<span class="inline-code">stay</span> 驻留；<span class="inline-code">mot</span> 运动状态字符串；<span class="inline-code">mlvl</span> 运动等级；跌倒/温限 <span class="inline-code">evt=3</span></td>
+</tr>
+<tr>
 <td><strong>WW-26C</strong></td>
 <td><span class="inline-code">water</span></td>
 <td><span class="inline-code">water</span></td>
@@ -2423,6 +2444,12 @@ AT+LIS=0      # 不留窗口，纯单向上报（最省电，配置只能下次�
 <td>烟感 / SOS / WW-21C 等</td>
 </tr>
 <tr>
+<td><strong>人体存在 / 跌倒多传感</strong></td>
+<td><span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span></td>
+<td><span class="inline-code">t</span>/<span class="inline-code">rh</span>=0.01；<span class="inline-code">lux</span>=光照；<span class="inline-code">pir</span>/<span class="inline-code">pres</span>/<span class="inline-code">fall</span>/<span class="inline-code">stay</span>=<span class="inline-code">0</span>/<span class="inline-code">1</span>；<span class="inline-code">mot</span>=字符串；<span class="inline-code">mlvl</span>=等级</td>
+<td><strong>WW-25C</strong></td>
+</tr>
+<tr>
 <td>气体</td>
 <td><span class="inline-code">g</span>；补偿时另带 <span class="inline-code">t</span> <span class="inline-code">rh</span></td>
 <td><span class="inline-code">g</span>=ppm</td>
@@ -2516,7 +2543,21 @@ AT+LIS=0      # 不留窗口，纯单向上报（最省电，配置只能下次�
  "per":"60,600","thre":"OFF",
  "server":"TCP,81.71.164.182,20004",
  "water":0,"ts":1793969400}</div><p>数据报文（变化，有水）：</p><div class="code">{"no":"WW26C24090005","model":"WW26C,2.0.3","seq":6,"evt":1,"ok":1,
- "water":1,"bat":"88,3080","csq":17,"ts":1793973100}</div><p><strong>气体（WW-30C，带温湿度补偿）</strong> &mdash; key：<span class="inline-code">g</span>（ppm）；补偿另带 <span class="inline-code">t</span> <span class="inline-code">rh</span></p><p>注册报文：</p><div class="code">{"no":"WW30C24090006","evt":10,"model":"WW30C-CO2,2.0.3",
+ "water":1,"bat":"88,3080","csq":17,"ts":1793973100}</div><p><strong>人体存在 / 跌倒多传感（WW-25C）</strong> &mdash; key：<span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span></p><div class="note">
+<p>手册口径：<span class="inline-code">bat</span>/<span class="inline-code">per</span>/<span class="inline-code">thre</span>/<span class="inline-code">server</span> 同 V4.5+；<span class="inline-code">t</span>/<span class="inline-code">rh</span> 用 0.01 整型。现网产品手册仍可能发浮点 <span class="inline-code">t</span>/<span class="inline-code">rh</span>/<span class="inline-code">lux</span> 与拆段配置字段，平台应兼容；<strong>新固件以本表为准</strong>。跌倒或温度越限报 <span class="inline-code">evt=3</span>。</p>
+</div><p>注册报文：</p><div class="code">{"no":"WW25C24090025","evt":10,"model":"WW25C,200",
+ "iccid":"89860012345678901245","imei":"861234567890135","csq":20,"bat":"85,3100",
+ "per":"60,600","thre":"8000,-2000","var":"50,200",
+ "server":"TCP,81.71.164.182,20004",
+ "t":2910,"rh":4348,"lux":54,"pir":1,
+ "pres":0,"fall":0,"stay":0,"mot":"NONE","mlvl":0,
+ "ts":1793969450}</div><p>数据报文（周期）：</p><div class="code">{"no":"WW25C24090025","model":"WW25C,200","seq":12,"evt":0,"ok":1,
+ "t":2910,"rh":4348,"lux":54,"pir":1,
+ "pres":0,"fall":0,"stay":0,"mot":"NONE","mlvl":0,
+ "bat":"85,3100","csq":20,"ts":1793973200}</div><p>数据报文（跌倒告警）：</p><div class="code">{"no":"WW25C24090025","model":"WW25C,200","seq":13,"evt":3,"ok":1,
+ "t":2910,"rh":4348,"lux":54,"pir":1,
+ "pres":1,"fall":1,"stay":0,"mot":"FALL","mlvl":3,
+ "bat":"85,3100","csq":20,"ts":1793973210}</div><p><strong>气体（WW-30C，带温湿度补偿）</strong> &mdash; key：<span class="inline-code">g</span>（ppm）；补偿另带 <span class="inline-code">t</span> <span class="inline-code">rh</span></p><p>注册报文：</p><div class="code">{"no":"WW30C24090006","evt":10,"model":"WW30C-CO2,2.0.3",
  "iccid":"89860012345678901240","imei":"861234567890129","csq":18,"bat":"75,3010",
  "per":"60,600","thre":"1000,0",
  "server":"TCP,81.71.164.182,20004",
@@ -2656,6 +2697,11 @@ ATO</div><p>每条应得到「查询行 + <span class="inline-code">OK</span>」
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.6-4G</strong></td>
+<td>新增 <strong>WW-25C</strong>（人体存在/跌倒多传感）：&sect;3.0.3 / &sect;3.2.1 / &sect;6.3.0~&sect;6.3.2；本型 key=<span class="inline-code">t</span> <span class="inline-code">rh</span> <span class="inline-code">lux</span> <span class="inline-code">pir</span> <span class="inline-code">pres</span> <span class="inline-code">fall</span> <span class="inline-code">stay</span> <span class="inline-code">mot</span> <span class="inline-code">mlvl</span></td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.5-4G</strong></td>
