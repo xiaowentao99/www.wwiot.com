@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AT 与远程配置（LoRa）- 文档中心 | 万维物联网 WWIOT</title>
-  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.12-LoRa。空口上报为 TLV。私有 LoRa 下行有两种正式格式：远程 AT 与 Modbus。">
+  <meta name="description" content="万维 LoRa / LoRaWAN 系列 AT 与远程配置指导手册 V4.13-LoRa。Header 为协议版本号整字节（无 MType）；私有 FCtrl 的 bit7 为 ACK、bit6:0 为事件。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -30,18 +30,18 @@
     <section class="hero">
       <span class="badge">LoRa · 空口 TLV</span>
       <h1>AT 与远程配置（LoRa）</h1>
-      <p>协议：LoRa / LoRaWAN · 版本 V4.12-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>（无 JSON 空口）。私有 LoRa <strong>远程配置有两种正式下行</strong>：远程 AT（8 位设备编号紧贴 AT，无空格）和 Modbus（功能码 10/03 + 寄存器 + CRC16）。设备先认远程 AT，对不上再按 Modbus 解析。§6 与独立 TLV 协议页同源，<strong>以 §6 加 AT key 对照为准</strong>。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
-      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.12-LoRa</span><span>万维物联网（南京）有限公司</span></div>
+      <p>协议：LoRa / LoRaWAN · 版本 V4.13-LoRa · 以《AT配置统一规范-LoRa》为能力集权威。<strong>空口上报 = TLV</strong>。<strong>Header = 协议版本号整字节，无 MType</strong>，常用 <span class="inline-code">0x03</span>（WW-27L 现网可能仍为 <span class="inline-code">0x10</span>）。私有协议 FCtrl：bit7 = ACK 请求，bit6:0 = Event，<span class="inline-code">FCtrl=(ACK&lt;&lt;7)|Event</span>；注册且 ACK=0 为 <span class="inline-code">0x0A</span>，开 ACK 为 <span class="inline-code">0x8A</span>。LoRaWAN 的 FCtrl 按 LoRaWAN 规范，不在此改写。详见 §6.1。4G（C 后缀）请看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a>。</p>
+      <div class="meta"><span>适用：万维 LoRa / LoRaWAN 系列</span><span class="version">V4.13-LoRa</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
 
-    <div class="note"><strong>V4.12 · 私有 LoRa 两种下行，都是正式格式。</strong>先判 8 位十六进制设备编号 + AT 文本（中间无空格），对上按<strong>远程 AT</strong>执行，否则再按 <strong>Modbus 03/10</strong> 解析。远程 AT 例：<span class="inline-code">12345678AT+PER=30,60</span>。Modbus 写 PER（寄存器 <span class="inline-code">0001</span>–<span class="inline-code">0002</span>，检测 0、发送 10，数据 <span class="inline-code">0000 000A</span>，CRC-16/XMODEM 初值 0）：<span class="inline-code">12 34 56 78 10 00 01 00 02 04 00 00 00 0A 86 3F</span>。上行仍是 TLV，不新造 Type。详见 §5.2、§5.3。</div>
+    <div class="note"><strong>V4.13 · Header / FCtrl。</strong>Header 只表示协议版本，整字节，<strong>没有 MType</strong>。主口径 <span class="inline-code">0x03</span>；WW-27L 旧包可能仍是 <span class="inline-code">0x10</span>（§6.4）。<strong>LoRaWAN</strong> 的 FCtrl 按 LoRaWAN，不另定义。<strong>私有协议</strong>：bit7 = ACK 请求，bit6:0 = Event。<span class="inline-code">FCtrl=(ACK&lt;&lt;7)|Event</span>。事件：0 状态、1 值变化、2 按键、3 预警、4 关机、5 开机、6 补传、7 应答、8 配置回执、<strong>10 注册</strong>。注册且 ACK=0 → <span class="inline-code">0x0A</span>；开 ACK → <span class="inline-code">0x8A</span>。旧「MType + Version」和私有侧「ACKReq/Trigger/Mark」不再作为基线。全文见 §6.1。</div>
 
     <nav class="toc"><h2>目录</h2><ol><li><a href="#overview">分册说明</a></li><li><a href="#s-1-命令格式约定">1 命令格式约定</a><ol><li><a href="#s-1.1-设计规则摘自规范">1.1 设计规则（摘自规范）</a></li><li><a href="#s-1.2-AT-指令总表LoRa-全量速查">1.2 AT 指令总表（LoRa 全量速查）</a></li></ol></li><li><a href="#第一部分--通用型">第一部分 &middot; 通用型</a></li><li><a href="#s-2.1-通用层per--var--cal--tun">2.1 通用层（per / var / cal / tun）</a></li><li><a href="#s-2.2-硬件层door--io--pwr">2.2 硬件层（door / io / pwr）</a></li><li><a href="#s-2.3-射频层--LoRa网络lora--exlora--ack--batt--aes--eui">2.3 射频层 &middot; LoRa网络（lora / exlora / ack / batt / aes / eui）</a><ol><li><a href="#s-2.3.1-备注设备编号--DevEUI--AES">2.3.1 备注：设备编号 / DevEUI / AES</a></li></ol></li><li><a href="#s-2.4-系统层ver--log与监听">2.4 系统层（ver / log）与监听</a></li><li><a href="#s-2.5-控制与查询非-key">2.5 控制与查询（非 key）</a></li><li><a href="#第二部分--传感器">第二部分 &middot; 传感器</a></li><li><a href="#s-3.0-型号--AT-指令对照表">3.0 型号 &times; AT 指令对照表</a><ol><li><a href="#s-3.0.1-计数口径LoRa">3.0.1 计数口径（LoRa）</a></li><li><a href="#s-3.0.2-按传感器类型的-key-矩阵规范-3">3.0.2 按传感器类型的 key 矩阵（规范 &sect;3）</a></li><li><a href="#s-3.0.3-按型号速查">3.0.3 按型号速查</a></li><li><a href="#s-3.0.4-产线对账">3.0.4 产线对账</a></li></ol></li><li><a href="#s-3.1-温湿度--测温杆">3.1 温湿度 / 测温杆</a></li><li><a href="#s-3.2-门磁SL210--WW-27">3.2 门磁（SL210 / WW-27）</a></li><li><a href="#s-3.3-水浸SL200--WW-26与烟感WW-22L">3.3 水浸（SL200 / WW-26）与烟感（WW-22L）</a></li><li><a href="#s-3.4-其他-L-族压力--运动--采集器--控制">3.4 其他 L 族（压力 / 运动 / 采集器 / 控制）</a></li><li><a href="#s-4-LoRa-回-ERR3--不适用的-key">4 LoRa 回 ERR3 / 不适用的 key</a></li><li><a href="#第三部分--远程配置">第三部分 &middot; 远程配置</a></li><li><a href="#s-5.1-本地-AT">5.1 本地 AT</a></li><li><a href="#s-5.2-远程-AT设备编号--AT">5.2 远程 AT（设备编号 + AT）</a></li><li><a href="#s-5.3-Modbus-配置设备编号--写读寄存器">5.3 Modbus 配置（设备编号 + 写/读寄存器）</a><ol><li><a href="#s-5.3.1-写多个寄存器功能码-0x10">5.3.1 写多个寄存器（功能码 0x10）</a></li><li><a href="#s-5.3.2-读保持寄存器功能码-0x03">5.3.2 读保持寄存器（功能码 0x03）</a></li><li><a href="#s-5.3.3-key--寄存器写入须按组一次写齐">5.3.3 key &harr; 寄存器（写入须按组一次写齐）</a></li></ol></li><li><a href="#s-5.4-LoRaWAN-下行--key--功能码">5.4 LoRaWAN 下行 &middot; key &harr; 功能码</a></li><li><a href="#s-5.5-监听窗口-lis">5.5 监听窗口 lis</a></li><li><a href="#附录">附录</a></li><li><a href="#s-6-上报报文">6 上报报文</a><ol><li><a href="#s-6.1-空口-TLV-帧结构">6.1 空口 TLV 帧结构</a></li><li><a href="#s-6.2-Type-范围与总表">6.2 Type 范围与总表</a></li><li><a href="#s-6.3-基础--定制-Type-详解">6.3 基础 / 定制 Type 详解</a></li><li><a href="#s-6.4-WW-27L-产品实现差异">6.4 WW-27L 产品实现差异</a></li><li><a href="#s-6.5-CRC">6.5 CRC</a></li><li><a href="#s-6.6-报文设计注册包--数据包">6.6 报文设计（注册包 / 数据包）</a></li><li><a href="#s-6.7-下行-Type-紧凑表官网">6.7 下行 Type 紧凑表（官网）</a></li></ol></li><li><a href="#s-7-与-4G-分册差异摘要">7 与 4G 分册差异摘要</a></li><li><a href="#s-8-规范改动清单对现有-LoRa">8 规范改动清单（对现有 LoRa）</a></li><li><a href="#s-9-自检脚本">9 自检脚本</a></li><li><a href="#s-10-修订记录">10 修订记录</a></li></ol></nav>
 
     <section class="section" id="overview"><h2>分册说明</h2><div class="note">
-<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.12-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
+<p><strong>协议：LoRa / LoRaWAN</strong> &middot; 版本 <strong>V4.13-LoRa</strong> &middot; 由合并手册拆出，并以《AT配置统一规范-LoRa》为能力集权威<br/>
 4G（C 后缀）请改看 <a href="index.html#at-remote-config-4g.html" target="_top">《AT 与远程配置（4G）》</a></p>
 </div><div class="table-wrap"><table>
 <thead>
@@ -53,7 +53,7 @@
 <tbody>
 <tr>
 <td>版本</td>
-<td><strong>V4.12-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
+<td><strong>V4.13-LoRa</strong>（协议：LoRa / LoRaWAN）</td>
 </tr>
 <tr>
 <td>依据</td>
@@ -1465,7 +1465,7 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <th>偏移</th>
 <th>长度</th>
 <th>字段</th>
-<th>解析（官网）</th>
+<th>解析</th>
 </tr>
 </thead>
 <tbody>
@@ -1473,7 +1473,7 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <td>0</td>
 <td>1</td>
 <td><strong>Header</strong></td>
-<td>高 3 bit = <strong>MType</strong>（预留）；低 5 bit = <strong>Protocol Version</strong>，当前 <strong><span class="inline-code">0x03</span></strong></td>
+<td><strong>协议版本号</strong>（整字节），<strong>无 MType</strong>。当前常用 <strong><span class="inline-code">0x03</span></strong>；部分现网产品（如 WW-27L）写作 <strong><span class="inline-code">0x10</span></strong>，见 &sect;6.4</td>
 </tr>
 <tr>
 <td>1</td>
@@ -1485,13 +1485,13 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <td>5</td>
 <td>1</td>
 <td><strong>FCtrl</strong></td>
-<td>控制字，见下</td>
+<td><strong>私有协议</strong> = 事件字段（见 &sect;6.1.2）；<strong>LoRaWAN</strong> 则按 LoRaWAN 规范的 FCtrl，勿与私有混用</td>
 </tr>
 <tr>
 <td>6</td>
 <td>2</td>
 <td><strong>SeqNo</strong></td>
-<td>主动上报时序号自增</td>
+<td>主动上报时序号自增（注册包通常不递增）</td>
 </tr>
 <tr>
 <td>8</td>
@@ -1506,29 +1506,43 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <td>公司自定义 CRC16，覆盖 Header&hellip;Body；见 &sect;6.5</td>
 </tr>
 </tbody>
-</table></div><p>要点：Body 为「类似 TLV」&mdash;&mdash;基础类型多为 <strong>T+V（省略 Length）</strong>；<span class="inline-code">0x10+</span> 为 <strong>T+L+V</strong>。无整帧 PayloadLen；解析靠 Type 表直到只剩末尾 2 字节 CRC。</p><h4 id="s-6.1.1-Header-位域">6.1.1 Header 位域</h4><div class="table-wrap"><table>
+</table></div><p>要点：Body 为「类似 TLV」&mdash;&mdash;基础类型多为 <strong>T+V（省略 Length）</strong>；<span class="inline-code">0x10+</span> 为 <strong>T+L+V</strong>。无整帧 PayloadLen；解析靠 Type 表直到只剩末尾 2 字节 CRC。</p><h4 id="s-6.1.1-Header版本号">6.1.1 Header（版本号）</h4><p><strong>Header 就是版本号</strong>，整字节表示协议版本，<strong>不拆 MType</strong>。</p><div class="table-wrap"><table>
 <thead>
 <tr>
-<th>位</th>
-<th>名称</th>
-<th>说明</th>
+<th>Header</th>
+<th>含义</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>7:5</td>
-<td>MType</td>
-<td><span class="inline-code">0xx</span> / <span class="inline-code">1xx</span> TBD，预留</td>
+<td><span class="inline-code">0x03</span></td>
+<td>当前文档主口径版本（与多数 TLV-V1 材料一致）</td>
 </tr>
 <tr>
-<td>4:0</td>
-<td>Protocol Version</td>
-<td>当前 <strong><span class="inline-code">0x03</span></strong></td>
+<td><span class="inline-code">0x10</span></td>
+<td>部分现网私有实现（如 WW-27L）首字节，见 &sect;6.4</td>
 </tr>
 </tbody>
 </table></div><div class="note">
-<p>MType=0 且 Version=<span class="inline-code">0x03</span> 时，Header 整字节为 <strong><span class="inline-code">0x03</span></strong>。</p>
-</div><h4 id="s-6.1.2-FCtrl控制字">6.1.2 FCtrl（控制字）</h4><div class="table-wrap"><table>
+<p>旧材料若写「高 3 bit = MType、低 5 bit = Version」&mdash;&mdash;<strong>作废</strong>；以本节为准：Header = 版本号。</p>
+</div><h4 id="s-6.1.2-FCtrl">6.1.2 FCtrl</h4><p>分两种链路，<strong>不可混解析</strong>：</p><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>链路</th>
+<th>FCtrl 含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LoRaWAN</strong></td>
+<td>按 <strong>LoRaWAN 协议</strong> 的 FCtrl（ADR / ACK / FOptsLen 等），本文不改写规范位域</td>
+</tr>
+<tr>
+<td><strong>私有协议</strong></td>
+<td><strong>事件字段</strong>（下表）；与 LoRaWAN FCtrl <strong>不是同一套位义</strong></td>
+</tr>
+</tbody>
+</table></div><p><strong>私有协议 FCtrl 位域</strong></p><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>位</th>
@@ -1538,28 +1552,90 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 </thead>
 <tbody>
 <tr>
-<td>7:6</td>
-<td>Reserve</td>
-<td>保留</td>
+<td><strong>7</strong></td>
+<td><strong>ACK</strong></td>
+<td><span class="inline-code">1</span> = 请求下行应答（与 <span class="inline-code">AT+ACK=1</span> 相关）；<span class="inline-code">0</span> = 不请求</td>
 </tr>
 <tr>
-<td>5</td>
-<td><strong>ACKReq</strong></td>
-<td>1 = 请求下行应答（与 <span class="inline-code">AT+ACK</span> 相关）</td>
+<td><strong>6:0</strong></td>
+<td><strong>事件 Event</strong></td>
+<td>事件类型，取值见 <strong>&sect;6.1.3</strong>（0～127）</td>
+</tr>
+</tbody>
+</table></div><p>整字节示意：<span class="inline-code">FCtrl = (ACK &lt;&lt; 7) | Event</span>。例如事件=注册 <span class="inline-code">10</span>、未开 ACK &rarr; <span class="inline-code">0x0A</span>；开 ACK &rarr; <span class="inline-code">0x8A</span>。</p><h4 id="s-6.1.3-事件类型私有协议-EventFCtrl-bit60">6.1.3 事件类型（私有协议 Event，FCtrl bit6:0）</h4><div class="table-wrap"><table>
+<thead>
+<tr>
+<th>值（十进制）</th>
+<th>hex</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td><span class="inline-code">0x00</span></td>
+<td><strong>状态</strong></td>
+<td>周期/心跳等到点上报（状态包）</td>
 </tr>
 <tr>
-<td>4</td>
-<td><strong>Trigger</strong></td>
-<td><span class="inline-code">0</span> = 定时；<span class="inline-code">1</span> = 触发（变化）</td>
+<td><strong>1</strong></td>
+<td><span class="inline-code">0x01</span></td>
+<td><strong>值变化</strong></td>
+<td>测量值超变、开关量边沿等</td>
 </tr>
 <tr>
-<td>3:0</td>
-<td><strong>Mark</strong></td>
-<td>官网写明：<strong><span class="inline-code">1</span> = 开机</strong>（其余取值未逐一枚举）</td>
+<td><strong>2</strong></td>
+<td><span class="inline-code">0x02</span></td>
+<td><strong>按键</strong></td>
+<td>短按松手，或 <span class="inline-code">AT+REPORT</span></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td><span class="inline-code">0x03</span></td>
+<td><strong>预警</strong></td>
+<td>阈值/预警类（产品实现则发）</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><span class="inline-code">0x04</span></td>
+<td><strong>关机</strong></td>
+<td>主动下线/进休眠前最后一包（若产品有）</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td><span class="inline-code">0x05</span></td>
+<td><strong>开机</strong></td>
+<td>从关机态唤醒后的开机包（<strong>不是</strong>注册）</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td><span class="inline-code">0x06</span></td>
+<td><strong>补传</strong></td>
+<td>补发/重传类（若产品有）</td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td><span class="inline-code">0x07</span></td>
+<td><strong>应答</strong></td>
+<td>对下行的业务应答类（若产品有；区别于 Type <span class="inline-code">0xFF</span>）</td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td><span class="inline-code">0x08</span></td>
+<td><strong>配置回执</strong></td>
+<td>远程配置结果回执（若产品有）</td>
+</tr>
+<tr>
+<td><strong>10</strong></td>
+<td><span class="inline-code">0x0A</span></td>
+<td><strong>注册</strong></td>
+<td>上电/入网后的注册包</td>
 </tr>
 </tbody>
 </table></div><div class="note">
-<p>WW-27L 把同一字节解为「计时事件」（事件码 <span class="inline-code">0/1/2/4/5/A</span> + TRIG/ACK），见 <strong>&sect;6.4</strong>，<strong>不可与官网 Mark 表混用</strong>。</p>
+<p>平台旧 JSON <span class="inline-code">evt</span> 与上表同口径时：<span class="inline-code">0</span> 状态、<span class="inline-code">1</span> 变化、<span class="inline-code">2</span> 按键、<span class="inline-code">10</span> 注册。未列出的取值保留，<strong>勿自造</strong>与产品不符的事件码。<br/>
+部分旧固件（WW-27L）曾用「低 4 位事件 + TRIG/ACK 高位」另一套打包，见 <strong>&sect;6.4</strong>；<strong>新口径以本节 bit7=ACK、bit6:0=事件为准</strong>。</p>
 </div><h3 id="s-6.2-Type-范围与总表">6.2 Type 范围与总表</h3><h4 id="s-6.2.1-Length-模式">6.2.1 Length 模式</h4><div class="table-wrap"><table>
 <thead>
 <tr>
@@ -2092,14 +2168,14 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 </thead>
 <tbody>
 <tr>
-<td>首字节</td>
-<td>Version 低 5 位 = <strong><span class="inline-code">0x03</span></strong>（整字节常 <span class="inline-code">0x03</span>）</td>
-<td>固定写作 <strong><span class="inline-code">0x10</span>（Ver）</strong></td>
+<td>首字节 / Header</td>
+<td><strong>版本号</strong>整字节 <strong><span class="inline-code">0x03</span></strong>（无 MType）</td>
+<td>固定写作 <strong><span class="inline-code">0x10</span>（版本）</strong></td>
 </tr>
 <tr>
 <td>控制字</td>
-<td><strong>FCtrl</strong>：ACKReq / Trigger / Mark</td>
-<td><strong>计时事件</strong>：ACK / TRIG + 事件低 4 位（<span class="inline-code">0/1/2/3/4/5/A</span>）</td>
+<td><strong>私有 FCtrl</strong>：bit7=ACK，bit6:0=事件（&sect;6.1.2～6.1.3）</td>
+<td><strong>旧实现</strong>：低 4 位事件 + TRIG/ACK 高位（与新口径不同）</td>
 </tr>
 <tr>
 <td>Type <span class="inline-code">0x00</span></td>
@@ -2132,7 +2208,7 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <td>材料称 <strong>XMODEM</strong>，<strong>init=<span class="inline-code">0</span></strong></td>
 </tr>
 </tbody>
-</table></div><p><strong>WW-27L Type 子集与拼接顺序</strong>：<span class="inline-code">HB(00)</span> &rarr;（可选）<span class="inline-code">TEMP(04)</span> &rarr;（可选）<span class="inline-code">HUMI(05)</span> &rarr; <span class="inline-code">DOOR(09)</span> &rarr; <span class="inline-code">IO(0D)</span>。SHT40 失败则省略 TEMP/HUMI。</p><p><strong>WW-27L 计时事件（低 4 位）</strong></p><div class="table-wrap"><table>
+</table></div><p><strong>WW-27L Type 子集与拼接顺序</strong>：<span class="inline-code">HB(00)</span> &rarr;（可选）<span class="inline-code">TEMP(04)</span> &rarr;（可选）<span class="inline-code">HUMI(05)</span> &rarr; <span class="inline-code">DOOR(09)</span> &rarr; <span class="inline-code">IO(0D)</span>。SHT40 失败则省略 TEMP/HUMI。</p><p><strong>WW-27L 旧「计时事件」打包（低 4 位事件；与 &sect;6.1.3 新口径不同，仅对照现网）</strong></p><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>低 4 位</th>
@@ -2177,7 +2253,7 @@ FFFFFFFFAT+PER=60,600</div><p>单播成功应答示意：<span class="inline-cod
 <td>上电首包，同时 TRIG=1</td>
 </tr>
 </tbody>
-</table></div><p>常见整字节：<span class="inline-code">0x1A</span> 注册；<span class="inline-code">0x04</span>/<span class="inline-code">0x24</span> 关机；<span class="inline-code">0x05</span>/<span class="inline-code">0x25</span> 开机。与官网 FCtrl / 迁移对照见 <strong>&sect;6.6.2</strong>、<strong>&sect;6.6.5</strong>（<span class="inline-code">0&rarr;周期</span>、<span class="inline-code">1&rarr;变化</span>、<span class="inline-code">2&rarr;按键</span>、<span class="inline-code">A&rarr;注册</span>）；关机/开机正式 Mark 取值待与官网对齐。</p><p><strong>WW-27L 示例 hex</strong>（DevAddr=<span class="inline-code">12345678</span>，Seq=42，电量 85%/类型 27，27.00℃，55.00%RH，门磁 bit0=1，IO=0；CRC 按 XMODEM init=0）：</p><p>心跳：</p><div class="code">10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02</div><p>注册（<span class="inline-code">0x1A</span>，Seq=1 示意；注册包 Seq <strong>不递增</strong>）：</p><div class="code">10 12 34 56 78 1A 00 01 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 8A E3</div><div class="note">
+</table></div><p>常见整字节（旧打包）：<span class="inline-code">0x1A</span> 注册；<span class="inline-code">0x04</span>/<span class="inline-code">0x24</span> 关机；<span class="inline-code">0x05</span>/<span class="inline-code">0x25</span> 开机。<strong>新口径</strong>对应：注册=<span class="inline-code">0x0A</span>/<span class="inline-code">0x8A</span>，状态=<span class="inline-code">0x00</span>/<span class="inline-code">0x80</span>，值变化=<span class="inline-code">0x01</span>/<span class="inline-code">0x81</span>，按键=<span class="inline-code">0x02</span>/<span class="inline-code">0x82</span>（高字节位为 ACK），见 <strong>&sect;6.1.3</strong>；迁移对照 <strong>&sect;6.6.2</strong>、<strong>&sect;6.6.5</strong>。</p><p><strong>WW-27L 示例 hex</strong>（DevAddr=<span class="inline-code">12345678</span>，Seq=42，电量 85%/类型 27，27.00℃，55.00%RH，门磁 bit0=1，IO=0；CRC 按 XMODEM init=0）：</p><p>心跳：</p><div class="code">10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02</div><p>注册（<span class="inline-code">0x1A</span>，Seq=1 示意；注册包 Seq <strong>不递增</strong>）：</p><div class="code">10 12 34 56 78 1A 00 01 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 8A E3</div><div class="note">
 <p><strong>不可</strong>与官网默认精度（温度 <span class="inline-code">01 0E</span>=27.0&times;10、湿度 1B <span class="inline-code">37</span>、Header=<span class="inline-code">0x03</span>、CRC init FFFF）混用同一解析器。</p>
 </div><h3 id="s-6.5-CRC">6.5 CRC</h3><div class="table-wrap"><table>
 <thead>
@@ -2249,13 +2325,13 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 <tbody>
 <tr>
 <td>Header</td>
-<td><span class="inline-code">0x03</span>（官网 Version）</td>
+<td><strong>版本号</strong> <span class="inline-code">0x03</span>（无 MType）</td>
 <td>WW-27L 现网写作 <span class="inline-code">0x10</span>，见 &sect;6.4</td>
 </tr>
 <tr>
 <td>FCtrl</td>
-<td><strong>Trigger=1</strong>（bit4）</td>
-<td>官网触发；WW-27L 现网常用整字节 <strong><span class="inline-code">0x1A</span></strong>（TRIG + 事件 <span class="inline-code">0xA</span>）</td>
+<td><strong>私有</strong>：事件=<span class="inline-code">10</span> 注册 &rarr; <span class="inline-code">0x0A</span>（ACK=0）或 <span class="inline-code">0x8A</span>（ACK=1）</td>
+<td>WW-27L 旧打包常见 <strong><span class="inline-code">0x1A</span></strong>（TRIG+事件 <span class="inline-code">0xA</span>），见 &sect;6.4</td>
 </tr>
 <tr>
 <td>SeqNo</td>
@@ -2374,8 +2450,8 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 </tr>
 <tr>
 <td>FCtrl</td>
-<td><strong>定时</strong> Trigger=<span class="inline-code">0</span>；<strong>变化/触发</strong> Trigger=<span class="inline-code">1</span></td>
-<td>ACKReq 随 <span class="inline-code">AT+ACK</span></td>
+<td><strong>状态</strong> Event=<span class="inline-code">0</span>；<strong>值变化</strong> Event=<span class="inline-code">1</span>；ACK=bit7 随 <span class="inline-code">AT+ACK</span></td>
+<td>见 &sect;6.1.3</td>
 </tr>
 <tr>
 <td>SeqNo</td>
@@ -2388,12 +2464,12 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 <td>一般<strong>不带</strong>配置快照（<span class="inline-code">0x81</span>/<span class="inline-code">0x10</span>）</td>
 </tr>
 </tbody>
-</table></div><p><strong>官网 FCtrl vs WW-27L 事件码（产品附录）</strong></p><div class="table-wrap"><table>
+</table></div><p><strong>私有事件 vs WW-27L 旧打包（产品附录）</strong></p><div class="table-wrap"><table>
 <thead>
 <tr>
 <th>场景</th>
-<th>官网 FCtrl（建议）</th>
-<th>WW-27L 计时事件整字节（现网）</th>
+<th>私有 FCtrl（新口径，ACK=0）</th>
+<th>WW-27L 旧计时事件整字节（现网）</th>
 </tr>
 </thead>
 <tbody>
@@ -2569,9 +2645,9 @@ static uint16_t cal_crc16(const uint8_t *pData, const uint32_t len) {
 </table></div><div class="note">
 <p>上报里的门磁/水浸状态走 <strong><span class="inline-code">0x09</span></strong>；配置侧 <span class="inline-code">AT+DOOR?</span> 仍是硬件只读查询，通道不同。</p>
 </div><h4 id="s-6.6.4-完整示例官网-TLV-V1-精度基线">6.6.4 完整示例（官网 TLV-V1 精度基线）</h4><p>参数约定：DevAddr=<span class="inline-code">12 34 56 78</span>；CRC 为官网算法（init=<span class="inline-code">0xFFFF</span>，见 &sect;6.5）。温度 <strong>0.1℃</strong>、湿度 <strong>1B&middot;1%RH</strong>（<strong>不是</strong> WW-27L 的 0.01 精度）。</p><p><strong>① 注册包（温湿度 WW-10L 示意）</strong><br/>
-FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inline-code">00 01</span>（不递增）；Body：<span class="inline-code">0x00</span> 设备信息（电压档示意、devType=<span class="inline-code">0x10</span> 温湿度）+ <span class="inline-code">0x81</span>（上报 600s / 检测 60s）+ <span class="inline-code">0x10</span>（TFREQ=470300000、LCP=7、RPREM=8、LFT=0、TSF=7）+ <span class="inline-code">0x04</span>/<span class="inline-code">0x05</span>（23.5℃ / 55%RH）。</p><div class="code">03 12 34 56 78 10 00 01 00 14 10 81 04 02 58 00 3C 10 0B 1C 07 F7 B0 00 07 00 08 00 00 07 04 00 EB 05 37 A8 91</div><p><strong>② 心跳 / 周期数据包（同上测量）</strong><br/>
+FCtrl=<span class="inline-code">0x0A</span>（私有：事件=注册 <span class="inline-code">10</span>，ACK=0）；Seq=<span class="inline-code">00 01</span>（不递增）；Body：<span class="inline-code">0x00</span> 设备信息（电压档示意、devType=<span class="inline-code">0x10</span> 温湿度）+ <span class="inline-code">0x81</span>（上报 600s / 检测 60s）+ <span class="inline-code">0x10</span>（TFREQ=470300000、LCP=7、RPREM=8、LFT=0、TSF=7）+ <span class="inline-code">0x04</span>/<span class="inline-code">0x05</span>（23.5℃ / 55%RH）。</p><div class="code">03 12 34 56 78 10 00 01 00 14 10 81 04 02 58 00 3C 10 0B 1C 07 F7 B0 00 07 00 08 00 00 07 04 00 EB 05 37 A8 91</div><p><strong>② 心跳 / 周期数据包（同上测量）</strong><br/>
 FCtrl=<span class="inline-code">0x00</span>；Seq=<span class="inline-code">00 2A</span>；Body：<span class="inline-code">0x00</span> + <span class="inline-code">0x04</span> + <span class="inline-code">0x05</span>。</p><div class="code">03 12 34 56 78 00 00 2A 00 14 10 04 00 EB 05 37 BF 44</div><p><strong>③ 门磁变化包</strong><br/>
-FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inline-code">00 05</span>；devType=<span class="inline-code">0x21</span>；<span class="inline-code">0x09</span>=<span class="inline-code">01</span>（有状态/打开，按产品极性）。</p><div class="code">03 12 34 56 78 10 00 05 00 14 21 09 01 DB A8</div><p><strong>WW-27L 现网对照示例</strong>（Header=<span class="inline-code">0x10</span>、TEMP/HUMI 为 <strong>0.01</strong> 精度、CRC init=<span class="inline-code">0</span>；见 &sect;6.4，<strong>不可</strong>与上列官网示例混用同一解析器）：</p><div class="code">心跳：10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02
+FCtrl=<span class="inline-code">0x01</span>（私有：事件=值变化 <span class="inline-code">1</span>，ACK=0）；Seq=<span class="inline-code">00 05</span>；devType=<span class="inline-code">0x21</span>；<span class="inline-code">0x09</span>=<span class="inline-code">01</span>（有状态/打开，按产品极性）。</p><div class="code">03 12 34 56 78 10 00 05 00 14 21 09 01 DB A8</div><p><strong>WW-27L 现网对照示例</strong>（Header=<span class="inline-code">0x10</span>、TEMP/HUMI 为 <strong>0.01</strong> 精度、CRC init=<span class="inline-code">0</span>；见 &sect;6.4，<strong>不可</strong>与上列官网示例混用同一解析器）：</p><div class="code">心跳：10 12 34 56 78 00 00 2A 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 03 02
 注册：10 12 34 56 78 1A 00 01 00 55 1B 04 0A 8C 05 15 7C 09 01 0D 00 8A E3</div><h4 id="s-6.6.5-原-JSON-key--Type-迁移对照">6.6.5 原 JSON key &rarr; Type 迁移对照</h4><div class="note">
 <p>仅供从旧「平台扁平 JSON」口径迁移。<strong>LoRa 空口不再发送这些 JSON 字段</strong>；网关可按左列语义从右列 Type 译出。</p>
 </div><div class="table-wrap"><table>
@@ -2595,7 +2671,7 @@ FCtrl=<span class="inline-code">0x10</span>（Trigger）；Seq=<span class="inli
 </tr>
 <tr>
 <td><span class="inline-code">evt</span></td>
-<td><strong>FCtrl</strong>（Trigger/Mark）或 WW-27L 事件字节</td>
+<td><strong>私有 FCtrl</strong> bit6:0 事件（&sect;6.1.3）；旧 WW-27L 见 &sect;6.4</td>
 <td>见 &sect;6.6.2</td>
 </tr>
 <tr>
@@ -2892,6 +2968,11 @@ ATO</div></section>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-09</td>
+<td><strong>V4.13-LoRa</strong></td>
+<td><strong>Header = 版本号（无 MType）</strong>；<strong>私有 FCtrl</strong> = bit7 ACK + bit6:0 事件；<strong>LoRaWAN FCtrl</strong> 按 LoRaWAN；新增 <strong>&sect;6.1.3 事件类型表</strong>（0 状态 / 1 值变化 / 2 按键 / 10 注册等）；示例与迁移对照同步</td>
+</tr>
 <tr>
 <td>2026-11-09</td>
 <td><strong>V4.12-LoRa</strong></td>
