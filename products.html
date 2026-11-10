@@ -1830,47 +1830,47 @@
     // 产品图片URL映射表
     // key: 产品型号 (不含WW-前缀)
     // value: 图片文件名 (放在 images/ 目录下)
-    // [] 内的内容表示可选项，例如 WW-10[L:LW:HW:C]-SP1.png 对应 WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
+    // [] 内的内容表示可选项，例如 WW-10-CLHW-SP1.png 对应 WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
     const productImages = {
       // ========== WW-10 系列 - 温湿度传感器 ==========
-      // 图片: WW-10[L:LW:HW:C]-SP1.png → WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
-      '10L-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      '10LW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      '10HW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      '10C-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      // 图片: WW-10L:H:LW:HW:C.png → WW-10L, WW-10H, WW-10LW, WW-10HW, WW-10C
-      '10L': 'WW-10L:H:LW:HW:C.png',
-      '10H': 'WW-10L:H:LW:HW:C.png',
-      '10LW': 'WW-10L:H:LW:HW:C.png',
-      '10HW': 'WW-10L:H:LW:HW:C.png',
-      '10C': 'WW-10L:H:LW:HW:C.png',
+      // 图片: WW-10-CLHW-SP1.png → WW-10L-SP1, WW-10LW-SP1, WW-10HW-SP1, WW-10C-SP1
+      '10L-SP1': 'WW-10-CLHW-SP1.png',
+      '10LW-SP1': 'WW-10-CLHW-SP1.png',
+      '10HW-SP1': 'WW-10-CLHW-SP1.png',
+      '10C-SP1': 'WW-10-CLHW-SP1.png',
+      // 图片: WW-10-CLHW.png → WW-10L, WW-10H, WW-10LW, WW-10HW, WW-10C
+      '10L': 'WW-10-CLHW.png',
+      '10H': 'WW-10-CLHW.png',
+      '10LW': 'WW-10-CLHW.png',
+      '10HW': 'WW-10-CLHW.png',
+      '10C': 'WW-10-CLHW.png',
 
       // ========== WW-11/12/13 系列 - 室内/测温 ==========
       // 使用 WW-10 系列的通用图片
-      '11L': 'WW-11.png',
-      '11H': 'WW-11.png',
-      '11LW': 'WW-11.png',
-      '11HW': 'WW-11.png',
-      '11C': 'WW-11.png',
+      '11L': 'WW-11-CLHW.png',
+      '11H': 'WW-11-CLHW.png',
+      '11LW': 'WW-11-CLHW.png',
+      '11HW': 'WW-11-CLHW.png',
+      '11C': 'WW-11-CLHW.png',
 
-      // '11L-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      // '11LW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      // '11HW-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
-      // '11C-SP1': 'WW-10[L:LW:HW:C]-SP1.png',
+      // '11L-SP1': 'WW-10-CLHW-SP1.png',
+      // '11LW-SP1': 'WW-10-CLHW-SP1.png',
+      // '11HW-SP1': 'WW-10-CLHW-SP1.png',
+      // '11C-SP1': 'WW-10-CLHW-SP1.png',
 
-      '12L': 'WW-12.png',
-      '12LW': 'WW-12.png',
-      '12HW': 'WW-12.png',
-      '12C': 'WW-12.png',
-      '12L-SP1': 'WW-12-SP1.jpg',
-      '12LW-SP1': 'WW-12-SP1.jpg',
-      '12HW-SP1': 'WW-12-SP1.jpg',
-      '12C-SP1': 'WW-12-SP1.jpg',
-      '13L': 'WW-13.png',
-      '13H': 'WW-13.png',
-      '13LW': 'WW-13.png',
-      '13HW': 'WW-13.png',
-      '13C': 'WW-13.png',
+      '12L': 'WW-12-CLW.png',
+      '12LW': 'WW-12-CLW.png',
+      '12HW': 'WW-12-CLW.png',
+      '12C': 'WW-12-CLW.png',
+      '12L-SP1': 'WW-12-CLW-SP1.jpg',
+      '12LW-SP1': 'WW-12-CLW-SP1.jpg',
+      '12HW-SP1': 'WW-12-CLW-SP1.jpg',
+      '12C-SP1': 'WW-12-CLW-SP1.jpg',
+      '13L': 'WW-13-CLHW.png',
+      '13H': 'WW-13-CLHW.png',
+      '13LW': 'WW-13-CLHW.png',
+      '13HW': 'WW-13-CLHW.png',
+      '13C': 'WW-13-CLHW.png',
 
       // ========== WW-RS 系列 - RS485 总线传感器 ==========
       'RS10': 'WW-RS10.png',
@@ -1880,159 +1880,159 @@
       'RS18': 'WW-RS18.png',
 
       // ========== WW-15 系列 - K型温度传感器 ==========
-      // 图片: WW-15[L:C]-K.jpg → WW-15L-K, WW-15C-K
-      '15L-K': 'WW-15.png',
-      '15C-K': 'WW-15.png',
-      // '15L-T': 'WW-15.png',
-      // '15C-T': 'WW-15.png',
-      // '15L-HW': 'WW-15.png',
-      // '15C-HW': 'WW-15.png',
-      // '15L-RM': 'WW-15.png',
-      // '15C-RM': 'WW-15.png',
+      // 图片: WW-15-CL-K.jpg → WW-15L-K, WW-15C-K
+      '15L-K': 'WW-15-CL-K.png',
+      '15C-K': 'WW-15-CL-K.png',
+      // '15L-T': 'WW-15-CL-K.png',
+      // '15C-T': 'WW-15-CL-K.png',
+      // '15L-HW': 'WW-15-CL-K.png',
+      // '15C-HW': 'WW-15-CL-K.png',
+      // '15L-RM': 'WW-15-CL-K.png',
+      // '15C-RM': 'WW-15-CL-K.png',
 
-      '16L': 'WW-16.png',
-      '16-RS': 'WW-16.png',
+      '16L': 'WW-16-L.png',
+      '16-RS': 'WW-16-L.png',
      
       // ========== WW-20 系列 - 开关量采集终端 ==========
       // 
-      '20L-SP20': 'WW-20-SP20.jpg',
-      '20LW-SP20': 'WW-20-SP20.jpg',
-      '20HW-SP20': 'WW-20-SP20.jpg',
-      '20C-SP20': 'WW-20-SP20.jpg',
+      '20L-SP20': 'WW-20-CLW-SP20.jpg',
+      '20LW-SP20': 'WW-20-CLW-SP20.jpg',
+      '20HW-SP20': 'WW-20-CLW-SP20.jpg',
+      '20C-SP20': 'WW-20-CLW-SP20.jpg',
 
-      // 图片: WW-20[L:LW:HW:C]-SP21.jpg → 水浸(绕线)
-      '20L-SP21': 'WW-20-SP21.png',
-      '20LW-SP21': 'WW-20-SP21.png',
-      '20HW-SP21': 'WW-20-SP21.png',
-      '20C-SP21': 'WW-20-SP21.png',
-      // 图片: WW-20[L:LW:HW:C]-SP22.png → 门磁
-      '20L-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
-      '20LW-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
-      '20HW-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
-      '20C-SP22': 'WW-20[L:LW:HW:C]-SP22.png',
+      // 图片: WW-20-CLHW-SP21.jpg → 水浸(绕线)
+      '20L-SP21': 'WW-20-CLW-SP21.png',
+      '20LW-SP21': 'WW-20-CLW-SP21.png',
+      '20HW-SP21': 'WW-20-CLW-SP21.png',
+      '20C-SP21': 'WW-20-CLW-SP21.png',
+      // 图片: WW-20-CLHW-SP22.png → 门磁
+      '20L-SP22': 'WW-20-CLHW-SP22.png',
+      '20LW-SP22': 'WW-20-CLHW-SP22.png',
+      '20HW-SP22': 'WW-20-CLHW-SP22.png',
+      '20C-SP22': 'WW-20-CLHW-SP22.png',
       // 基础开关量型号 (无探头)
-      '20L': 'WW-20[L:LW:HW:C]-SP21.jpg',
-      '20LW': 'WW-20[L:LW:HW:C]-SP21.jpg',
-      '20HW': 'WW-20[L:LW:HW:C]-SP21.jpg',
-      '20C': 'WW-20[L:LW:HW:C]-SP21.jpg',
+      '20L': 'WW-20-CLHW-SP21.jpg',
+      '20LW': 'WW-20-CLHW-SP21.jpg',
+      '20HW': 'WW-20-CLHW-SP21.jpg',
+      '20C': 'WW-20-CLHW-SP21.jpg',
 
       // ========== WW-21 系列 - 人体感应 ==========
-      '21L': 'WW-21.png',
-      '21H': 'WW-21.png',
-      '21LW': 'WW-21.png',
-      '21HW': 'WW-21.png',
-      '21C': 'WW-21.png',
+      '21L': 'WW-21-CLHW.png',
+      '21H': 'WW-21-CLHW.png',
+      '21LW': 'WW-21-CLHW.png',
+      '21HW': 'WW-21-CLHW.png',
+      '21C': 'WW-21-CLHW.png',
 
       // ========== WW-22 系列 - 烟感 ==========
-      // 图片: WW-22L:LW:HW:C.png → WW-22L, WW-22LW, WW-22HW, WW-22C
-      '22L': 'WW-22L:LW:HW:C.png',
-      '22H': 'WW-22L:LW:HW:C.png',
-      '22LW': 'WW-22L:LW:HW:C.png',
-      '22HW': 'WW-22L:LW:HW:C.png',
-      '22C': 'WW-22L:LW:HW:C.png',
+      // 图片: WW-22-CLHW.png → WW-22L, WW-22LW, WW-22HW, WW-22C
+      '22L': 'WW-22-CLHW.png',
+      '22H': 'WW-22-CLHW.png',
+      '22LW': 'WW-22-CLHW.png',
+      '22HW': 'WW-22-CLHW.png',
+      '22C': 'WW-22-CLHW.png',
 
       // ========== WW-26 系列 - 水浸采集 ==========
-      '26L-SP20': 'WW-26-SP20.png',
-      '26LW-SP20': 'WW-26-SP20.png',
-      '26HW-SP20': 'WW-26-SP20.png',
-      '26C-SP20': 'WW-26-SP20.png',
-      '26L-SP21': 'WW-26-SP21.png',
-      '26LW-SP21': 'WW-26-SP21.png',
-      '26HW-SP21': 'WW-26-SP21.png',
-      '26C-SP21': 'WW-26-SP21.png',
+      '26L-SP20': 'WW-26-CLHW-SP20.png',
+      '26LW-SP20': 'WW-26-CLHW-SP20.png',
+      '26HW-SP20': 'WW-26-CLHW-SP20.png',
+      '26C-SP20': 'WW-26-CLHW-SP20.png',
+      '26L-SP21': 'WW-26-CLHW-SP21.png',
+      '26LW-SP21': 'WW-26-CLHW-SP21.png',
+      '26HW-SP21': 'WW-26-CLHW-SP21.png',
+      '26C-SP21': 'WW-26-CLHW-SP21.png',
 
-      '27L': 'WW-27.png',
-      '27LW': 'WW-27.png',
-      '27HW': 'WW-27.png',
-      '27C': 'WW-27.png',
+      '27L': 'WW-27-CLHW.png',
+      '27LW': 'WW-27-CLHW.png',
+      '27HW': 'WW-27-CLHW.png',
+      '27C': 'WW-27-CLHW.png',
 
-      '27L-SP22': 'WW-27-SP22.png',
-      '27LW-SP22': 'WW-27-SP22.png',
-      '27HW-SP22': 'WW-27-SP22.png',
-      '27C-SP22': 'WW-27-SP22.png',
+      '27L-SP22': 'WW-27-CLHW-SP22.png',
+      '27LW-SP22': 'WW-27-CLHW-SP22.png',
+      '27HW-SP22': 'WW-27-CLHW-SP22.png',
+      '27C-SP22': 'WW-27-CLHW-SP22.png',
 
       // ========== WW-28 系列 - SOS 报警终端 ==========
-      '28L': 'WW-28.png',
-      '28H': 'WW-28.png',
-      '28C': 'WW-28.png',
+      '28L': 'WW-28-CLH.png',
+      '28H': 'WW-28-CLH.png',
+      '28C': 'WW-28-CLH.png',
 
       // ===== WW-30 系列 - 气体类传感器 =====
-      '30L-CO2': 'WW-30.png',
-      '30L-O2': 'WW-30.png',
+      '30L-CO2': 'WW-30-L.png',
+      '30L-O2': 'WW-30-L.png',
 
       // ========== WW-50 系列 - 倾角传感器 ==========
-      // 图片: WW-50L:H:LW:HW:C.jpg → WW-50L, WW-50H, WW-50LW, WW-50HW, WW-50C
-      '50L': 'WW-50.png',
-      '50LW': 'WW-50.png',
-      '50HW': 'WW-50.png',
-      '50C': 'WW-50.png',
-      '50L-P2': 'WW-50.png',
-      '50LW-P2': 'WW-50.png',
-      '50HW-P2': 'WW-50.png',
-      '50C-P2': 'WW-50.png',
+      // 图片: WW-50-CLHW.jpg → WW-50L, WW-50H, WW-50LW, WW-50HW, WW-50C
+      '50L': 'WW-50-CLHW.png',
+      '50LW': 'WW-50-CLHW.png',
+      '50HW': 'WW-50-CLHW.png',
+      '50C': 'WW-50-CLHW.png',
+      '50L-P2': 'WW-50-CLHW.png',
+      '50LW-P2': 'WW-50-CLHW.png',
+      '50HW-P2': 'WW-50-CLHW.png',
+      '50C-P2': 'WW-50-CLHW.png',
 
       // ========== WW-51 系列 - 震动传感器 ==========
-      '51L': 'WW-51.png',
-      '51C': 'WW-51.png',
+      '51L': 'WW-51-CL.png',
+      '51C': 'WW-51-CL.png',
 
       // =======  60 计量类 =====
-      '60L': 'WW-60.png',
-      '61L': 'WW-61.png',
-      '62L': 'WW-60.png',
+      '60L': 'WW-60-L.png',
+      '61L': 'WW-61-L.png',
+      '62L': 'WW-60-L.png',
       // ========== WW-70 系列 - 压力传感器 ==========
-      '70L': 'WW-70.png',
-      '70LW': 'WW-70.png',
-      '70HW': 'WW-70.png',
-      '70C': 'WW-70.png',
+      '70L': 'WW-70-CLHW.png',
+      '70LW': 'WW-70-CLHW.png',
+      '70HW': 'WW-70-CLHW.png',
+      '70C': 'WW-70-CLHW.png',
 
-      '71L-P1': 'WW-71.png',
-      '71LW-P1': 'WW-71.png',
-      '71HW-P1': 'WW-71.png',
-      '71C-P1': 'WW-71.png',
+      '71L-P1': 'WW-71-CLHW-P1.png',
+      '71LW-P1': 'WW-71-CLHW-P1.png',
+      '71HW-P1': 'WW-71-CLHW-P1.png',
+      '71C-P1': 'WW-71-CLHW-P1.png',
 
-      '72L': 'WW-72.png',
-      '72LW': 'WW-72.png',
-      '72HW': 'WW-72.png',
-      '72B': 'WW-72.png',
+      '72L': 'WW-72-CLH.png',
+      '72LW': 'WW-72-CLH.png',
+      '72HW': 'WW-72-CLH.png',
+      '72B': 'WW-72-CLH.png',
 
 // ========== WW-73 系列 - 液位传感器 ==========
 
-      '73L': 'WW-73.png',
-      '73LW': 'WW-73.png',
-      '73HW': 'WW-73.png',
-      '73C': 'WW-73.png',
+      '73L': 'WW-73-CLHW.png',
+      '73LW': 'WW-73-CLHW.png',
+      '73HW': 'WW-73-CLHW.png',
+      '73C': 'WW-73-CLHW.png',
 
-      '74L': 'WW-74.png',
-      '74C': 'WW-74.png',
+      '74L': 'WW-74-CL.png',
+      '74C': 'WW-74-CL.png',
 
 // ========== WW-C18 系列 - 液位传感器 ==========
-      'C18L':  'WW-C18.png',
-      'C18HW': 'WW-C18.png',
-      'C18LW': 'WW-C18.png',
-      'C18C':  'WW-C18.png',
+      'C18L':  'WW-C18-CLHW.png',
+      'C18HW': 'WW-C18-CLHW.png',
+      'C18LW': 'WW-C18-CLHW.png',
+      'C18C':  'WW-C18-CLHW.png',
 
 
       // ========== WW-D2 系列 - 太阳能数据采集器 ==========
-      // 图片: WW-D2L:H:LW:HW:C.jpg → WW-D2L, WW-D2H, WW-D2LW, WW-D2HW, WW-D2C
-      'D1L': 'WW-D1.png',
-      'D1L-AI': 'WW-D1.png',
-      'D1L-IO': 'WW-D1.png',
-      'D1HW': 'WW-D1.png',
-      'D1LW': 'WW-D1.png',
-      'D1C': 'WW-D1.png',
+      // 图片: WW-D2-CLHW.png → WW-D2L, WW-D2H, WW-D2LW, WW-D2HW, WW-D2C
+      'D1L': 'WW-D1-CLHW.png',
+      'D1L-AI': 'WW-D1-CLHW.png',
+      'D1L-IO': 'WW-D1-CLHW.png',
+      'D1HW': 'WW-D1-CLHW.png',
+      'D1LW': 'WW-D1-CLHW.png',
+      'D1C': 'WW-D1-CLHW.png',
 
       // ========== WW-D1/D3 系列 - 数据采集器 ==========
-      'D2L': 'WW-D2.png',
-      'D2H': 'WW-D2.png',
-      'D2LW': 'WW-D2.png',
-      'D2HW': 'WW-D2.png',
-      'D2C': 'WW-D2.png',
+      'D2L': 'WW-D2-CLHW.png',
+      'D2H': 'WW-D2-CLHW.png',
+      'D2LW': 'WW-D2-CLHW.png',
+      'D2HW': 'WW-D2-CLHW.png',
+      'D2C': 'WW-D2-CLHW.png',
 
-      'D3L': 'WW-D3.png',
-      'D3H': 'WW-D3.png',
-      'D3LW': 'WW-D3.png',
-      'D3HW': 'WW-D3.png',
-      'D3C': 'WW-D3.png',
+      'D3L': 'WW-D3-CLHW.png',
+      'D3H': 'WW-D3-CLHW.png',
+      'D3LW': 'WW-D3-CLHW.png',
+      'D3HW': 'WW-D3-CLHW.png',
+      'D3C': 'WW-D3-CLHW.png',
 
       // ========== WW-G1 系列 - 网关 ==========
       // 图片: WW-G1.jpg → WW-G1, WW-G1-610

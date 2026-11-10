@@ -49,7 +49,7 @@
         <tr><td>var</td><td>AT+VAR=</td><td>"100,500"</td><td>温/湿变化量（0.01 单位）</td></tr>
         <tr><td>thre</td><td>AT+THRE=</td><td>"6000,0" 或 "OFF"</td><td>阈值或关闭</td></tr>
         <tr><td>server</td><td>AT+SERVER=</td><td>"TCP,81.71.164.182,20004"</td><td>类型,主机,端口</td></tr>
-        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"u,p,cid,topic/sub"</td><td>MQTT 四段（用户名,密码,ClientId,Topic）</td></tr>
+        <tr><td>mqtt</td><td>AT+MQTT=</td><td>"u,p,cid,topic_pub,topic_sub"</td><td>MQTT 五段（用户名,密码,ClientId,发布主题,订阅主题）</td></tr>
         <tr><td>ver</td><td>AT+VER=</td><td>"WW105C,200"</td><td>须为字符串；下次开机仍被固件覆盖</td></tr>
         <tr><td>log</td><td>AT+LOG=</td><td>"1" 或 1</td><td>调试日志 0/1</td></tr>
         <tr><td>rst</td><td>AT+RST=</td><td>"24,10,10"</td><td>复位策略：小时,网络失败次,传感器失败次</td></tr>
