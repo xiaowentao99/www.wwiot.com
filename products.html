@@ -1531,9 +1531,9 @@
         <div class="filter-dropdown">
           <select class="filter-select" id="filter-protocol">
             <option value="">通信方式</option>
-            <option value="lora">LoRa</option>
-            <option value="lorawan-hf">LoRaWAN 高频</option>
-            <option value="lorawan-lf">LoRaWAN 低频</option>
+            <option value="lora">LoRa（433/470MHz）</option>
+            <option value="lorawan-hf">LoRaWAN 高频（868/915/923MHz）</option>
+            <option value="lorawan-lf">LoRaWAN 低频（433/470MHz）</option>
             <option value="4g">4G</option>
             <option value="bluetooth">蓝牙</option>
             <option value="rs485">RS485</option>
@@ -1707,7 +1707,7 @@
                   </div>
                   <div class="naming-rule">
                     <span class="naming-rule__prefix">L/LW/HW/C</span>
-                    <span class="naming-rule__desc">通讯方式：L=LoRa, LW=LoRaWAN, HW=高频LoRaWAN, C=4G</span>
+                    <span class="naming-rule__desc">通讯方式：L=LoRa（中国频点 433/470MHz）, LW=LoRaWAN（中国频点 433/470MHz）, HW=高频LoRaWAN（868/915/923MHz）, C=4G</span>
                   </div>
                   <div class="naming-rule">
                     <span class="naming-rule__prefix">SP1</span>
@@ -2108,9 +2108,9 @@
 
     // 协议标签
     const protocolLabels = {
-      'lora': 'LoRa',
-      'lorawan-hf': 'LoRaWAN高频',
-      'lorawan-lf': 'LoRaWAN低频',
+      'lora': 'LoRa（433/470MHz）',
+      'lorawan-hf': 'LoRaWAN高频（868/915/923MHz）',
+      'lorawan-lf': 'LoRaWAN低频（433/470MHz）',
       '4g': '4G',
       'bluetooth': '蓝牙',
       'rs485': 'RS485',
@@ -2344,9 +2344,9 @@
 
       // 获取通讯方式说明
       const commMap = {
-        'L': 'LoRa',
-        'LW': 'LoRaWAN',
-        'HW': '高频LoRaWAN',
+        'L': 'LoRa（中国频点 433/470MHz）',
+        'LW': 'LoRaWAN（中国频点 433/470MHz）',
+        'HW': '高频LoRaWAN（868/915/923MHz）',
         'C': '4G'
       };
       const commLabel = commMap[comm] || comm;

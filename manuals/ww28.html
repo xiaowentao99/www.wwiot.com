@@ -17,7 +17,7 @@
       <span class="badge">控制/报警</span>
       <h1>WW-28 系列 SOS 报警终端</h1>
       <p>一键求助，快速响应，安全守护。支持 4G / LoRa / LoRaWAN 多种通信方式，安装简便，牢固耐用，适用多场景。</p>
-      <div class="meta"><span>修订日期：2026.10</span><span class="version">V1.0</span><span>万维物联网（南京）有限公司</span></div>
+      <div class="meta"><span>修订日期：2026.11</span><span class="version">V1.1</span><span>万维物联网（南京）有限公司</span></div>
     </section>
 
     <div class="company"><strong>万维物联网（南京）有限公司</strong>　南京市浦口高新区星火路 20 号　|　x@wwiot.com　|　136 7512 0926</div>
@@ -28,7 +28,8 @@
       <li><a href="#s3">核心功能</a></li>
       <li><a href="#s4">电池方案与产品尺寸</a></li>
       <li><a href="#s5">产品规格</a></li>
-      <li><a href="#s6">应用场景</a></li>
+      <li><a href="#s6">数据上报格式</a></li>
+      <li><a href="#s7">应用场景</a></li>
     </ol></nav>
 
     <section class="section" id="s1"><h2><span class="num">1</span>产品概述</h2>
@@ -42,7 +43,7 @@
         <tr><td><strong>WW-28L</strong></td><td>国内 LoRa</td><td>国内 LoRa 低功耗，适合私有化部署，传输稳定覆盖广</td></tr>
         <tr><td><strong>WW-28H</strong></td><td>LoRaWAN</td><td>国外 LoRaWAN 产品，支持 LoRaWAN 标准，低功耗长距离传输，适用于海外市场</td></tr>
       </table></div>
-      <div class="note">WW-28L 使用国内 433~510 MHz 频段，适合搭配万维 LoRa 网关私有化部署；WW-28H 面向海外 LoRaWAN 网络（EU868 / US915 / AU915 等频段可选）。</div>
+      <div class="note">WW-28L / WW-28LW 使用中国频点（433 / 470 MHz），适合搭配万维 LoRa 网关私有化部署；WW-28H 为高频 LoRaWAN（868 / 915 / 923 MHz），面向海外网络。</div>
     </section>
 
     <section class="section" id="s3"><h2><span class="num">3</span>核心功能</h2>
@@ -107,7 +108,85 @@
       <div class="note">具体通信字段、接口电气参数和项目配置请以对应型号的交付资料为准。</div>
     </section>
 
-    <section class="section" id="s6"><h2><span class="num">6</span>应用场景</h2>
+    <section class="section" id="s6"><h2><span class="num">6</span>数据上报格式</h2>
+      <p>WW-28 系列三个型号的上报载体不同：WW-28L / WW-28H 空口采用官网 <strong>TLV-V1 二进制帧</strong>，WW-28C 采用 <strong>4G JSON</strong>。字段定义与《AT及远程配置指导文件（新）》对应分册一致。</p>
+      <h3>6.1 上报载体对照</h3>
+      <div class="table-wrap"><table>
+        <tr><th>型号</th><th>上报载体</th><th>说明</th></tr>
+        <tr><td>WW-28L</td><td>私有 LoRa · TLV-V1</td><td>经万维 LoRa 网关汇聚后上送平台；平台如需扁平字段由网关/平台从 TLV 翻译</td></tr>
+        <tr><td>WW-28H</td><td>LoRaWAN · TLV payload</td><td>寻址由 LoRaWAN 层完成（DevEUI / DevAddr、FPort），载荷 Type 编码与 WW-28L 一致</td></tr>
+        <tr><td>WW-28C</td><td>4G · JSON</td><td>TCP / UDP / MQTT 链路上报 JSON 数据包，同时支持远程 JSON 配置下发</td></tr>
+      </table></div>
+      <h3>6.2 WW-28L / WW-28H：TLV-V1 空口帧</h3>
+      <p>帧结构（大端，无 SOF）：完整协议见《传感器 TLV 协议》与《AT及远程配置LoRa指导文件（新）》§6。</p>
+      <div class="code">Header(1) | DevAddr(4 BE) | FCtrl(1) | SeqNo(2 BE) | TLV… | CRC(2 BE)</div>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>长度</th><th>说明</th></tr>
+        <tr><td>Header</td><td>1</td><td>协议版本号，当前 <span class="inline-code">0x03</span>（以设备实际版本为准）</td></tr>
+        <tr><td>DevAddr</td><td>4</td><td>设备地址，大端（WW-28L 私有 4 字节编号；WW-28H 由 LoRaWAN 层寻址）</td></tr>
+        <tr><td>FCtrl</td><td>1</td><td>事件字段（见下表）；bit7 为 ACK 标志（随 <span class="inline-code">AT+ACK</span>）</td></tr>
+        <tr><td>SeqNo</td><td>2</td><td>包序号，主动上报自增；注册包不递增</td></tr>
+        <tr><td>TLV Body</td><td>N</td><td>本型测量 Type，见下表；部分基础类型省略 Length</td></tr>
+        <tr><td>CRC</td><td>2</td><td>CRC16-CCITT（init <span class="inline-code">0xFFFF</span>、poly <span class="inline-code">0x1021</span>），大端，覆盖 Header…Body</td></tr>
+      </table></div>
+      <p><strong>FCtrl 事件取值</strong>（FCtrl bit6:0 = 事件 Event，bit7 = ACK；事件定义见《AT及远程配置LoRa指导文件（新）》§6.1.3）：</p>
+      <div class="table-wrap"><table>
+        <tr><th>场景</th><th>FCtrl（ACK=0）</th><th>说明</th></tr>
+        <tr><td>注册（上电首包）</td><td><span class="inline-code">0x0A</span> / <span class="inline-code">0x8A</span></td><td>事件=注册（Event=10）；Body 含设备信息 + 配置快照 + 测量快照</td></tr>
+        <tr><td>周期 / 心跳</td><td><span class="inline-code">0x00</span></td><td>事件=状态（Event=0），按上报周期定时发送</td></tr>
+        <tr><td>值变化 / 检测</td><td><span class="inline-code">0x01</span></td><td>事件=值变化（Event=1），触发量变化上报</td></tr>
+        <tr><td><strong>SOS 按键 / 拉绳触发</strong></td><td><span class="inline-code">0x02</span>（ACK=1 时 <span class="inline-code">0x82</span>）</td><td>事件=按键（Event=2）；按键或拉绳触发立即上报，<span class="inline-code">0x09</span> 置 1</td></tr>
+      </table></div>
+      <p><strong>WW-28 本型 Body Type</strong>：</p>
+      <div class="table-wrap"><table>
+        <tr><th>Type</th><th>长度</th><th>编码</th><th>说明</th></tr>
+        <tr><td><span class="inline-code">0x00</span> 设备信息</td><td>2（省略 Length）</td><td>Version(3bit) + 电压档(5bit) + 异常(1bit) + devType(7bit)</td><td>必选；devType 以交付资料为准</td></tr>
+        <tr><td><span class="inline-code">0x04</span> 温度</td><td>2</td><td>int16，<strong>0.1 ℃</strong></td><td>如 <span class="inline-code">00 EB</span> = 23.5 ℃</td></tr>
+        <tr><td><span class="inline-code">0x05</span> 湿度</td><td>1</td><td>uint8，<strong>1 %RH</strong></td><td>如 <span class="inline-code">37</span> = 55 %RH</td></tr>
+        <tr><td><span class="inline-code">0x09</span> 通用开关量</td><td>1</td><td><span class="inline-code">0x01</span> SOS 触发 / <span class="inline-code">0x00</span> 正常</td><td>按键与拉绳任一触发即置 1；如需区分触发源由项目侧定义（见交付资料）</td></tr>
+      </table></div>
+      <p><strong>示例帧</strong>（DevAddr=<span class="inline-code">12 34 56 78</span>，CRC 已按官网算法计算）：</p>
+      <div class="code"># ① 注册包：FCtrl=0A，Seq=0001；Body = 0x00 设备信息 + 0x81 用户参数(上报600s/检测60s) + 测量快照
+03 12 34 56 78 0A 00 01 00 14 21 81 04 02 58 00 3C 04 00 EB 05 37 09 00 21 29
+
+# ② SOS 触发上报：FCtrl=02（事件=按键 Event=2，§6.1.3；ACK=1 时为 0x82），Seq=0005；23.5℃ / 55%RH / SOS=1
+03 12 34 56 78 02 00 05 00 14 21 04 00 EB 05 37 09 01 06 4A
+
+# ③ 周期心跳：FCtrl=00，Seq=002A；SOS 已恢复正常（09=00）
+03 12 34 56 78 00 00 2A 00 14 21 04 00 EB 05 37 09 00 BD E4</div>
+      <div class="note">示例中 devType 以 <span class="inline-code">0x21</span>（门磁/开关类）示意，WW-28 实际 devType 以交付资料为准；电压档位为示意值。测量 Type 失败或传感器异常时该项可整项省略，<span class="inline-code">0x00</span> 异常位置 1。拉绳与按键触发源的区分方式（如 0x09 扩展 bit 或 0x21 业务数据）以项目交付资料为准。</div>
+      <h3>6.3 WW-28C：4G JSON 数据包</h3>
+      <p>数据包固定字段 + 本型数据 key：</p>
+      <div class="table-wrap"><table>
+        <tr><th>字段</th><th>说明</th></tr>
+        <tr><td><span class="inline-code">no</span></td><td>设备编号（型号 + 序号）</td></tr>
+        <tr><td><span class="inline-code">model</span></td><td><span class="inline-code">"型号,固件版本"</span>，如 <span class="inline-code">"WW28C,1.0.0"</span></td></tr>
+        <tr><td><span class="inline-code">seq</span></td><td>上报序号，自增</td></tr>
+        <tr><td><span class="inline-code">evt</span></td><td>事件码：<span class="inline-code">0</span> 周期 / <span class="inline-code">1</span> 变化 / <span class="inline-code">2</span> 手动 / <span class="inline-code">3</span> 预警 / <span class="inline-code">4</span> 报警 / <span class="inline-code">5</span> 恢复 / <span class="inline-code">6</span> 补传 / <span class="inline-code">7</span> 应答 / <span class="inline-code">8</span> 配置回执 / <span class="inline-code">10</span> 注册</td></tr>
+        <tr><td><span class="inline-code">ok</span></td><td>采集状态 <span class="inline-code">1</span> 正常 / <span class="inline-code">0</span> 异常</td></tr>
+        <tr><td><span class="inline-code">csq</span></td><td>4G 信号强度</td></tr>
+        <tr><td><span class="inline-code">bat</span></td><td><span class="inline-code">"电量%,毫伏"</span>，如 <span class="inline-code">"76,3005"</span></td></tr>
+        <tr><td><span class="inline-code">ts</span></td><td>Unix 时间戳（秒）</td></tr>
+      </table></div>
+      <p><strong>WW-28C 本型数据 key</strong>：</p>
+      <div class="table-wrap"><table>
+        <tr><th>key</th><th>类型</th><th>编码</th><th>说明</th></tr>
+        <tr><td><span class="inline-code">d</span></td><td>0 / 1</td><td><span class="inline-code">1</span> SOS 触发 / <span class="inline-code">0</span> 正常</td><td>按键与拉绳任一触发置 1</td></tr>
+        <tr><td><span class="inline-code">t</span></td><td>int</td><td><strong>0.01 ℃</strong></td><td>如 <span class="inline-code">2350</span> = 23.50 ℃</td></tr>
+        <tr><td><span class="inline-code">rh</span></td><td>int</td><td><strong>0.01 %RH</strong></td><td>如 <span class="inline-code">5560</span> = 55.60 %RH</td></tr>
+      </table></div>
+      <p><strong>示例</strong>：</p>
+      <div class="code"># SOS 按键 / 拉绳触发（evt=2 手动，d=1，立即上报）
+{"no":"WW28C24090001","model":"WW28C,1.0.0","seq":37,"evt":2,"ok":1,
+ "d":1,"t":2350,"rh":5560,"bat":"76,3005","csq":18,"ts":1793970120}
+
+# 周期心跳（evt=0，SOS 已恢复正常）
+{"no":"WW28C24090001","model":"WW28C,1.0.0","seq":38,"evt":0,"ok":1,
+ "d":0,"t":2351,"rh":5548,"bat":"76,3002","csq":19,"ts":1793970420}</div>
+      <div class="note">SOS 触发后设备立即上报（evt=2 手动事件），平台收到 <span class="inline-code">d=1</span> 即触发电话、短信、微信等预警推送；恢复上报（<span class="inline-code">d=0</span>）的时机与解除方式按项目策略执行。MQTT 链路下发布/订阅主题按《AT及远程配置4G指导文件（新）》§5 配置（<span class="inline-code">AT+MQTT=user,pass,cid,发布主题,订阅主题</span>，5 段）。</div>
+    </section>
+
+    <section class="section" id="s7"><h2><span class="num">7</span>应用场景</h2>
       <p><strong>主要应用场景：</strong></p>
       <div class="table-wrap"><table>
         <tr><th>场景</th><th>说明</th></tr>
